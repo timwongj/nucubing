@@ -53,9 +53,25 @@
         <h1>Results</h1>
     </div>
     <div class="btn-group" role="group">
-        <button type="button" class="btn btn-default" ng-repeat="event in events" ng-click="selectEvent(event)">{{event}}</button>
+        <button type="button" class="btn btn-default" ng-repeat="event in events" ng-click="selectEvent(event)">{{event.name}}</button>
     </div>
-    <h3>{{selectedEvent}}</h3>
+    <h3>{{selectedEvent.name}}</h3>
+    <div class="table table-responsive">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Result</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="result in selectedEvent.results">
+                <td>{{result.name}}</td>
+                <td>{{result.result}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 </body>
 </html>

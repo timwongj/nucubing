@@ -54,7 +54,7 @@
     </div>
     <div class="row">
         <div class="col-md-3 col-sm-6" ng-repeat="event in events">
-            <div class="panel panel-primary">
+            <div class="panel panel-default">
                 <div class="panel-heading centered">
                     <h1 class="panel-title">{{event.name}}</h1>
                 </div>
@@ -63,7 +63,7 @@
                 </div>
                 <div class="panel-footer centered">
                     <button class="btn btn-warning" ng-click="manualEntry(event)">Manual Entry</button>
-                    <button class="btn btn-success" ng-click="timer(event)">Timer</button>
+                    <button class="btn btn-info" ng-click="timer(event)">Timer</button>
                 </div>
             </div>
         </div>
