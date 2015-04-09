@@ -89,11 +89,17 @@ app.get('/', function(req, res) {
 });
 
 app.get('/profile', function(req, res) {
-    res.sendfile(__dirname + '/templates/profile.html');
+    if (req.user)
+        res.sendfile(__dirname + '/templates/profile.html');
+    else
+        res.sendfile(__dirname + '/templates/login.html');
 });
 
 app.get('/contest', function(req, res) {
-    res.sendfile(__dirname + '/templates/contest.html');
+    if (req.user)
+        res.sendfile(__dirname + '/templates/contest.html');
+    else
+        res.sendfile(__dirname + '/templates/login.html');
 });
 
 app.get('/results', function(req, res) {
