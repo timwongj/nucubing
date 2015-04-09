@@ -5,9 +5,6 @@ var multer = require('multer');
 var mongoose = require('mongoose');
 var passport = require('passport'),
     FacebookStrategy = require('passport-facebook').Strategy;
-var sessions = require('client-sessions');
-var bcrypt = require('bcryptjs');
-var path = require('path');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -28,13 +25,7 @@ var User = mongoose.model('User', new Schema ({
     displayName:String,
     email:String,
     username:String,
-    provider:String,
-}));
-
-// define session cookie
-app.use(sessions({
-    cookieName: 'session',
-    secret: 'yeahwhy69dosegjobjbnfnkdsoasa83hkffo'
+    provider:String
 }));
 
 // facebook login
@@ -58,6 +49,7 @@ passport.use(new FacebookStrategy({
     }
 ));
 
+// render static pages
 app.use(express.static(__dirname + '/public'));
 
 app.get('/', function(req, res) {
@@ -85,7 +77,7 @@ app.get('/links', function(req, res) {
 });
 
 app.get('/auth', function(req, res) {
-    if (!res.user)
+    if (!req.user)
         res.sendfile(__dirname + '/templates/login.html');
     else {
         req.logout();
