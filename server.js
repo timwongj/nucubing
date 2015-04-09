@@ -10,6 +10,24 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(multer());
 
+app.configure(function() {
+    app.use(express.static('public'));
+    app.use(express.cookieParser());
+    app.use(express.bodyParser());
+    app.use(express.session({ secret: 'keyboard cat' }));
+    app.use(passport.initialize());
+    app.use(passport.session());
+    app.use(app.router);
+});
+
+passport.serializeUser(function(user, done) {
+    done(null, user);
+});
+
+passport.deserializeUser(function(user, done) {
+    done(null, user);
+});
+
 // connect to mongoDB
 var connectionString = process.env.OPENSHIFT_MONGODB_DB_URL || 'mongodb://localhost/auth';
 mongoose.connect(connectionString);
@@ -20,6 +38,8 @@ var ObjectId = Schema.ObjectId;
 
 var User = mongoose.model('User', new Schema ({
     id: ObjectId,
+    facebook_id:String,
+    token:String,
     firstName: String,
     lastName: String,
     displayName:String,
@@ -32,20 +52,32 @@ var User = mongoose.model('User', new Schema ({
 passport.use(new FacebookStrategy({
         clientID: '1397096627278092',
         clientSecret: 'e98f10732572cff4bf9a1ccd54288460',
-        callbackURL: '/'
+        callbackURL: '/auth/facebook/callback'
     }, function(accessToken, refreshToken, profile, done) {
-        //var providerData = profile._json;
-        //providerData.accessToken = accessToken;
-        //providerData.refreshToken = refreshToken;
-        //var user = new User({
-        //    firstName: profile.name.givenName,
-        //    lastName:profile.name.familyName,
-        //    displayName:profile.displayName,
-        //    email:profile.emails[0].value,
-        //    username:profile.username,
-        //    provider:'facebook'
-        //});
-        //user.save();
+        process.nextTick(function() {
+            User.findOne({'facebook_id':profile.id}, function(err, user) {
+                if (err)
+                    return done(err);
+                if (user)
+                    return done(null, user);
+                else {
+                    console.log('New User');
+                    var newUser = new User();
+                    newUser.facebook_id = profile.id;
+                    newUser.token = profile.accessToken;
+                    newUser.firstName = profile.name.givenName;
+                    newUser.lastName = profile.name.familyName;
+                    newUser.displayName = profile.name.displayName;
+                    newUser.email = profile.emails[0].value;
+                    newUser.provider = 'facebook';
+                    newUser.save(function(err) {
+                        if (err)
+                            throw err;
+                        return done(null, newUser);
+                    });
+                }
+            });
+        });
     }
 ));
 
@@ -76,11 +108,17 @@ app.get('/links', function(req, res) {
     res.sendfile(__dirname + '/templates/links.html');
 });
 
+// if user wants to log out, then log out, otherwise redirect them to the login page
 app.get('/auth', function(req, res) {
-    res.sendfile(__dirname + '/templates/login.html');
+    if (req.user) {
+        req.logout();
+        res.redirect('/');
+    }
+    else
+        res.sendfile(__dirname + '/templates/login.html');
 });
 
-app.get('/auth/facebook', passport.authenticate('facebook', { scope:'email' }));
+app.get('/auth/facebook', passport.authenticate('facebook', { scope: 'email' }));
 
 app.get('/auth/facebook/callback', passport.authenticate('facebook', { successRedirect: '/', failureRedirect: '/auth' }));
 
