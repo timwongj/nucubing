@@ -16,3 +16,17 @@
 .centerModal {
     top:-2.5%;
 }
+
+.jumbotron-login {
+    padding-top:20px;
+    padding-bottom:40px;
+    padding-left:30px;
+    padding-right:30px;
+}
+
+.profilePic {
+    margin-top:0px;
+    margin-bottom:20px;
+    margin-left:20px;
+    margin-right:20px;
+}

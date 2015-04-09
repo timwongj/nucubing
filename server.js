@@ -39,12 +39,10 @@ var ObjectId = Schema.ObjectId;
 var User = mongoose.model('User', new Schema ({
     id: ObjectId,
     facebook_id:String,
-    token:String,
     firstName: String,
     lastName: String,
-    displayName:String,
     email:String,
-    username:String,
+    picture:String,
     provider:String
 }));
 
@@ -55,19 +53,16 @@ passport.use(new FacebookStrategy({
         callbackURL: '/auth/facebook/callback'
     }, function(accessToken, refreshToken, profile, done) {
         process.nextTick(function() {
-            User.findOne({'facebook_id':profile.id}, function(err, user) {
+            User.findOne({'email':profile.emails[0].value}, function(err, user) {
                 if (err)
                     return done(err);
                 if (user)
                     return done(null, user);
                 else {
-                    console.log('New User');
                     var newUser = new User();
                     newUser.facebook_id = profile.id;
-                    newUser.token = profile.accessToken;
                     newUser.firstName = profile.name.givenName;
                     newUser.lastName = profile.name.familyName;
-                    newUser.displayName = profile.name.displayName;
                     newUser.email = profile.emails[0].value;
                     newUser.provider = 'facebook';
                     newUser.save(function(err) {
@@ -120,7 +115,7 @@ app.get('/auth', function(req, res) {
         res.sendfile(__dirname + '/templates/login.html');
 });
 
-app.get('/auth/facebook', passport.authenticate('facebook', { scope: 'email' }));
+app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', 'public_profile'] }));
 
 app.get('/auth/facebook/callback', passport.authenticate('facebook', { successRedirect: '/', failureRedirect: '/auth' }));
 
@@ -131,13 +126,14 @@ app.get('/authStatus', function(req, res) {
         res.json({status:'not_authorized'});
 });
 
+// send user info such as name, email, and facebook id
 app.get('/userInfo', function(req, res) {
     res.send(req.user);
 });
 
 app.post('/contest/:week/:event', function(req, res) {
-    console.log(req.params['week']);
-    console.log(req.params['event']);
+    console.log('Week: ' + req.params['week']);
+    console.log('Event: ' + req.params['event']);
     console.log(req.user);
     console.log(req.body);
 });

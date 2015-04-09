@@ -15,6 +15,7 @@ app.controller('nuCubingController', function($scope, $http, $modal) {
         $scope.user.firstName = response.firstName;
         $scope.user.lastName = response.lastName;
         $scope.user.email = response.email;
+        $scope.user.id = response.facebook_id;
     });
 
     $scope.results = {
@@ -51,6 +52,11 @@ app.controller('nuCubingController', function($scope, $http, $modal) {
         alert('Using Timer for ' + event);
     }
 
+    $scope.events = ["Rubik's Cube", "4x4 Cube", "5x5 Cube", "2x2 Cube", "3x3 Blindfolded", "3x3 One-Handed", "Pyraminx"];
+    $scope.selectedEvent = "Rubik's Cube";
+    $scope.selectEvent = function(event) {
+        $scope.selectedEvent = event;
+    };
 });
 
 app.controller('manualEntryController', function($scope, $http, $modal, $modalInstance, event, week) {

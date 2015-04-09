@@ -53,10 +53,24 @@
         <h1>Profile</h1>
     </div>
     <div class="row">
-        <div class="col-md-6 col-md-offset-3">
-            <h3>First Name: {{user.firstName}}</h3>
-            <h3>Last Name: {{user.lastName}}</h3>
-            <h3>Email: {{user.email}}</h3>
+        <div class="col-md-3 centered">
+            <img ng-src="http://graph.facebook.com/{{user.id}}/picture?width=250&height=250" class="img-responsive profilePic">
+        </div>
+        <div class="col-md-6">
+            <div class="table-responsive">
+                <table class="table">
+                    <tbody>
+                    <tr>
+                        <td><strong>Name</strong></td>
+                        <td>{{user.firstName}} {{user.lastName}}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Email</strong></td>
+                        <td>{{user.email}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
