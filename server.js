@@ -85,8 +85,12 @@ app.get('/links', function(req, res) {
 });
 
 app.get('/auth', function(req, res) {
-    res.sendfile(__dirname + '/templates/login.html');
-    //res.sendfile(__dirname + '/templates/home.html');
+    if (!res.user)
+        res.sendfile(__dirname + '/templates/login.html');
+    else {
+        req.logout();
+        res.redirect('/');
+    }
 });
 
 app.get('/auth/facebook', passport.authenticate('facebook'));
