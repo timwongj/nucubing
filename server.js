@@ -3,7 +3,7 @@ var app = express();
 var bodyParser = require('body-parser');
 var multer = require('multer');
 var mongoose = require('mongoose');
-var passport = require('passport'), LocalStrategy = require('passport-local');
+var passport = require('passport'), FacebookStrategy = require('passport-facebook').Strategy;
 var sessions = require('client-sessions');
 var bcrypt = require('bcryptjs');
 var path = require('path');
@@ -11,6 +11,20 @@ var path = require('path');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(multer());
+
+// facebook login
+passport.use(new FacebookStrategy({
+        clientID: '1397096627278092',
+        clientSecret: 'e98f10732572cff4bf9a1ccd54288460',
+        callbackURL: '/'
+    },
+    function(accessToken, refreshToken, profile, done) {
+        //User.findOrCreate(..., function(err, user) {
+        //    if (err) { return done(err); }
+        //    done(null, user);
+        //});
+    }
+));
 
 // define session cookie
 app.use(sessions({
@@ -53,8 +67,13 @@ app.get('/links', function(req, res) {
 });
 
 app.get('/auth', function(req, res) {
-    res.sendfile(__dirname + '/templates/home.html');
+    res.sendfile(__dirname + '/templates/login.html');
+    //res.sendfile(__dirname + '/templates/home.html');
 });
+
+app.get('/auth/facebook', passport.authenticate('facebook'));
+
+app.get('/auth/facebook/callback', passport.authenticate('facebook', { successRedirect: '/', failureRedirect: '/login' }));
 
 app.get('/authStatus', function(req, res) {
     res.json({status:'logged-out'});
