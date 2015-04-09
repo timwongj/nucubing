@@ -2,12 +2,19 @@ var app = angular.module('nuCubingApp', []);
 
 app.controller('nuCubingController', function($scope, $http) {
     $scope.authStatus;
+    $scope.user = {};
 
     $http.get('/authStatus').success(function(response) {
         if (response.status == 'connected')
             $scope.authStatus = 'Logout';
         else
             $scope.authStatus = 'Login';
+    });
+
+    $http.get('userInfo').success(function(response) {
+        $scope.user.firstName = response.firstName;
+        $scope.user.lastName = response.lastName;
+        $scope.user.email = response.email;
     });
 
     $scope.results = {
