@@ -4,7 +4,7 @@ app.controller('nuCubingController', function($scope, $http) {
     $scope.authStatus = 'Login';
 
     $http.get('/authStatus').success(function(response) {
-        if (response.status == 'logged-in')
+        if (response.status == 'connected')
             $scope.authStatus = 'Logout'
     });
 
@@ -23,9 +23,10 @@ app.controller('nuCubingController', function($scope, $http) {
 
 window.fbAsyncInit = function() {
     FB.init({
-        appId      : '1397096627278092',
-        xfbml      : true,
-        version    : 'v2.3'
+        appId: '1397096627278092',
+        cookies: true,
+        xfbml: true,
+        version: 'v2.3'
     });
 };
 

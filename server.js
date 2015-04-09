@@ -3,7 +3,8 @@ var app = express();
 var bodyParser = require('body-parser');
 var multer = require('multer');
 var mongoose = require('mongoose');
-var passport = require('passport'), FacebookStrategy = require('passport-facebook').Strategy;
+var passport = require('passport'),
+    FacebookStrategy = require('passport-facebook').Strategy;
 var sessions = require('client-sessions');
 var bcrypt = require('bcryptjs');
 var path = require('path');
@@ -12,26 +13,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(multer());
 
-// facebook login
-passport.use(new FacebookStrategy({
-        clientID: '1397096627278092',
-        clientSecret: 'e98f10732572cff4bf9a1ccd54288460',
-        callbackURL: '/'
-    },
-    function(accessToken, refreshToken, profile, done) {
-        //User.findOrCreate(..., function(err, user) {
-        //    if (err) { return done(err); }
-        //    done(null, user);
-        //});
-    }
-));
-
-// define session cookie
-app.use(sessions({
-    cookieName: 'session',
-    secret: '69yeahwhydosegjobjbnfnkdsoasa83hkffo'
-}));
-
 // connect to mongoDB
 var connectionString = process.env.OPENSHIFT_MONGODB_DB_URL || 'mongodb://localhost/auth';
 mongoose.connect(connectionString);
@@ -39,6 +20,43 @@ mongoose.connect(connectionString);
 // define User Schema
 var Schema = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
+
+var User = mongoose.model('User', new Schema ({
+    id: ObjectId,
+    firstName: String,
+    lastName: String,
+    displayName:String,
+    email:String,
+    username:String,
+    provider:String,
+}));
+
+// define session cookie
+app.use(sessions({
+    cookieName: 'session',
+    secret: 'yeahwhy69dosegjobjbnfnkdsoasa83hkffo'
+}));
+
+// facebook login
+passport.use(new FacebookStrategy({
+        clientID: '1397096627278092',
+        clientSecret: 'e98f10732572cff4bf9a1ccd54288460',
+        callbackURL: '/'
+    }, function(accessToken, refreshToken, profile, done) {
+        var providerData = profile._json;
+        providerData.accessToken = accessToken;
+        providerData.refreshToken = refreshToken;
+        var user = new User({
+            firstName: profile.name.givenName,
+            lastName:profile.name.familyName,
+            displayName:profile.displayName,
+            email:profile.emails[0].value,
+            username:profile.username,
+            provider:'facebook'
+        });
+        user.save();
+    }
+));
 
 app.use(express.static(__dirname + '/public'));
 
@@ -73,10 +91,13 @@ app.get('/auth', function(req, res) {
 
 app.get('/auth/facebook', passport.authenticate('facebook'));
 
-app.get('/auth/facebook/callback', passport.authenticate('facebook', { successRedirect: '/', failureRedirect: '/login' }));
+app.get('/auth/facebook/callback', passport.authenticate('facebook', { successRedirect: '/', failureRedirect: '/auth' }));
 
 app.get('/authStatus', function(req, res) {
-    res.json({status:'logged-out'});
+    if (req.user)
+        res.json({status:'connected'});
+    else
+        res.json({status:'not_authorized'});
 });
 
 var ip = process.env.OPENSHIFT_NODEJS_IP || "127.0.0.1";
