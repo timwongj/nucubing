@@ -34,18 +34,18 @@ passport.use(new FacebookStrategy({
         clientSecret: 'e98f10732572cff4bf9a1ccd54288460',
         callbackURL: '/'
     }, function(accessToken, refreshToken, profile, done) {
-        var providerData = profile._json;
-        providerData.accessToken = accessToken;
-        providerData.refreshToken = refreshToken;
-        var user = new User({
-            firstName: profile.name.givenName,
-            lastName:profile.name.familyName,
-            displayName:profile.displayName,
-            email:profile.emails[0].value,
-            username:profile.username,
-            provider:'facebook'
-        });
-        user.save();
+        //var providerData = profile._json;
+        //providerData.accessToken = accessToken;
+        //providerData.refreshToken = refreshToken;
+        //var user = new User({
+        //    firstName: profile.name.givenName,
+        //    lastName:profile.name.familyName,
+        //    displayName:profile.displayName,
+        //    email:profile.emails[0].value,
+        //    username:profile.username,
+        //    provider:'facebook'
+        //});
+        //user.save();
     }
 ));
 
@@ -77,12 +77,7 @@ app.get('/links', function(req, res) {
 });
 
 app.get('/auth', function(req, res) {
-    if (!req.user)
-        res.sendfile(__dirname + '/templates/login.html');
-    else {
-        req.logout();
-        res.redirect('/');
-    }
+    res.sendfile(__dirname + '/templates/login.html');
 });
 
 app.get('/auth/facebook', passport.authenticate('facebook', { scope:'email' }));
