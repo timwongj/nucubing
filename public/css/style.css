@@ -17,16 +17,24 @@
     top:-2.5%;
 }
 
-.jumbotron-login {
+.page-header {
+    margin-top:0px;
+}
+
+.jumbotronLogin {
     padding-top:20px;
     padding-bottom:40px;
     padding-left:30px;
     padding-right:30px;
 }
 
+.panelBodyProfile {
+    padding:0px;
+}
+
 .profilePic {
-    margin-top:0px;
-    margin-bottom:20px;
-    margin-left:20px;
-    margin-right:20px;
+    margin-top:10px;
+    margin-bottom:10px;
+    margin-left:auto;
+    margin-right:auto;
 }

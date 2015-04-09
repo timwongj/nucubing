@@ -1,8 +1,8 @@
 var app = angular.module('nuCubingApp', ['ui.bootstrap']);
 
 app.controller('nuCubingController', function($scope, $http, $modal) {
+
     $scope.authStatus = '';
-    $scope.user = {};
 
     $http.get('/authStatus').success(function(response) {
         if (response.status == 'connected')
@@ -11,22 +11,61 @@ app.controller('nuCubingController', function($scope, $http, $modal) {
             $scope.authStatus = 'Login';
     });
 
-    $http.get('userInfo').success(function(response) {
+});
+
+app.controller('profileController', function($scope, $http) {
+
+    $scope.user = {};
+
+    $http.get('/userInfo').success(function(response) {
         $scope.user.firstName = response.firstName;
         $scope.user.lastName = response.lastName;
         $scope.user.email = response.email;
         $scope.user.id = response.facebook_id;
     });
 
-    $scope.results = {
-        x3Cube:'Not Completed',
-        x4Cube:'Not Completed',
-        x5Cube:'Not Completed',
-        x2Cube:'Not Completed',
-        x3BLD:'Not Completed',
-        x3OH:'Not Completed',
-        pyra:'Not Completed'
+    $scope.personalResults = [];
+    $scope.personalResults[0] = {type:'Unofficial Personal Records'};
+    $scope.personalResults[1] = {type:'Official Personal Records'};
+    $scope.personalResults[2] = {type:'Contest Personal Records'};
+    $scope.personalResults[3] = {type:'Current Week Results'};
+
+    $scope.personalResults[0].results = [];
+    $scope.personalResults[1].results = [];
+    $scope.personalResults[2].results = [];
+    $scope.personalResults[3].results = [];
+
+    $scope.personalResults[0].results[0] = {event:"Rubik's Cube", single:'5.79', average:'8.50'};
+    $scope.personalResults[0].results[1] = {event:"4x4 Cube", single:'27.34', average:'32.51'};
+    $scope.personalResults[0].results[2] = {event:"5x5 Cube", single:'1:08.65', average:'1:15.03'};
+
+    $scope.personalResults[1].results[0] = {event:"Rubik's Cube", single:'8.48', average:'10.40'};
+    $scope.personalResults[1].results[1] = {event:"4x4 Cube", single:'33.92', average:'38.80'};
+    $scope.personalResults[1].results[2] = {event:"5x5 Cube", single:'1:11.38', average:'1:23.47'};
+
+});
+
+app.controller('resultsController', function($scope, $http) {
+
+    $scope.events = ["Rubik's Cube", "4x4 Cube", "5x5 Cube", "2x2 Cube", "3x3 Blindfolded", "3x3 One-Handed", "Pyraminx"];
+    $scope.selectedEvent = "Rubik's Cube";
+
+    $scope.selectEvent = function(event) {
+        $scope.selectedEvent = event;
     };
+
+});
+
+app.controller('contestController', function($scope, $http, $modal) {
+
+    $scope.events = [];
+    $scope.events[0] = {name:"Rubik's Cube", result:'Not Completed'};
+    $scope.events[1] = {name:"4x4 Cube", result:'Not Completed'};
+    $scope.events[2] = {name:"5x5 Cube", result:'Not Completed'};
+    $scope.events[3] = {name:"2x2 Cube", result:'Not Completed'};
+    $scope.events[4] = {name:"3x3 Blindfolded", result:'Not Completed'};
+    $scope.events[5] = {name:"3x3 One-Handed", result:'Not Completed'};
+    $scope.events[6] = {name:"Pyraminx", result:'Not Completed'};
 
     $scope.manualEntry = function(event) {
         var modalInstance = $modal.open({
@@ -49,14 +88,9 @@ app.controller('nuCubingController', function($scope, $http, $modal) {
     };
 
     $scope.timer = function(event) {
-        alert('Using Timer for ' + event);
-    }
-
-    $scope.events = ["Rubik's Cube", "4x4 Cube", "5x5 Cube", "2x2 Cube", "3x3 Blindfolded", "3x3 One-Handed", "Pyraminx"];
-    $scope.selectedEvent = "Rubik's Cube";
-    $scope.selectEvent = function(event) {
-        $scope.selectedEvent = event;
+        alert('Open timer for ' + event.name);
     };
+
 });
 
 app.controller('manualEntryController', function($scope, $http, $modal, $modalInstance, event, week) {

@@ -22,7 +22,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="/images/cubeLogo.png"/>
     <title>NU Cubing - Contest</title>
 </head>
-<body ng-app="nuCubingApp" ng-controller="nuCubingController">
+<body ng-app="nuCubingApp" ng-controller="contestController">
 <div class="navbar navbar-default" role="navigation">
     <div class="container">
         <div class="navbar-header">
@@ -49,105 +49,21 @@
     </div>
 </div>
 <div class="container">
-    <div class="jumbotron">
+    <div class="page-header">
         <h1>Contest</h1>
     </div>
     <div class="row">
-        <div class="col-md-3 col-sm-6">
+        <div class="col-md-3 col-sm-6" ng-repeat="event in events">
             <div class="panel panel-primary">
                 <div class="panel-heading centered">
-                    <h1 class="panel-title">Rubik's Cube</h1>
+                    <h1 class="panel-title">{{event.name}}</h1>
                 </div>
                 <div class="panel-body centered">
-                    <h1 class="panel-title">{{results.x3Cube}}</h1>
+                    <h1 class="panel-title">{{event.result}}</h1>
                 </div>
                 <div class="panel-footer centered">
-                    <button class="btn btn-warning" ng-click="manualEntry('Rubik\'s Cube')">Manual Entry</button>
-                    <button class="btn btn-success" ng-click="timer('Rubik\'s Cube')">Timer</button>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 col-sm-6">
-            <div class="panel panel-primary">
-                <div class="panel-heading centered">
-                    <h1 class="panel-title">4x4 Cube</h1>
-                </div>
-                <div class="panel-body centered">
-                    <h1 class="panel-title">{{results.x4Cube}}</h1>
-                </div>
-                <div class="panel-footer centered">
-                    <button class="btn btn-warning" ng-click="manualEntry('4x4 Cube')">Manual Entry</button>
-                    <button class="btn btn-success" ng-click="timer('4x4 Cube')">Timer</button>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 col-sm-6">
-            <div class="panel panel-primary">
-                <div class="panel-heading centered">
-                    <h1 class="panel-title">5x5 Cube</h1>
-                </div>
-                <div class="panel-body centered">
-                    <h1 class="panel-title">{{results.x5Cube}}</h1>
-                </div>
-                <div class="panel-footer centered">
-                    <button class="btn btn-warning" ng-click="manualEntry('5x5 Cube')">Manual Entry</button>
-                    <button class="btn btn-success" ng-click="timer('5x5 Cube')">Timer</button>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 col-sm-6">
-            <div class="panel panel-primary">
-                <div class="panel-heading centered">
-                    <h1 class="panel-title">2x2 Cube</h1>
-                </div>
-                <div class="panel-body centered">
-                    <h1 class="panel-title">{{results.x2Cube}}</h1>
-                </div>
-                <div class="panel-footer centered">
-                    <button class="btn btn-warning" ng-click="manualEntry('2x2 Cube')">Manual Entry</button>
-                    <button class="btn btn-success" ng-click="timer('2x2 Cube')">Timer</button>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 col-sm-6">
-            <div class="panel panel-primary">
-                <div class="panel-heading centered">
-                    <h1 class="panel-title">3x3 Blindfolded</h1>
-                </div>
-                <div class="panel-body centered">
-                    <h1 class="panel-title">{{results.x3BLD}}</h1>
-                </div>
-                <div class="panel-footer centered">
-                    <button class="btn btn-warning" ng-click="manualEntry('3x3 Blindfolded')">Manual Entry</button>
-                    <button class="btn btn-success" ng-click="timer('3x3 Blindfolded')">Timer</button>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 col-sm-6">
-            <div class="panel panel-primary">
-                <div class="panel-heading centered">
-                    <h1 class="panel-title">3x3 One-Handed</h1>
-                </div>
-                <div class="panel-body centered">
-                    <h1 class="panel-title">{{results.x3OH}}</h1>
-                </div>
-                <div class="panel-footer centered">
-                    <button class="btn btn-warning" ng-click="manualEntry('3x3 One-Handed')">Manual Entry</button>
-                    <button class="btn btn-success" ng-click="timer('3x3 One-Handed')">Timer</button>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 col-sm-6">
-            <div class="panel panel-primary">
-                <div class="panel-heading centered">
-                    <h1 class="panel-title">Pyraminx</h1>
-                </div>
-                <div class="panel-body centered">
-                    <h1 class="panel-title">{{results.pyra}}</h1>
-                </div>
-                <div class="panel-footer centered">
-                    <button class="btn btn-warning" ng-click="manualEntry('Pyraminx')">Manual Entry</button>
-                    <button class="btn btn-success" ng-click="timer('Pyraminx')">Timer</button>
+                    <button class="btn btn-warning" ng-click="manualEntry(event)">Manual Entry</button>
+                    <button class="btn btn-success" ng-click="timer(event)">Timer</button>
                 </div>
             </div>
         </div>
@@ -155,7 +71,7 @@
 </div>
 <script type="text/ng-template" id="manualEntry.html">
     <div class="modal-header">
-        <h4 class="modal-title" id="modalTitle">{{event}}</h4>
+        <h4 class="modal-title" id="modalTitle">{{event.name}}</h4>
     </div>
     <div class="modal-body">
         <form class="form-horizontal" ng-repeat="solve in solves">

@@ -22,7 +22,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="/images/cubeLogo.png"/>
     <title>NU Cubing - Results</title>
 </head>
-<body ng-app="nuCubingApp" ng-controller="nuCubingController">
+<body ng-app="nuCubingApp" ng-controller="resultsController">
 <div class="navbar navbar-default" role="navigation">
     <div class="container">
         <div class="navbar-header">
@@ -49,13 +49,13 @@
     </div>
 </div>
 <div class="container">
-    <div class="jumbotron">
+    <div class="page-header">
         <h1>Results</h1>
     </div>
     <div class="btn-group" role="group">
         <button type="button" class="btn btn-default" ng-repeat="event in events" ng-click="selectEvent(event)">{{event}}</button>
     </div>
-    <h1>{{selectedEvent}}</h1>
+    <h3>{{selectedEvent}}</h3>
 </div>
 </body>
 </html>

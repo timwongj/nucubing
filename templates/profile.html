@@ -22,7 +22,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="/images/cubeLogo.png"/>
     <title>NU Cubing - Profile</title>
 </head>
-<body ng-app="nuCubingApp" ng-controller="nuCubingController">
+<body ng-app="nuCubingApp" ng-controller="profileController">
 <div class="navbar navbar-default" role="navigation">
     <div class="container">
         <div class="navbar-header">
@@ -49,27 +49,43 @@
     </div>
 </div>
 <div class="container">
-    <div class="jumbotron">
-        <h1>Profile</h1>
-    </div>
     <div class="row">
-        <div class="col-md-3 centered">
-            <img ng-src="http://graph.facebook.com/{{user.id}}/picture?width=250&height=250" class="img-responsive profilePic">
+        <div class="col-md-4 col-sm-6 col-xs-8 centered">
+            <div class="panel panel-default">
+                <div class="panel-heading centered">
+                    <h1 class="panel-title">{{user.firstName}} {{user.lastName}}</h1>
+                </div>
+                <div class="panel-body centered panelBodyProfile">
+                    <img ng-src="http://graph.facebook.com/{{user.id}}/picture?width=250&height=250" class="img-responsive profilePic">
+                </div>
+                <div class="panel-footer centered">
+                    <p>Email: {{user.email}}</p>
+                </div>
+            </div>
         </div>
-        <div class="col-md-6">
-            <div class="table-responsive">
-                <table class="table">
-                    <tbody>
-                    <tr>
-                        <td><strong>Name</strong></td>
-                        <td>{{user.firstName}} {{user.lastName}}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Email</strong></td>
-                        <td>{{user.email}}</td>
-                    </tr>
-                    </tbody>
-                </table>
+        <div class="col-md-4 col-sm-6 col-xs-12" ng-repeat="personalResult in personalResults">
+            <div class="panel panel-default">
+                <div class="panel-heading centered">
+                    <h1 class="panel-title">{{personalResult.type}}</h1>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>Event</th>
+                            <th>Single</th>
+                            <th>Average</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="result in personalResult.results">
+                            <td>{{result.event}}</td>
+                            <td>{{result.single}}</td>
+                            <td>{{result.average}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
