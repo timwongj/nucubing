@@ -106,10 +106,6 @@ app.get('/results', function(req, res) {
     res.sendfile(__dirname + '/templates/results.html');
 });
 
-app.get('/tutorials', function(req, res) {
-    res.sendfile(__dirname + '/templates/tutorials.html');
-});
-
 app.get('/links', function(req, res) {
     res.sendfile(__dirname + '/templates/links.html');
 });
@@ -137,6 +133,13 @@ app.get('/authStatus', function(req, res) {
 
 app.get('/userInfo', function(req, res) {
     res.send(req.user);
+});
+
+app.post('/contest/:week/:event', function(req, res) {
+    console.log(req.params['week']);
+    console.log(req.params['event']);
+    console.log(req.user);
+    console.log(req.body);
 });
 
 var ip = process.env.OPENSHIFT_NODEJS_IP || "127.0.0.1";
