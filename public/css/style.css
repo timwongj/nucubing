@@ -1,0 +1,15 @@
+.navbar, .navbar-inverse {
+    border-radius:0px;
+}
+
+.logo {
+    width:25px;
+    height:25px;
+    text-align:center;
+    vertical-align:middle
+}
+
+.centered {
+    text-align:center;
+}
+
