@@ -234,6 +234,8 @@ app.post('/contest/:week/:event', function(req, res) {
     console.log('Event: ' + req.params['event']);
     console.log(req.user);
     console.log(req.body);
+    var result = '6.25';
+    res.send(result);
 });
 
 var ip = process.env.OPENSHIFT_NODEJS_IP || "127.0.0.1";

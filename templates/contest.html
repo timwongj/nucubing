@@ -17,7 +17,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.12.1/ui-bootstrap-tpls.min.js"></script>
     <!-- Local -->
     <link rel="stylesheet" type="text/css" href="css/style.css">
-    <script src="js/app.js"></script>
+    <script src="js/contest.js"></script>
     <!-- Title -->
     <link rel="shortcut icon" type="image/x-icon" href="/images/cubeLogo.png"/>
     <title>NU Cubing - Contest</title>
@@ -50,9 +50,9 @@
 </div>
 <div class="container">
     <div class="page-header">
-        <h1>Contest</h1>
+        <h1>{{event}} Contest</h1>
     </div>
-    <div class="row">
+    <div class="row" ng-show="showHome">
         <div class="col-md-3 col-sm-6" ng-repeat="event in events">
             <div class="panel panel-default">
                 <div class="panel-heading centered">
@@ -68,39 +68,38 @@
             </div>
         </div>
     </div>
-</div>
-<script type="text/ng-template" id="manualEntry.html">
-    <div class="modal-header">
-        <h4 class="modal-title" id="modalTitle">{{event.name}}</h4>
-    </div>
-    <div class="modal-body">
-        <form class="form-horizontal" ng-repeat="solve in solves">
-            <div class="form-group">
-                <label for="solve1" class="col-sm-2 control-label">Scramble</label>
-                <div class="col-sm-10">
-                    <pre>{{solve.scramble}}</pre>
-                </div>
-                <label for="solve1" class="col-sm-2 control-label">Result</label>
-                <div class="col-sm-3">
-                    <input type="text" class="form-control" id="solve1" maxlength="10" ng-model="solve.result">
-                </div>
-                <div class="col-sm-3">
-                    <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-success" ng-click="solve.penalty = ''"><span class="glyphicon glyphicon-ok"></span></button>
-                        <button type="button" class="btn btn-warning" ng-click="solve.penalty = '(+2)'"><span class="glyphicon glyphicon-plus"></span></button>
-                        <button type="button" class="btn btn-danger" ng-click="solve.penalty = '(DNF)'"><span class="glyphicon glyphicon-remove"></span></button>
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                    <pre>{{solve.result}} {{solve.penalty}}</pre>
+    <form class="form-horizontal" ng-repeat="solve in solves" ng-show="showManualEntry">
+        <div class="form-group">
+            <label for="solve1" class="col-sm-2 control-label">Scramble</label>
+            <div class="col-sm-10">
+                <pre>{{solve.scramble}}</pre>
+            </div>
+            <label for="solve1" class="col-sm-2 control-label">Result</label>
+            <div class="col-sm-3">
+                <input type="text" class="form-control" id="solve1" maxlength="10" ng-model="solve.result">
+            </div>
+            <div class="col-sm-3">
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-success" ng-click="solve.penalty = ''"><span class="glyphicon glyphicon-ok"></span></button>
+                    <button type="button" class="btn btn-warning" ng-click="solve.penalty = '(+2)'"><span class="glyphicon glyphicon-plus"></span></button>
+                    <button type="button" class="btn btn-danger" ng-click="solve.penalty = '(DNF)'"><span class="glyphicon glyphicon-remove"></span></button>
                 </div>
             </div>
-        </form>
+            <div class="col-sm-4">
+                <pre>{{solve.result}} {{solve.penalty}}</pre>
+            </div>
+        </div>
+    </form>
+    <div class="row" ng-show="showTimer">
+        <div class="jumbotron">
+            <h3>Timer</h3>
+        </div>
     </div>
-    <div class="modal-footer">
-        <button class="btn btn-default" ng-click="cancel()">Cancel</button>
-        <button class="btn btn-success" ng-click="ok()">OK</button>
+    <div class="row" ng-show="showManualEntry || showTimer">
+        <hr/>
+        <button class="btn btn-warning pull-left" ng-click="cancel()">Cancel</button>
+        <button class="btn btn-success pull-right" ng-click="submit()">Submit</button>
     </div>
-</script>
+</div>
 </body>
 </html>
