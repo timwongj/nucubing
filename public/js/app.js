@@ -129,11 +129,26 @@ app.controller('manualEntryController', function($scope, $http, $modal, $modalIn
         $scope.solves[i].penalty = '';
     }
 
-    $scope.solves[0].scramble = "B' R B' D2 F2 D2 L' R' B' R2 U2 L2 B' F2 U2 B' L2 F' R2 B2";
-    $scope.solves[1].scramble = "R2 B' F2 R' L B2 D U' B' L2 F B' U' R2 F B R2 D2 L2 F'";
-    $scope.solves[2].scramble = "U2 R2 F D2 R' F B2 R B' F2 R U2 F2 R2 L2 F2 D' R B R";
-    $scope.solves[3].scramble = "L' F2 B' R' L2 F B' D R2 U' L R F U L' R2 D2 B' D F2";
-    $scope.solves[4].scramble = "D' B L R2 U2 L B R' B R D' R U2 L2 R' D L2 D F D";
+    $scope.eventId = 'x3Cube';
+    if (event.name == "Rubik's Cube")
+        $scope.eventId = 'x3Cube';
+    if (event.name == "4x4 Cube")
+        $scope.eventId = 'x4Cube';
+    if (event.name == "5x5 Cube")
+        $scope.eventId = 'x5Cube';
+    if (event.name == "2x2 Cube")
+        $scope.eventId = 'x2Cube';
+    if (event.name == "3x3 Blindfolded")
+        $scope.eventId = 'x3BLD';
+    if (event.name == "3x3 One-Handed")
+        $scope.eventId = 'x3OH';
+    if (event.name == "Pyraminx")
+        $scope.eventId = 'pyra';
+
+    $http.get('/contest/' + week + '/' + $scope.eventId + '/scrambles').success(function(response) {
+        for (var i = 0; i < 5; i++)
+            $scope.solves[i].scramble = response[i];
+    });
 
     $scope.ok = function () {
 
