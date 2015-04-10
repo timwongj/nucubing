@@ -224,7 +224,7 @@ app.get('/contest/:week/:event/scrambles', function(req, res) {
     for (var i = 0; i < contest[weekIndex].events.length; i++)
         if (event == contest[weekIndex].events[i].name)
             eventIndex = i;
-    for (var i = 0; i < 5; i++)
+    for (var i = 0; i < contest[weekIndex].events[eventIndex].numSolves; i++)
         scrambles[i] = contest[weekIndex].events[eventIndex].solves[i].scramble;
     res.json(scrambles);
 });

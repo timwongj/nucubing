@@ -123,12 +123,6 @@ app.controller('manualEntryController', function($scope, $http, $modal, $modalIn
 
     $scope.solves = [];
 
-    for (var i = 0; i < 5; i++) {
-        $scope.solves[i] = {};
-        $scope.solves[i].result = '';
-        $scope.solves[i].penalty = '';
-    }
-
     $scope.eventId = 'x3Cube';
     if (event.name == "Rubik's Cube")
         $scope.eventId = 'x3Cube';
@@ -146,8 +140,15 @@ app.controller('manualEntryController', function($scope, $http, $modal, $modalIn
         $scope.eventId = 'pyra';
 
     $http.get('/contest/' + week + '/' + $scope.eventId + '/scrambles').success(function(response) {
-        for (var i = 0; i < 5; i++)
+        for (var i = 0; i < response.length; i++)
+        {
+            $scope.solves[i] = {};
+            $scope.solves[i].result = '';
+            $scope.solves[i].penalty = '';
             $scope.solves[i].scramble = response[i];
+        }
+
+
     });
 
     $scope.ok = function () {
