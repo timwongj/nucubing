@@ -105,6 +105,10 @@ app.get('/links', function(req, res) {
     res.sendfile(__dirname + '/templates/links.html');
 });
 
+app.get('/privacy_policy', function(req, res) {
+    res.send('Privacy Policy');
+});
+
 // if user wants to log out, then log out, otherwise redirect them to the login page
 app.get('/auth', function(req, res) {
     if (req.user) {
