@@ -31,7 +31,7 @@ passport.deserializeUser(function(user, done) {
 });
 
 // connect to mongoDB
-var connectionString = process.env.OPENSHIFT_MONGODB_DB_URL || 'mongodb://localhost/auth';
+var connectionString = process.env.OPENSHIFT_MONGODB_DB_URL || 'mongodb://localhost/nucubing';
 mongoose.connect(connectionString);
 
 // define Schemas
@@ -39,7 +39,7 @@ var Schema = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
 
 var User = mongoose.model('User', new Schema ({
-    id: ObjectId,
+    id:ObjectId,
     facebook_id:String,
     firstName: String,
     lastName: String,
@@ -49,20 +49,12 @@ var User = mongoose.model('User', new Schema ({
 }));
 
 var Result = mongoose.model('Result', new Schema ({
+    id:ObjectId,
+    week:String,
+    event:String,
     email:String,
     times:[String],
     penalties:[String]
-}));
-
-var WeeklyResults = mongoose.model('WeeklyResults', new Schema ({
-    week:String,
-    x3:[Result],
-    x4:[Result],
-    x5:[Result],
-    x2:[Result],
-    x3BLD:[Result],
-    x3OH:[Result],
-    pyra:[Result]
 }));
 
 // facebook login
@@ -187,7 +179,6 @@ for (var i = 0; i < contest[0].numEvents; i++) {
         contest[0].events[i].solves[j] = {};
 }
 
-
 // Rubik's Cube Scrambles
 contest[0].events[0].solves[0].scramble = "L' R' B2 L U2 R' B2 L B2 R' F' D' B2 F2 L' B F2 D' U F'";
 contest[0].events[0].solves[1].scramble = "D' R2 U2 R' B R' L U2 B' D' L2 U2 F2 L2 B' D2 L2 F' D2 F";
@@ -235,6 +226,11 @@ contest[0].events[6].solves[2].scramble = "R U' R' L B L R' B U' R' L' u l";
 contest[0].events[6].solves[3].scramble = "U' B' R' L B' R' B U' R' B U u' l r' b";
 contest[0].events[6].solves[4].scramble = "R' L U L R U L' R U L U' u r' b";
 
+// get current week
+app.get('/contest/currentWeek', function(req, res) {
+    res.send(contest[0].week);
+});
+
 // get scrambles
 app.get('/contest/:week/:event/scrambles', function(req, res) {
     var week = req.params['week'];
@@ -250,36 +246,40 @@ app.get('/contest/:week/:event/scrambles', function(req, res) {
             eventIndex = i;
     for (var i = 0; i < contest[weekIndex].events[eventIndex].numSolves; i++)
         scrambles[i] = contest[weekIndex].events[eventIndex].solves[i].scramble;
-
     res.json(scrambles);
 });
 
 app.post('/contest/:week/:event', function(req, res) {
-    console.log('Week: ' + req.params['week']);
-    console.log('Event: ' + req.params['event']);
-    console.log(req.user);
-    console.log(req.body);
-
-    WeeklyResults.findOne({'week':req.params['week']}, function(err, weeklyResults) {
+    var result = new Result();
+    result.week = req.params['week'];
+    result.event = req.params['event'];
+    result.email = req.user.email;
+    var numSolves = 5;
+    if (result.event == 'x3BLD')
+        numSolves = 3;
+    for (var i = 0; i < numSolves; i++) {
+        result.times[i] = req.body[i].result;
+        result.penalties[i] = req.body[i].penalty;
+    }
+    Result.remove({'week':result.week, 'email':result.email, 'event':result.event}, function(err, result) {
         if (err)
             throw err;
-        else if (weeklyResults) {
-            var result = new Result();
-            result.email = req.user.email;
-            for (var i = 0; i < 5; i++) {
-                result.times[i] = req.body[i].result;
-                result.penalty[i] = req.body[i].penalty;
-            }
-            weeklyResults.x3.push(result);
-            weeklyResults.save(function(err) {
-                if (err)
-                    throw err;
-            });
-        }
     });
-
-    var result = '6.25';
+    result.save(function(err) {
+        if (err)
+            throw err;
+    });
     res.send(result);
+});
+
+app.get('/contest/results', function(req, res) {
+    var results = [];
+    Result.find({'week':contest[0].week, 'email':req.user.email}, function(err, result) {
+        if (err)
+            throw err;
+        else
+            res.json(result);
+    });
 });
 
 var ip = process.env.OPENSHIFT_NODEJS_IP || "127.0.0.1";
