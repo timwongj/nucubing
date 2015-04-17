@@ -5,6 +5,8 @@ var multer = require('multer');
 var mongoose = require('mongoose');
 var passport = require('passport'),
     FacebookStrategy = require('passport-facebook').Strategy;
+var fs = require('fs'),
+    byline = require('byline');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -32,7 +34,7 @@ passport.deserializeUser(function(user, done) {
 var connectionString = process.env.OPENSHIFT_MONGODB_DB_URL || 'mongodb://localhost/auth';
 mongoose.connect(connectionString);
 
-// define User Schema
+// define Schemas
 var Schema = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
 
@@ -44,6 +46,23 @@ var User = mongoose.model('User', new Schema ({
     email:String,
     picture:String,
     provider:String
+}));
+
+var Result = mongoose.model('Result', new Schema ({
+    email:String,
+    times:[String],
+    penalties:[String]
+}));
+
+var WeeklyResults = mongoose.model('WeeklyResults', new Schema ({
+    week:String,
+    x3:[Result],
+    x4:[Result],
+    x5:[Result],
+    x2:[Result],
+    x3BLD:[Result],
+    x3OH:[Result],
+    pyra:[Result]
 }));
 
 // facebook login
@@ -168,6 +187,7 @@ for (var i = 0; i < contest[0].numEvents; i++) {
         contest[0].events[i].solves[j] = {};
 }
 
+
 // Rubik's Cube Scrambles
 contest[0].events[0].solves[0].scramble = "L' R' B2 L U2 R' B2 L B2 R' F' D' B2 F2 L' B F2 D' U F'";
 contest[0].events[0].solves[1].scramble = "D' R2 U2 R' B R' L U2 B' D' L2 U2 F2 L2 B' D2 L2 F' D2 F";
@@ -230,6 +250,7 @@ app.get('/contest/:week/:event/scrambles', function(req, res) {
             eventIndex = i;
     for (var i = 0; i < contest[weekIndex].events[eventIndex].numSolves; i++)
         scrambles[i] = contest[weekIndex].events[eventIndex].solves[i].scramble;
+
     res.json(scrambles);
 });
 
@@ -238,6 +259,25 @@ app.post('/contest/:week/:event', function(req, res) {
     console.log('Event: ' + req.params['event']);
     console.log(req.user);
     console.log(req.body);
+
+    WeeklyResults.findOne({'week':req.params['week']}, function(err, weeklyResults) {
+        if (err)
+            throw err;
+        else if (weeklyResults) {
+            var result = new Result();
+            result.email = req.user.email;
+            for (var i = 0; i < 5; i++) {
+                result.times[i] = req.body[i].result;
+                result.penalty[i] = req.body[i].penalty;
+            }
+            weeklyResults.x3.push(result);
+            weeklyResults.save(function(err) {
+                if (err)
+                    throw err;
+            });
+        }
+    });
+
     var result = '6.25';
     res.send(result);
 });

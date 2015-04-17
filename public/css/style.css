@@ -38,3 +38,8 @@
     margin-left:auto;
     margin-right:auto;
 }
+
+.result-row {
+    margin-top:5px;
+    margin-bottom:5px;
+}

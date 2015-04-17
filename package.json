@@ -25,9 +25,11 @@
   "dependencies": {
     "bcryptjs": "^2.1.0",
     "body-parser": "^1.12.2",
+    "byline": "^4.2.1",
     "client-sessions": "^0.7.0",
     "csurf": "^1.8.0",
     "express": "^3.4.8",
+    "fs": "0.0.2",
     "mongoose": "^4.0.1",
     "multer": "^0.1.8",
     "passport": "^0.2.1",
