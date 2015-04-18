@@ -287,7 +287,7 @@ app.get('/results/:event', function(req, res) {
             throw err;
         else
             res.json(result);
-    })
+    });
 });
 
 var ip = process.env.OPENSHIFT_NODEJS_IP || "127.0.0.1";
