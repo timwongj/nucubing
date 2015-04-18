@@ -20,27 +20,29 @@ app.controller('resultsController', function($scope, $http) {
     $scope.events[5] = {id:'x3OH', name:"3x3 One-Handed"};
     $scope.events[6] = {id:'pyra', name:"Pyraminx"};
 
+    $scope.eventNames = ['x3Cube', 'x4Cube', 'x5Cube', 'x2Cube', 'x3BLD', 'x3OH', 'pyra'];
+
     for (var i = 0; i < $scope.events.length; i++)
         $scope.events[i].results = [];
-    var completedRequests = 0;
+
     for (var i = 0; i < $scope.events.length; i++) {
         $http.get('/results/' + $scope.events[i].id).success(function(response) {
+            var index = $scope.eventNames.indexOf(response[0].event);
             for (var j = 0; j < response.length; j++) {
-                $scope.events[completedRequests].results[j] = {};
-                $scope.events[completedRequests].results[j].name = response[j].firstName + ' ' + response[j].lastName;
+                $scope.events[index].results[j] = {};
+                $scope.events[index].results[j].name = response[j].firstName + ' ' + response[j].lastName;
                 if (response[j].times.length == 5)
-                    $scope.events[completedRequests].results[j].result = calculateAverage(response[j].times, response[j].penalties);
+                    $scope.events[index].results[j].result = calculateAverage(response[j].times, response[j].penalties);
                 if (response[j].times.length == 3)
-                    $scope.events[completedRequests].results[j].result = calculateMean(response[j].times, response[j].penalties);
+                    $scope.events[index].results[j].result = calculateMean(response[j].times, response[j].penalties);
                 var details = '';
                 for (var k = 0; k < response[j].times.length; k++) {
                     details += response[j].times[k] + response[j].penalties[k];
                     if (k != response[j].times.length - 1)
                         details += ', ';
                 }
-                $scope.events[completedRequests].results[j].details = details;
+                $scope.events[index].results[j].details = details;
             }
-            completedRequests++;
         });
     }
 
