@@ -53,6 +53,8 @@ var Result = mongoose.model('Result', new Schema ({
     week:String,
     event:String,
     email:String,
+    firstName: String,
+    lastName: String,
     times:[String],
     penalties:[String]
 }));
@@ -254,6 +256,8 @@ app.post('/contest/:week/:event', function(req, res) {
     result.week = req.params['week'];
     result.event = req.params['event'];
     result.email = req.user.email;
+    result.firstName = req.user.firstName;
+    result.lastName = req.user.lastName;
     var numSolves = 5;
     if (result.event == 'x3BLD')
         numSolves = 3;
@@ -273,13 +277,21 @@ app.post('/contest/:week/:event', function(req, res) {
 });
 
 app.get('/contest/results', function(req, res) {
-    var results = [];
     Result.find({'week':contest[0].week, 'email':req.user.email}, function(err, result) {
         if (err)
             throw err;
         else
             res.json(result);
     });
+});
+
+app.get('/results/:event', function(req, res) {
+    Result.find({'week':contest[0].week, 'event':req.params['event']}, function(err, result) {
+        if (err)
+            throw err;
+        else
+            res.json(result);
+    })
 });
 
 var ip = process.env.OPENSHIFT_NODEJS_IP || "127.0.0.1";

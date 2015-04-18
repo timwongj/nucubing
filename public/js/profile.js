@@ -21,23 +21,144 @@ app.controller('profileController', function($scope, $http) {
     });
 
     $scope.personalResults = [];
-    $scope.personalResults[0] = {type:'Unofficial Personal Records'};
-    $scope.personalResults[1] = {type:'Official Personal Records'};
-    $scope.personalResults[2] = {type:'Contest Personal Records'};
-    $scope.personalResults[3] = {type:'Current Week Results'};
+    $scope.personalResults[0] = {type:'Current Week Results'};
+    $scope.personalResults[1] = {type:'Contest Personal Records'};
+    $scope.personalResults[2] = {type:'Unofficial Personal Records'};
+    $scope.personalResults[3] = {type:'Official Personal Records'};
 
-    for (var i = 0; i < 3; i++)
+    for (var i = 0; i < 4; i++)
         $scope.personalResults[i].results = [];
 
-    $scope.personalResults[0].results[0] = {event:"Rubik's Cube", single:'5.79', average:'8.50'};
-    $scope.personalResults[0].results[1] = {event:"4x4 Cube", single:'27.34', average:'32.51'};
-    $scope.personalResults[0].results[2] = {event:"5x5 Cube", single:'1:08.65', average:'1:15.03'};
-
-    $scope.personalResults[1].results[0] = {event:"Rubik's Cube", single:'8.48', average:'10.40'};
-    $scope.personalResults[1].results[1] = {event:"4x4 Cube", single:'33.92', average:'38.80'};
-    $scope.personalResults[1].results[2] = {event:"5x5 Cube", single:'1:11.38', average:'1:23.47'};
+    $http.get('/contest/results').success(function(response) {
+        if (response != null) {
+            for (var i = 0; i < response.length; i++) {
+                $scope.personalResults[0].results[i] = {};
+                $scope.personalResults[0].results[i].single = calculateSingle(response[i].times, response[i].penalties);
+                if (response[i].times.length == 5)
+                    $scope.personalResults[0].results[i].average = calculateAverage(response[i].times, response[i].penalties);
+                else if (response[i].times.length == 3)
+                    $scope.personalResults[0].results[i].average = calculateMean(response[i].times, response[i].penalties);
+                if (response[i].event == 'x3Cube')
+                    $scope.personalResults[0].results[i].event = "Rubik's Cube";
+                if (response[i].event == 'x4Cube')
+                    $scope.personalResults[0].results[i].event = "4x4 Cube";
+                if (response[i].event == 'x5Cube')
+                    $scope.personalResults[0].results[i].event = "5x5 Cube";
+                if (response[i].event == 'x2Cube')
+                    $scope.personalResults[0].results[i].event = "2x2 Cube";
+                if (response[i].event == 'x3BLD')
+                    $scope.personalResults[0].results[i].event = "3x3 Blindfolded";
+                if (response[i].event == 'x3OH')
+                    $scope.personalResults[0].results[i].event = "3x3 One-Handed";
+                if (response[i].event == 'pyra')
+                    $scope.personalResults[0].results[i].event = "Pyraminx";
+            }
+        }
+    });
 
 });
+
+function calculateSingle(times, penalties) {
+    var single = 'DNF';
+    var formattedTimes = formatTimes(times, penalties);
+    for (var i = 0; i < formattedTimes.length; i++) {
+        if (formattedTimes[i] != 'DNF') {
+            if (single == 'DNF')
+                single = formattedTimes[i];
+            if (parseFloat(formattedTimes[i]) < single)
+                single = formattedTimes[i];
+        }
+    }
+    if (single == 'DNF')
+        return single
+    else {
+        return reformatTime(single);
+    }
+
+}
+
+function calculateAverage(times, penalties) {
+    var formattedTimes = formatTimes(times, penalties);
+    var DNFCount = 0;
+    for (var i = 0; i < formattedTimes.length; i++) {
+        if (formattedTimes[i] == 'DNF')
+            DNFCount++;
+    }
+    if (DNFCount > 1)
+        return 'DNF';
+    if (formattedTimes[0] != 'DNF') {
+        var minIndex = 0, maxIndex = 0;
+        var minValue = parseFloat(formattedTimes[0]), maxValue = parseFloat(formattedTimes[0]);
+    } else {
+        var minIndex = 1, maxIndex = 1;
+        var minValue = parseFloat(formattedTimes[1]), maxValue = parseFloat(formattedTimes[1]);
+    }
+    for (var i = 0; i < formattedTimes.length; i++) {
+        if (formattedTimes[i] == 'DNF') {
+            maxValue = formattedTimes[i];
+            maxIndex = i;
+            break;
+        }
+        if (parseFloat(formattedTimes[i]) > maxValue) {
+            maxValue = parseFloat(formattedTimes[i]);
+            maxIndex = i;
+        }
+    }
+    for (var i = 0; i < formattedTimes.length; i++) {
+        if ((i != maxIndex) && (parseFloat(formattedTimes[i]) < minValue)) {
+            minValue = parseFloat(formattedTimes[i]);
+            minIndex = i;
+        }
+    }
+    var sum = 0;
+    for (var i = 0; i < formattedTimes.length; i++)
+        if ((i != minIndex) && (i != maxIndex))
+            sum += parseFloat(formattedTimes[i]);
+    var average = sum / (formattedTimes.length - 2);
+    return reformatTime(average);
+}
+
+function calculateMean(times, penalties) {
+    var formattedTimes = formatTimes(times, penalties);
+    var DNFCount = 0;
+    for (var i = 0; i < formattedTimes.length; i++) {
+        if (formattedTimes[i] == 'DNF')
+            DNFCount++;
+    }
+    if (DNFCount > 0)
+        return 'DNF';
+    var sum = 0;
+    for (var i = 0; i < formattedTimes.length; i++)
+        sum += parseFloat(formattedTimes[i]);
+    var mean = sum / formattedTimes.length;
+    return reformatTime(mean);
+}
+
+function formatTimes(times, penalties) {
+    var formattedTimes = [];
+    for (var i = 0; i < times.length; i++) {
+        var res = times[i].split(':');
+        if (res.length > 1)
+            formattedTimes[i] = (parseFloat(res[0]) * 60) + parseFloat(res[1]);
+        if ((penalties[i] == '(DNF)') || (times[i] == ''))
+            formattedTimes[i] = 'DNF';
+        else if (penalties[i] == '(+2)')
+            formattedTimes[i] = parseFloat(times[i]) + 2;
+        else
+            formattedTimes[i] = times[i];
+    }
+    return formattedTimes;
+}
+
+function reformatTime(time) {
+    if (parseFloat(time) <  60)
+        return parseFloat(time).toFixed(2);
+    else {
+        var min = (parseFloat(time) / 60).toFixed(0);
+        var sec = (parseFloat(time) % 60).toFixed(2);
+        return min + ':' + sec;
+    }
+}
 
 window.fbAsyncInit = function() {
     FB.init({

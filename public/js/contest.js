@@ -16,17 +16,16 @@ app.controller('contestController', function($scope, $http) {
     $scope.showTimer = 0;
 
     $scope.events = [];
-    $scope.events[0] = {name:"Rubik's Cube", result:'Not Completed'};
-    $scope.events[1] = {name:"4x4 Cube", result:'Not Completed'};
-    $scope.events[2] = {name:"5x5 Cube", result:'Not Completed'};
-    $scope.events[3] = {name:"2x2 Cube", result:'Not Completed'};
-    $scope.events[4] = {name:"3x3 Blindfolded", result:'Not Completed'};
-    $scope.events[5] = {name:"3x3 One-Handed", result:'Not Completed'};
-    $scope.events[6] = {name:"Pyraminx", result:'Not Completed'};
+    $scope.events[0] = {name:"Rubik's Cube", result:' '};
+    $scope.events[1] = {name:"4x4 Cube", result:' '};
+    $scope.events[2] = {name:"5x5 Cube", result:' '};
+    $scope.events[3] = {name:"2x2 Cube", result:' '};
+    $scope.events[4] = {name:"3x3 Blindfolded", result:' '};
+    $scope.events[5] = {name:"3x3 One-Handed", result:' '};
+    $scope.events[6] = {name:"Pyraminx", result:' '};
 
     $http.get('/contest/results').success(function(response) {
         if (response != null) {
-            console.log(response);
             for (var i = 0; i < response.length; i++) {
                 var result;
                 if (response[i].times.length == 5)
@@ -48,6 +47,10 @@ app.controller('contestController', function($scope, $http) {
                 if (response[i].event == 'pyra')
                     $scope.events[6].result = result;
             }
+        }
+        for (var i = 0; i < $scope.events.length; i++) {
+            if ($scope.events[i].result == ' ')
+                $scope.events[i].result = 'Not Completed';
         }
     });
 
@@ -199,7 +202,7 @@ function formatTimes(times, penalties) {
     for (var i = 0; i < times.length; i++) {
         var res = times[i].split(':');
         if (res.length > 1)
-            times[i] = (parseFloat(res[0]) * 60) + parseFloat(res[1]);
+            formattedTimes[i] = (parseFloat(res[0]) * 60) + parseFloat(res[1]);
         if ((penalties[i] == '(DNF)') || (times[i] == ''))
             formattedTimes[i] = 'DNF';
         else if (penalties[i] == '(+2)')
@@ -212,7 +215,7 @@ function formatTimes(times, penalties) {
 
 function reformatTime(time) {
     if (parseFloat(time) <  60)
-        return time.toFixed(2);
+        return parseFloat(time).toFixed(2);
     else {
         var min = (parseFloat(time) / 60).toFixed(0);
         var sec = (parseFloat(time) % 60).toFixed(2);
