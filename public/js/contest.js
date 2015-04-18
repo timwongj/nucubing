@@ -23,7 +23,7 @@ app.controller('contestController', function($scope, $http) {
     $scope.events[5] = {name:"3x3 One-Handed", result:' '};
     $scope.events[6] = {name:"Pyraminx", result:' '};
 
-    $http.get('/contest/results').success(function(response) {
+    $http.get('/contest/results/current').success(function(response) {
         if (response != null) {
             for (var i = 0; i < response.length; i++) {
                 var result;

@@ -30,7 +30,7 @@ app.controller('profileController', function($scope, $http) {
     for (var i = 0; i < 4; i++)
         $scope.personalResults[i].results = [];
 
-    $http.get('/contest/results').success(function(response) {
+    $http.get('/contest/results/current').success(function(response) {
         if (response != null) {
             for (var i = 0; i < response.length; i++) {
                 $scope.personalResults[0].results[i] = {};
@@ -57,7 +57,66 @@ app.controller('profileController', function($scope, $http) {
         }
     });
 
+    $http.get('/contest/results/all').success(function(response) {
+        if (response != null) {
+            var events = [];
+            for (var i = 0; i < response.length; i++) {
+                if (events.indexOf(response[i].event) == -1)
+                    events.push(response[i].event);
+            }
+            for (var i = 0; i < events.length; i++) {
+                $scope.personalResults[1].results[i] = {};
+                if (events[i] == 'x3Cube')
+                    $scope.personalResults[1].results[i].event = "Rubik's Cube";
+                if (events[i] == 'x4Cube')
+                    $scope.personalResults[1].results[i].event = "4x4 Cube";
+                if (events[i] == 'x5Cube')
+                    $scope.personalResults[1].results[i].event = "5x5 Cube";
+                if (events[i] == 'x2Cube')
+                    $scope.personalResults[1].results[i].event = "2x2 Cube";
+                if (events[i] == 'x3BLD')
+                    $scope.personalResults[1].results[i].event = "3x3 Blindfolded";
+                if (events[i] == 'x3OH')
+                    $scope.personalResults[1].results[i].event = "3x3 One-Handed";
+                if (events[i] == 'pyra')
+                    $scope.personalResults[1].results[i].event = "Pyraminx";
+                var singles = [];
+                var averages = [];
+                for (var j = 0; j < response.length; j++) {
+                    if (response[j].event == events[i]) {
+                        singles.push(calculateSingle(response[j].times, response[j].penalties));
+                        if (response[j].times.length == 5)
+                            averages.push(calculateAverage(response[j].times, response[j].penalties));
+                        else if (response[j].times.length == 3)
+                            averages.push(calculateAverage(response[j].times, response[j].penalties));
+                    }
+                }
+                $scope.personalResults[1].results[i].single = findBest(singles);
+                $scope.personalResults[1].results[i].average = findBest(averages);
+            }
+        }
+    });
+
 });
+
+function findBest(results) {
+    var best = 'DNF';
+    var unsplitTimes = [];
+    for (var i = 0; i < results.length; i++) {
+        var res = results[i].split(':');
+        if (res.length > 1)
+            unsplitTimes[i] = (parseFloat(res[0]) * 60) + parseFloat(res[1]);
+        else
+            unsplitTimes[i] = parseFloat(res[0]);
+    }
+    for (var i = 0; i < results.length; i++) {
+        if ((best == 'DNF') && (unsplitTimes[i] != 'DNF'))
+            best = unsplitTimes[i];
+        if (parseFloat(unsplitTimes[i]) < best)
+            best = unsplitTimes[i];
+    }
+    return reformatTime(best);
+}
 
 function calculateSingle(times, penalties) {
     var single = 'DNF';
