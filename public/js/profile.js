@@ -221,7 +221,10 @@ function reformatTime(time) {
     else {
         var min = Math.floor(parseFloat(time) / 60);
         var sec = (parseFloat(time) % 60).toFixed(2);
-        return min + ':' + sec;
+        if (sec < 10)
+            return min + ':0' + sec;
+        else
+            return min + ':' + sec;
     }
 }
 

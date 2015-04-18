@@ -97,7 +97,7 @@ app.controller('contestController', function($scope, $http) {
 
     $scope.submit = function() {
         $http.post('/contest/' + $scope.week + '/' + $scope.eventId, $scope.solves).success(function (response) {
-            $http.get('/contest/results').success(function(response) {
+            $http.get('/contest/results/current').success(function(response) {
                 if (response != null) {
                     for (var i = 0; i < response.length; i++) {
                         var result;
@@ -213,7 +213,10 @@ function reformatTime(time) {
     else {
         var min = Math.floor(parseFloat(time) / 60);
         var sec = (parseFloat(time) % 60).toFixed(2);
-        return min + ':' + sec;
+        if (sec < 10)
+            return min + ':0' + sec;
+        else
+            return min + ':' + sec;
     }
 }
 
