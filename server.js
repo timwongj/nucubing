@@ -129,7 +129,7 @@ app.get('/auth', function(req, res) {
 
 app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', 'public_profile'] }));
 
-app.get('/auth/facebook/callback', passport.authenticate('facebook', { successRedirect: '/', failureRedirect: '/auth' }));
+app.get('/auth/facebook/callback', passport.authenticate('facebook', { successRedirect: '/profile', failureRedirect: '/auth' }));
 
 app.get('/authStatus', function(req, res) {
     if (req.user)
