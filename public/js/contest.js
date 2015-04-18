@@ -208,7 +208,7 @@ function formatTimes(times, penalties) {
 }
 
 function reformatTime(time) {
-    if (time == null)
+    if (isNaN(time))
         return 'DNF';
     if (parseFloat(time) <  60)
         return parseFloat(time).toFixed(2);
