@@ -48,3 +48,13 @@
     margin-top:10px;
     margin-bottom:10px;
 }
+
+.solve-input {
+    -webkit-transition:all linear 0.5s;
+    transition:all linear 0.5s;
+    background: transparent;
+}
+.solve-input.ng-invalid {
+    color:white;
+    background:lightcoral;
+}
