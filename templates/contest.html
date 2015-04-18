@@ -67,13 +67,13 @@
             </div>
         </div>
     </div>
-    <form class="form-horizontal" ng-repeat="solve in solves" ng-show="showManualEntry">
-        <div class="form-group">
+    <form name="contestForm" class="form-horizontal" ng-show="showManualEntry" ng-submit="contestForm.$valid && submit()">
+        <div class="form-group" ng-repeat="solve in solves">
             <div class="col-sm-12">
                 <pre>{{solve.scramble}}</pre>
             </div>
             <div class="col-sm-3 col-sm-offset-3 result-row">
-                <input type="text" class="form-control solve-input" maxlength="9" ng-model="solve.result" ng-pattern="/^(([0-5]?[0-9]:)?[0-5])?[0-9].[0-9][0-9][0-9]?$/">
+                <input type="text" class="form-control solve-input" maxlength="9" ng-model="solve.result" required ng-pattern="/^(([0-5]?[0-9]:)?[0-5])?[0-9].[0-9][0-9][0-9]?$/">
             </div>
             <div class="col-sm-3 col-xs-6 result-row">
                 <div class="btn-group" role="group">
@@ -86,12 +86,12 @@
                 <pre>{{solve.result}} {{solve.penalty}}</pre>
             </div>
         </div>
+        <div class="row" ng-show="showManualEntry">
+            <hr/>
+            <button class="btn btn-warning pull-left" ng-click="cancel()">Cancel</button>
+            <button class="btn btn-success pull-right" type="submit">Submit</button>
+        </div>
     </form>
-    <div class="row" ng-show="showManualEntry">
-        <hr/>
-        <button class="btn btn-warning pull-left" ng-click="cancel()">Cancel</button>
-        <button class="btn btn-success pull-right" ng-click="submit()">Submit</button>
-    </div>
     <br>
 </div>
 </body>
