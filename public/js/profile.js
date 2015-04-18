@@ -24,10 +24,10 @@ app.controller('profileController', function($scope, $http) {
     $scope.personalResults = [];
     $scope.personalResults[0] = {type:'Current Week Results'};
     $scope.personalResults[1] = {type:'Contest Personal Records'};
-    $scope.personalResults[2] = {type:'Unofficial Personal Records'};
-    $scope.personalResults[3] = {type:'Official Personal Records'};
+    //$scope.personalResults[2] = {type:'Unofficial Personal Records'};
+    //$scope.personalResults[3] = {type:'Official Personal Records'};
 
-    for (var i = 0; i < 4; i++)
+    for (var i = 0; i < $scope.personalResults.length; i++)
         $scope.personalResults[i].results = [];
 
     $http.get('/contest/results/current').success(function(response) {
@@ -216,6 +216,8 @@ function formatTimes(times, penalties) {
 }
 
 function reformatTime(time) {
+    if (time == null)
+        return 'DNF';
     if (parseFloat(time) <  60)
         return parseFloat(time).toFixed(2);
     else {

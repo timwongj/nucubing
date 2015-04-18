@@ -132,6 +132,8 @@ function formatTimes(times, penalties) {
 }
 
 function reformatTime(time) {
+    if (time == null)
+        return 'DNF';
     if (parseFloat(time) <  60)
         return parseFloat(time).toFixed(2);
     else {
