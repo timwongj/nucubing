@@ -44,7 +44,7 @@ var User = mongoose.model('User', new Schema ({
     firstName: String,
     lastName: String,
     email:String,
-    picture:String,
+    wcaID:String,
     provider:String
 }));
 

@@ -17,6 +17,7 @@ app.controller('profileController', function($scope, $http) {
         $scope.user.firstName = response.firstName;
         $scope.user.lastName = response.lastName;
         $scope.user.email = response.email;
+        $scope.user.wcaID = response.wcaID;
         $scope.user.id = response.facebook_id;
     });
 
@@ -136,16 +137,19 @@ function calculateMean(times, penalties) {
 
 function formatTimes(times, penalties) {
     var formattedTimes = [];
+    var unsplitTimes = [];
     for (var i = 0; i < times.length; i++) {
         var res = times[i].split(':');
         if (res.length > 1)
-            formattedTimes[i] = (parseFloat(res[0]) * 60) + parseFloat(res[1]);
-        if ((penalties[i] == '(DNF)') || (times[i] == ''))
+            unsplitTimes[i] = (parseFloat(res[0]) * 60) + parseFloat(res[1]);
+        else
+            unsplitTimes[i] = parseFloat(res[0]);
+        if ((penalties[i] == '(DNF)') || (unsplitTimes[i] == ''))
             formattedTimes[i] = 'DNF';
         else if (penalties[i] == '(+2)')
-            formattedTimes[i] = parseFloat(times[i]) + 2;
+            formattedTimes[i] = parseFloat(unsplitTimes[i]) + 2;
         else
-            formattedTimes[i] = times[i];
+            formattedTimes[i] = unsplitTimes[i];
     }
     return formattedTimes;
 }
