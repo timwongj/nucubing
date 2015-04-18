@@ -65,7 +65,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="result in selectedEvent.results">
+            <tr ng-repeat="result in selectedEvent.results | orderBy:'result'">
                 <td>{{result.name}}</td>
                 <td>{{result.result}}</td>
                 <td>{{result.details}}</td>
