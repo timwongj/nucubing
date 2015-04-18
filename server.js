@@ -16,7 +16,7 @@ app.configure(function() {
     app.use(express.static('public'));
     app.use(express.cookieParser());
     app.use(express.bodyParser());
-    app.use(express.session({ secret: 'keyboard cat' }));
+    app.use(express.session({secret: 'dose you eben gj?'}));
     app.use(passport.initialize());
     app.use(passport.session());
     app.use(app.router);
@@ -144,6 +144,9 @@ app.get('/userInfo', function(req, res) {
     res.send(req.user);
 });
 
+// currentWeek temporarily hardcoded
+var currentWeek = '040715';
+
 // contest temporarily hardcoded
 var contest = [];
 
@@ -226,7 +229,7 @@ contest[0].events[6].solves[4].scramble = "R' L U L R U L' R U L U' u r' b";
 
 // get current week
 app.get('/contest/currentWeek', function(req, res) {
-    res.send(contest[0].week);
+    res.send(currentWeek);
 });
 
 // get scrambles
@@ -273,7 +276,7 @@ app.post('/contest/:week/:event', function(req, res) {
 });
 
 app.get('/contest/results', function(req, res) {
-    Result.find({'week':contest[0].week, 'email':req.user.email}, function(err, result) {
+    Result.find({'week':currentWeek, 'email':req.user.email}, function(err, result) {
         if (err)
             throw err;
         else
@@ -282,7 +285,7 @@ app.get('/contest/results', function(req, res) {
 });
 
 app.get('/results/:event', function(req, res) {
-    Result.find({'week':contest[0].week, 'event':req.params['event']}, function(err, result) {
+    Result.find({'week':currentWeek, 'event':req.params['event']}, function(err, result) {
         if (err)
             throw err;
         else

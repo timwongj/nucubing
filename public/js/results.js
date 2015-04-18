@@ -133,7 +133,7 @@ function reformatTime(time) {
     if (parseFloat(time) <  60)
         return parseFloat(time).toFixed(2);
     else {
-        var min = (parseFloat(time) / 60).toFixed(0);
+        var min = Math.floor(parseFloat(time) / 60);
         var sec = (parseFloat(time) % 60).toFixed(2);
         return min + ':' + sec;
     }
