@@ -143,7 +143,7 @@ app.get('/userInfo', function(req, res) {
     res.send(req.user);
 });
 
-// get current week
+// set current week
 var currentWeek = '040715';
 
 // get current week
@@ -218,8 +218,8 @@ app.get('/contest/results/all', function(req, res) {
     });
 });
 
-app.get('/results/:event', function(req, res) {
-    Result.find({'week':currentWeek, 'event':req.params['event']}, function(err, result) {
+app.get('/results/:week/:event', function(req, res) {
+    Result.find({'week':req.params['week'], 'event':req.params['event']}, function(err, result) {
         if (err)
             throw err;
         else

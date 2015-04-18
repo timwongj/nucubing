@@ -11,6 +11,8 @@ app.controller('resultsController', function($scope, $http) {
             $scope.authStatus = 'Login';
     });
 
+    $scope.weeks = ['040715', '041415', '042115', '042815'];
+
     $scope.events = [];
     $scope.events[0] = {id:'x3Cube', name:"Rubik's Cube"};
     $scope.events[1] = {id:'x4Cube', name:"4x4 Cube"};
@@ -22,39 +24,42 @@ app.controller('resultsController', function($scope, $http) {
 
     $scope.eventNames = ['x3Cube', 'x4Cube', 'x5Cube', 'x2Cube', 'x3BLD', 'x3OH', 'pyra'];
 
-    for (var i = 0; i < $scope.events.length; i++)
-        $scope.events[i].results = [];
+    $http.get('/contest/currentWeek').success(function(response) {
+        $scope.currentWeek = response;
+        for (var i = 0; i < $scope.events.length; i++)
+            $scope.events[i].results = [];
 
-    for (var i = 0; i < $scope.events.length; i++) {
-        $http.get('/results/' + $scope.events[i].id).success(function(response) {
-            var index = $scope.eventNames.indexOf(response[0].event);
-            for (var j = 0; j < response.length; j++) {
-                $scope.events[index].results[j] = {};
-                $scope.events[index].results[j].name = response[j].firstName + ' ' + response[j].lastName;
-                if (response[j].times.length == 5)
-                    $scope.events[index].results[j].result = calculateAverage(response[j].times, response[j].penalties);
-                if (response[j].times.length == 3)
-                    $scope.events[index].results[j].result = calculateMean(response[j].times, response[j].penalties);
-                var details = '';
-                for (var k = 0; k < response[j].times.length; k++) {
-                    details += response[j].times[k] + response[j].penalties[k];
-                    if (k != response[j].times.length - 1)
-                        details += ', ';
-                }
-                $scope.events[index].results[j].details = details;
-                if ($scope.events[index].results[j].result == 'DNF')
-                    $scope.events[index].results[j].raw = 'DNF';
-                else {
-                    var res = $scope.events[index].results[j].result.split(':');
-                    if (res.length > 1)
-                        $scope.events[index].results[j].raw = (parseFloat(res[0]) * 60) + parseFloat(res[1]);
-                    else
-                        $scope.events[index].results[j].raw = parseFloat(res[0]);
-                }
+        for (var i = 0; i < $scope.events.length; i++) {
+            $http.get('/results/' + $scope.currentWeek + '/' + $scope.events[i].id).success(function(response) {
+                var index = $scope.eventNames.indexOf(response[0].event);
+                for (var j = 0; j < response.length; j++) {
+                    $scope.events[index].results[j] = {};
+                    $scope.events[index].results[j].name = response[j].firstName + ' ' + response[j].lastName;
+                    if (response[j].times.length == 5)
+                        $scope.events[index].results[j].result = calculateAverage(response[j].times, response[j].penalties);
+                    if (response[j].times.length == 3)
+                        $scope.events[index].results[j].result = calculateMean(response[j].times, response[j].penalties);
+                    var details = '';
+                    for (var k = 0; k < response[j].times.length; k++) {
+                        details += response[j].times[k] + response[j].penalties[k];
+                        if (k != response[j].times.length - 1)
+                            details += ', ';
+                    }
+                    $scope.events[index].results[j].details = details;
+                    if ($scope.events[index].results[j].result == 'DNF')
+                        $scope.events[index].results[j].raw = 'DNF';
+                    else {
+                        var res = $scope.events[index].results[j].result.split(':');
+                        if (res.length > 1)
+                            $scope.events[index].results[j].raw = (parseFloat(res[0]) * 60) + parseFloat(res[1]);
+                        else
+                            $scope.events[index].results[j].raw = parseFloat(res[0]);
+                    }
 
-            }
-        });
-    }
+                }
+            });
+        }
+    });
 
     $scope.selectedEvent = $scope.events[0];
     $scope.selectEvent = function(event) {
