@@ -54,6 +54,7 @@ app.controller('profileController', function($scope, $http) {
                 if (response[i].event == 'pyra')
                     $scope.personalResults[0].results[i].event = "Pyraminx";
             }
+            sortByEvent($scope.personalResults[0].results);
         }
     });
 
@@ -94,10 +95,24 @@ app.controller('profileController', function($scope, $http) {
                 $scope.personalResults[1].results[i].single = findBest(singles);
                 $scope.personalResults[1].results[i].average = findBest(averages);
             }
+            sortByEvent($scope.personalResults[1].results);
         }
     });
 
 });
+
+function sortByEvent(results) {
+    var events = ["Rubik's Cube", "4x4 Cube", "5x5 Cube", "2x2 Cube", "3x3 Blindfolded", "3x3 One-Handed", "Pyraminx"];
+    for (var i = 0; i < results.length; i++) {
+        for (var j = i; j < results.length; j++) {
+            if (events.indexOf(results[i].event) > events.indexOf(results[j].event)) {
+                var temp = results[i];
+                results[i] = results[j];
+                results[j] = temp;
+            }
+        }
+    }
+}
 
 function findBest(results) {
     var best = 'DNF';
