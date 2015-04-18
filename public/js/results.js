@@ -42,6 +42,16 @@ app.controller('resultsController', function($scope, $http) {
                         details += ', ';
                 }
                 $scope.events[index].results[j].details = details;
+                if ($scope.events[index].results[j].result == 'DNF')
+                    $scope.events[index].results[j].raw = 'DNF';
+                else {
+                    var res = $scope.events[index].results[j].result.split(':');
+                    if (res.length > 1)
+                        $scope.events[index].results[j].raw = (parseFloat(res[0]) * 60) + parseFloat(res[1]);
+                    else
+                        $scope.events[index].results[j].raw = parseFloat(res[0]);
+                }
+
             }
         });
     }
