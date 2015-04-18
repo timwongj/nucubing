@@ -62,8 +62,7 @@
                     <h1 class="panel-title">{{event.result}}</h1>
                 </div>
                 <div class="panel-footer centered">
-                    <button class="btn btn-warning" ng-click="manualEntry(event)">Manual Entry</button>
-                    <button class="btn btn-info" ng-click="timer(event)">Timer</button>
+                    <button class="btn btn-primary" ng-click="manualEntry(event)">Manual Entry</button>
                 </div>
             </div>
         </div>
@@ -88,12 +87,7 @@
             </div>
         </div>
     </form>
-    <div class="row" ng-show="showTimer">
-        <div class="jumbotron">
-            <h3>Timer</h3>
-        </div>
-    </div>
-    <div class="row" ng-show="showManualEntry || showTimer">
+    <div class="row" ng-show="showManualEntry">
         <hr/>
         <button class="btn btn-warning pull-left" ng-click="cancel()">Cancel</button>
         <button class="btn btn-success pull-right" ng-click="submit()">Submit</button>

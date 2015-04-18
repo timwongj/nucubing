@@ -111,6 +111,8 @@ function calculateAverage(times, penalties) {
             minIndex = i;
         }
     }
+    if ((minIndex == 0) && (maxIndex == 0))
+        maxIndex = 1;
     var sum = 0;
     for (var i = 0; i < formattedTimes.length; i++)
         if ((i != minIndex) && (i != maxIndex))

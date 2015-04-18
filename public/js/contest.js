@@ -13,7 +13,6 @@ app.controller('contestController', function($scope, $http) {
 
     $scope.showHome = 1;
     $scope.showManualEntry = 0;
-    $scope.showTimer = 0;
 
     $scope.events = [];
     $scope.events[0] = {name:"Rubik's Cube", result:' '};
@@ -87,14 +86,6 @@ app.controller('contestController', function($scope, $http) {
         });
         $scope.showHome = 0;
         $scope.showManualEntry = 1;
-        $scope.showTimer = 0;
-        $scope.event = event.name;
-    };
-
-    $scope.timer = function(event) {
-        $scope.showHome = 0;
-        $scope.showManualEntry = 0;
-        $scope.showTimer = 1;
         $scope.event = event.name;
     };
 
@@ -102,7 +93,6 @@ app.controller('contestController', function($scope, $http) {
         $scope.event = '';
         $scope.showHome = 1;
         $scope.showManualEntry = 0;
-        $scope.showTimer = 0;
     };
 
     $scope.submit = function() {
@@ -136,7 +126,6 @@ app.controller('contestController', function($scope, $http) {
         $scope.event = '';
         $scope.showHome = 1;
         $scope.showManualEntry = 0;
-        $scope.showTimer = 0;
     };
 });
 
@@ -173,6 +162,8 @@ function calculateAverage(times, penalties) {
             minIndex = i;
         }
     }
+    if ((minIndex == 0) && (maxIndex == 0))
+        maxIndex = 1;
     var sum = 0;
     for (var i = 0; i < formattedTimes.length; i++)
         if ((i != minIndex) && (i != maxIndex))
