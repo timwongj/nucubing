@@ -32,18 +32,18 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/"><img class="logo" alt="NU Cubing" src="/images/cubeLogo.png"></a>
+            <a class="navbar-brand" href="/" tabindex="-1"><img class="logo" alt="NU Cubing" src="/images/cubeLogo.png"></a>
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-left">
-                <li><a href="/">Home</a></li>
-                <li><a href="/profile">Profile</a></li>
-                <li><a href="/contest">Contest</a></li>
-                <li><a href="/results">Results</a></li>
-                <li><a href="/links">Links</a></li>
+                <li><a href="/" tabindex="-1">Home</a></li>
+                <li><a href="/profile" tabindex="-1">Profile</a></li>
+                <li><a href="/contest" tabindex="-1">Contest</a></li>
+                <li><a href="/results" tabindex="-1">Results</a></li>
+                <li><a href="/links" tabindex="-1">Links</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="/auth">{{authStatus}}</a></li>
+                <li><a href="/auth" tabindex="-1">{{authStatus}}</a></li>
             </ul>
         </div>
     </div>
@@ -77,9 +77,9 @@
             </div>
             <div class="col-sm-3 col-xs-6 result-row">
                 <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-success" ng-click="solve.penalty = ''"><span class="glyphicon glyphicon-ok"></span></button>
-                    <button type="button" class="btn btn-warning" ng-click="solve.penalty = '(+2)'"><span class="glyphicon glyphicon-plus"></span></button>
-                    <button type="button" class="btn btn-danger" ng-click="solve.penalty = '(DNF)'"><span class="glyphicon glyphicon-remove"></span></button>
+                    <button type="button" class="btn btn-success" tabindex="-1" ng-click="solve.penalty = ''"><span class="glyphicon glyphicon-ok"></span></button>
+                    <button type="button" class="btn btn-warning" tabindex="-1" ng-click="solve.penalty = '(+2)'"><span class="glyphicon glyphicon-plus"></span></button>
+                    <button type="button" class="btn btn-danger" tabindex="-1" ng-click="solve.penalty = '(DNF)'"><span class="glyphicon glyphicon-remove"></span></button>
                 </div>
             </div>
             <div class="col-sm-3 col-xs-6 result-row">
@@ -88,8 +88,8 @@
         </div>
         <div class="row" ng-show="showManualEntry">
             <hr/>
-            <button class="btn btn-warning pull-left" ng-click="cancel()">Cancel</button>
-            <button class="btn btn-success pull-right" type="submit">Submit</button>
+            <button class="btn btn-warning pull-left" tabindex="-1" ng-click="cancel()">Cancel</button>
+            <button class="btn btn-success pull-right" tabindex="-1" type="submit">Submit</button>
         </div>
     </form>
     <br>
