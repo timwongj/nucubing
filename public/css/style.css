@@ -13,8 +13,8 @@
     text-align:center;
 }
 
-.centerModal {
-    top:0%;
+.vertical-middle {
+    vertical-align:middle;
 }
 
 .page-header {

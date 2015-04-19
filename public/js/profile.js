@@ -220,7 +220,7 @@ function formatTimes(times, penalties) {
             unsplitTimes[i] = (parseFloat(res[0]) * 60) + parseFloat(res[1]);
         else
             unsplitTimes[i] = parseFloat(res[0]);
-        if ((penalties[i] == '(DNF)') || (unsplitTimes[i] == ''))
+        if ((penalties[i] == '(DNF)') || (unsplitTimes[i] === ''))
             formattedTimes[i] = 'DNF';
         else if (penalties[i] == '(+2)')
             formattedTimes[i] = parseFloat(unsplitTimes[i]) + 2;
