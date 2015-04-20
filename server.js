@@ -7,11 +7,11 @@ var passport = require('passport'),
     FacebookStrategy = require('passport-facebook').Strategy;
 var fs = require('fs');
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(multer());
-
+// configuration
 app.configure(function() {
+    app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded({extended: true}));
+    app.use(multer());
     app.use(express.static('public'));
     app.use(express.cookieParser());
     app.use(express.bodyParser());
@@ -21,6 +21,7 @@ app.configure(function() {
     app.use(app.router);
 });
 
+// passport
 passport.serializeUser(function(user, done) {
     done(null, user);
 });
@@ -33,10 +34,55 @@ passport.deserializeUser(function(user, done) {
 var connectionString = process.env.OPENSHIFT_MONGODB_DB_URL || 'mongodb://localhost/nucubing';
 mongoose.connect(connectionString);
 
+// render static files
+app.use(express.static(__dirname + '/public'));
+
+// render home page
+app.get('/', function(req, res) {
+    res.sendfile(__dirname + '/templates/home.html');
+});
+
+// render profile page
+app.get('/profile', function(req, res) {
+    if (req.user)
+        res.sendfile(__dirname + '/templates/profile.html');
+    else
+        res.sendfile(__dirname + '/templates/login.html');
+});
+
+// render contest page
+app.get('/contest', function(req, res) {
+    if (req.user)
+        res.sendfile(__dirname + '/templates/contest.html');
+    else
+        res.sendfile(__dirname + '/templates/login.html');
+});
+
+// render results page
+app.get('/results', function(req, res) {
+    res.sendfile(__dirname + '/templates/results.html');
+});
+
+// render links page
+app.get('/links', function(req, res) {
+    res.sendfile(__dirname + '/templates/links.html');
+});
+
+// authorization
+app.get('/auth', function(req, res) {
+    if (req.user) {
+        req.logout();
+        res.redirect('/');
+    }
+    else
+        res.sendfile(__dirname + '/templates/login.html');
+});
+
 // define Schemas
 var Schema = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
 
+// User Schema
 var User = mongoose.model('User', new Schema ({
     id:ObjectId,
     facebook_id:String,
@@ -47,6 +93,7 @@ var User = mongoose.model('User', new Schema ({
     provider:String
 }));
 
+// Result Schema
 var Result = mongoose.model('Result', new Schema ({
     id:ObjectId,
     week:String,
@@ -58,7 +105,7 @@ var Result = mongoose.model('Result', new Schema ({
     penalties:[String]
 }));
 
-// facebook login
+// Facebook login
 passport.use(new FacebookStrategy({
         clientID: '1397096627278092',
         clientSecret: 'e98f10732572cff4bf9a1ccd54288460',
@@ -88,49 +135,13 @@ passport.use(new FacebookStrategy({
     }
 ));
 
-// render static pages
-app.use(express.static(__dirname + '/public'));
-
-app.get('/', function(req, res) {
-    res.sendfile(__dirname + '/templates/home.html');
-});
-
-app.get('/profile', function(req, res) {
-    if (req.user)
-        res.sendfile(__dirname + '/templates/profile.html');
-    else
-        res.sendfile(__dirname + '/templates/login.html');
-});
-
-app.get('/contest', function(req, res) {
-    if (req.user)
-        res.sendfile(__dirname + '/templates/contest.html');
-    else
-        res.sendfile(__dirname + '/templates/login.html');
-});
-
-app.get('/results', function(req, res) {
-    res.sendfile(__dirname + '/templates/results.html');
-});
-
-app.get('/links', function(req, res) {
-    res.sendfile(__dirname + '/templates/links.html');
-});
-
-// if user wants to log out, then log out, otherwise redirect them to the login page
-app.get('/auth', function(req, res) {
-    if (req.user) {
-        req.logout();
-        res.redirect('/');
-    }
-    else
-        res.sendfile(__dirname + '/templates/login.html');
-});
-
+// facebook authentication route
 app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', 'public_profile'] }));
 
+// facebook callback route
 app.get('/auth/facebook/callback', passport.authenticate('facebook', { successRedirect: '/profile', failureRedirect: '/auth' }));
 
+// get authorization status
 app.get('/authStatus', function(req, res) {
     if (req.user)
         res.json({status:'connected'});
@@ -151,7 +162,7 @@ app.get('/contest/currentWeek', function(req, res) {
     res.send(currentWeek);
 });
 
-// get scrambles
+// get scrambles given the week and event
 app.get('/contest/:week/:event/scrambles', function(req, res) {
     var filename = '';
     if (req.params['event'] == 'x3Cube')
@@ -168,13 +179,13 @@ app.get('/contest/:week/:event/scrambles', function(req, res) {
         filename = '3x3x3 One-Handed Round 1.txt';
     if (req.params['event'] == 'pyra')
         filename = 'Pyraminx Round 1.txt';
-
     var file = fs.readFileSync('./scrambles/' + req.params['week'] + '/' + filename, 'utf-8');
     var scrambles = file.split('\n');
     scrambles.splice(scrambles.length - 2, 2);
     res.json(scrambles);
 });
 
+// submit results for the given week and event
 app.post('/contest/:week/:event', function(req, res) {
     var result = new Result();
     result.week = req.params['week'];
@@ -200,6 +211,7 @@ app.post('/contest/:week/:event', function(req, res) {
     res.send(result);
 });
 
+// get user's contest results for current week
 app.get('/contest/results/current', function(req, res) {
     Result.find({'week':currentWeek, 'email':req.user.email}, function(err, result) {
         if (err)
@@ -209,6 +221,7 @@ app.get('/contest/results/current', function(req, res) {
     });
 });
 
+// get user's contest results for all weeks
 app.get('/contest/results/all', function(req, res) {
     Result.find({'email':req.user.email}, function(err, result) {
         if (err)
@@ -218,6 +231,7 @@ app.get('/contest/results/all', function(req, res) {
     });
 });
 
+// get all results given the week and event
 app.get('/results/:week/:event', function(req, res) {
     Result.find({'week':req.params['week'], 'event':req.params['event']}, function(err, result) {
         if (err)
@@ -227,6 +241,7 @@ app.get('/results/:week/:event', function(req, res) {
     });
 });
 
+// listen on port and ip
 var ip = process.env.OPENSHIFT_NODEJS_IP || "127.0.0.1";
 var port = process.env.OPENSHIFT_NODEJS_PORT || 8080;
 

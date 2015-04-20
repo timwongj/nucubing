@@ -1,9 +1,10 @@
 var app = angular.module('nuCubingApp', ['ui.bootstrap']);
 
+// results controller
 app.controller('resultsController', function($scope, $http) {
 
+    // get authorization status
     $scope.authStatus = '';
-
     $http.get('/authStatus').success(function(response) {
         if (response.status == 'connected')
             $scope.authStatus = 'Logout';
@@ -11,8 +12,7 @@ app.controller('resultsController', function($scope, $http) {
             $scope.authStatus = 'Login';
     });
 
-    $scope.weeks = ['040715', '041415', '042115', '042815'];
-
+    // events list
     $scope.events = [];
     $scope.events[0] = {id:'x3Cube', name:"Rubik's Cube"};
     $scope.events[1] = {id:'x4Cube', name:"4x4 Cube"};
@@ -24,11 +24,11 @@ app.controller('resultsController', function($scope, $http) {
 
     $scope.eventNames = ['x3Cube', 'x4Cube', 'x5Cube', 'x2Cube', 'x3BLD', 'x3OH', 'pyra'];
 
+    // get all contest results for all events for the current week
     $http.get('/contest/currentWeek').success(function(response) {
         $scope.currentWeek = response;
         for (var i = 0; i < $scope.events.length; i++)
             $scope.events[i].results = [];
-
         for (var i = 0; i < $scope.events.length; i++) {
             $http.get('/results/' + $scope.currentWeek + '/' + $scope.events[i].id).success(function(response) {
                 var index = $scope.eventNames.indexOf(response[0].event);
@@ -55,19 +55,17 @@ app.controller('resultsController', function($scope, $http) {
                         else
                             $scope.events[index].results[j].raw = parseFloat(res[0]);
                     }
-
                 }
             });
         }
     });
-
     $scope.selectedEvent = $scope.events[0];
     $scope.selectEvent = function(event) {
         $scope.selectedEvent = event;
     };
-
 });
 
+// calculate the trimmed average of 5 given the array of times and penalties
 function calculateAverage(times, penalties) {
     var formattedTimes = formatTimes(times, penalties);
     var DNFCount = 0;
@@ -111,6 +109,7 @@ function calculateAverage(times, penalties) {
     return reformatTime(average);
 }
 
+// calculate the mean of 3 given the array of times and penalties
 function calculateMean(times, penalties) {
     var formattedTimes = formatTimes(times, penalties);
     var DNFCount = 0;
@@ -127,6 +126,7 @@ function calculateMean(times, penalties) {
     return reformatTime(mean);
 }
 
+// return an array of results in milliseconds taking penalties into account
 function formatTimes(times, penalties) {
     var formattedTimes = [];
     var unsplitTimes = [];
@@ -146,6 +146,7 @@ function formatTimes(times, penalties) {
     return formattedTimes;
 }
 
+// convert the time from milliseconds to minutes:seconds.milliseconds
 function reformatTime(time) {
     if (isNaN(time))
         return 'DNF';
@@ -161,6 +162,7 @@ function reformatTime(time) {
     }
 }
 
+// facebook
 window.fbAsyncInit = function() {
     FB.init({
         appId: '1397096627278092',

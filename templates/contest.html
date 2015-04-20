@@ -52,6 +52,7 @@
     <div class="page-header">
         <h1>{{event}} Contest</h1>
     </div>
+    <!-- Contest Home Page-->
     <div class="row" ng-show="showHome">
         <div class="col-md-3 col-sm-6" ng-repeat="event in events">
             <div class="panel panel-default">
@@ -67,6 +68,7 @@
             </div>
         </div>
     </div>
+    <!-- Contest Form Page-->
     <form name="contestForm" class="form-horizontal" ng-show="showManualEntry" ng-submit="contestForm.$valid && submit()">
         <div class="form-group" ng-repeat="solve in solves">
             <div class="col-sm-12">

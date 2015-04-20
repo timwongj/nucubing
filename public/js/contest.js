@@ -1,9 +1,10 @@
 var app = angular.module('nuCubingApp', ['ui.bootstrap']);
 
+// contest controller
 app.controller('contestController', function($scope, $http) {
 
+    // get authorization status
     $scope.authStatus = '';
-
     $http.get('/authStatus').success(function(response) {
         if (response.status == 'connected')
             $scope.authStatus = 'Logout';
@@ -11,9 +12,11 @@ app.controller('contestController', function($scope, $http) {
             $scope.authStatus = 'Login';
     });
 
+    // variables for ng-show
     $scope.showHome = 1;
     $scope.showManualEntry = 0;
 
+    // events list
     $scope.events = [];
     $scope.events[0] = {name:"Rubik's Cube", result:' '};
     $scope.events[1] = {name:"4x4 Cube", result:' '};
@@ -23,6 +26,7 @@ app.controller('contestController', function($scope, $http) {
     $scope.events[5] = {name:"3x3 One-Handed", result:' '};
     $scope.events[6] = {name:"Pyraminx", result:' '};
 
+    // get current week contest results for user
     $http.get('/contest/results/current').success(function(response) {
         if (response != null) {
             for (var i = 0; i < response.length; i++) {
@@ -53,9 +57,11 @@ app.controller('contestController', function($scope, $http) {
         }
     });
 
+    // event variables
     $scope.event;
     $scope.eventId;
 
+    // go to manual entry page for the event
     $scope.manualEntry = function(event) {
         if (event.name == "Rubik's Cube")
             $scope.eventId = 'x3Cube';
@@ -89,12 +95,14 @@ app.controller('contestController', function($scope, $http) {
         $scope.event = event.name;
     };
 
+    // go back to the contest home page
     $scope.cancel = function() {
         $scope.event = '';
         $scope.showHome = 1;
         $scope.showManualEntry = 0;
     };
 
+    // submit results for the given event for the current week
     $scope.submit = function() {
         $http.post('/contest/' + $scope.week + '/' + $scope.eventId, $scope.solves).success(function (response) {
             $http.get('/contest/results/current').success(function(response) {
@@ -129,6 +137,7 @@ app.controller('contestController', function($scope, $http) {
     };
 });
 
+// calculate the trimmed average of 5 given the array of times and penalties
 function calculateAverage(times, penalties) {
     var formattedTimes = formatTimes(times, penalties);
     var DNFCount = 0;
@@ -172,6 +181,7 @@ function calculateAverage(times, penalties) {
     return reformatTime(average);
 }
 
+// calculate the mean of 3 given the array of times and penalties
 function calculateMean(times, penalties) {
     var formattedTimes = formatTimes(times, penalties);
     var DNFCount = 0;
@@ -188,6 +198,7 @@ function calculateMean(times, penalties) {
     return reformatTime(mean);
 }
 
+// return an array of results in milliseconds taking penalties into account
 function formatTimes(times, penalties) {
     var formattedTimes = [];
     var unsplitTimes = [];
@@ -207,6 +218,7 @@ function formatTimes(times, penalties) {
     return formattedTimes;
 }
 
+// convert the time from milliseconds to minutes:seconds.milliseconds
 function reformatTime(time) {
     if (isNaN(time))
         return 'DNF';
@@ -222,6 +234,7 @@ function reformatTime(time) {
     }
 }
 
+// prevent default behavior of enter key
 function stopRKey(evt) {
     var evt = (evt) ? evt : ((event) ? event : null);
     var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
@@ -230,6 +243,7 @@ function stopRKey(evt) {
 
 document.onkeypress = stopRKey;
 
+// facebook
 window.fbAsyncInit = function() {
     FB.init({
         appId: '1397096627278092',

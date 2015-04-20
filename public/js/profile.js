@@ -2,8 +2,8 @@ var app = angular.module('nuCubingApp', ['ui.bootstrap']);
 
 app.controller('profileController', function($scope, $http) {
 
+    // get authorization status
     $scope.authStatus = '';
-
     $http.get('/authStatus').success(function(response) {
         if (response.status == 'connected')
             $scope.authStatus = 'Logout';
@@ -11,8 +11,8 @@ app.controller('profileController', function($scope, $http) {
             $scope.authStatus = 'Login';
     });
 
+    // get user information
     $scope.user = {};
-
     $http.get('/userInfo').success(function(response) {
         $scope.user.firstName = response.firstName;
         $scope.user.lastName = response.lastName;
@@ -21,15 +21,14 @@ app.controller('profileController', function($scope, $http) {
         $scope.user.id = response.facebook_id;
     });
 
+    // list for current week results and overall personal best results
     $scope.personalResults = [];
     $scope.personalResults[0] = {type:'Current Week Results'};
     $scope.personalResults[1] = {type:'Contest Personal Records'};
-    //$scope.personalResults[2] = {type:'Unofficial Personal Records'};
-    //$scope.personalResults[3] = {type:'Official Personal Records'};
-
     for (var i = 0; i < $scope.personalResults.length; i++)
         $scope.personalResults[i].results = [];
 
+    // get current week results for user
     $http.get('/contest/results/current').success(function(response) {
         if (response != null) {
             for (var i = 0; i < response.length; i++) {
@@ -58,6 +57,7 @@ app.controller('profileController', function($scope, $http) {
         }
     });
 
+    // get personal results for user
     $http.get('/contest/results/all').success(function(response) {
         if (response != null) {
             var events = [];
@@ -101,6 +101,7 @@ app.controller('profileController', function($scope, $http) {
 
 });
 
+// sort results by event order
 function sortByEvent(results) {
     var events = ["Rubik's Cube", "4x4 Cube", "5x5 Cube", "2x2 Cube", "3x3 Blindfolded", "3x3 One-Handed", "Pyraminx"];
     for (var i = 0; i < results.length; i++) {
@@ -114,6 +115,7 @@ function sortByEvent(results) {
     }
 }
 
+// calculate best result from a list of results
 function findBest(results) {
     var best = 'DNF';
     var unsplitTimes = [];
@@ -133,6 +135,7 @@ function findBest(results) {
     return reformatTime(best);
 }
 
+// calculate the best single time from a single week
 function calculateSingle(times, penalties) {
     var single = 'DNF';
     var formattedTimes = formatTimes(times, penalties);
@@ -149,9 +152,9 @@ function calculateSingle(times, penalties) {
     else {
         return reformatTime(single);
     }
-
 }
 
+// calculate the trimmed average of 5 given the array of times and penalties
 function calculateAverage(times, penalties) {
     var formattedTimes = formatTimes(times, penalties);
     var DNFCount = 0;
@@ -195,6 +198,7 @@ function calculateAverage(times, penalties) {
     return reformatTime(average);
 }
 
+// calculate the mean of 3 given the array of times and penalties
 function calculateMean(times, penalties) {
     var formattedTimes = formatTimes(times, penalties);
     var DNFCount = 0;
@@ -211,6 +215,7 @@ function calculateMean(times, penalties) {
     return reformatTime(mean);
 }
 
+// return an array of results in milliseconds taking penalties into account
 function formatTimes(times, penalties) {
     var formattedTimes = [];
     var unsplitTimes = [];
@@ -230,6 +235,7 @@ function formatTimes(times, penalties) {
     return formattedTimes;
 }
 
+// convert the time from milliseconds to minutes:seconds.milliseconds
 function reformatTime(time) {
     if (isNaN(time))
         return 'DNF';
@@ -245,6 +251,7 @@ function reformatTime(time) {
     }
 }
 
+// facebook
 window.fbAsyncInit = function() {
     FB.init({
         appId: '1397096627278092',

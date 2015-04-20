@@ -1,9 +1,10 @@
 var app = angular.module('nuCubingApp', ['ui.bootstrap']);
 
+// controller for the home page and links page
 app.controller('nuCubingController', function($scope, $http, $modal) {
 
+    // get authorization status
     $scope.authStatus = '';
-
     $http.get('/authStatus').success(function(response) {
         if (response.status == 'connected')
             $scope.authStatus = 'Logout';
@@ -13,6 +14,7 @@ app.controller('nuCubingController', function($scope, $http, $modal) {
 
 });
 
+// facebook
 window.fbAsyncInit = function() {
     FB.init({
         appId: '1397096627278092',
