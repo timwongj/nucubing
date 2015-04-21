@@ -52,9 +52,12 @@
 .solve-input {
     -webkit-transition:all linear 0.5s;
     transition:all linear 0.5s;
-    background: transparent;
 }
+
 .solve-input.ng-invalid {
-    color:black;
-    background:lightcyan;
+    background:#FFCCCC;
+}
+
+.solve-input.ng-valid {
+    background:#BFFFBF;
 }
