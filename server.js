@@ -155,7 +155,7 @@ app.get('/userInfo', function(req, res) {
 });
 
 // set current week
-var currentWeek = '041415';
+var currentWeek = '042115';
 
 // get current week
 app.get('/contest/currentWeek', function(req, res) {
