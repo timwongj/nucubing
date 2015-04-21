@@ -55,6 +55,6 @@
     background: transparent;
 }
 .solve-input.ng-invalid {
-    color:white;
-    background:lightcoral;
+    color:black;
+    background:lightcyan;
 }
