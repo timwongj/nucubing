@@ -37,8 +37,12 @@ app.controller('resultsController', function($scope, $http) {
                     $scope.events[index].results[j].name = response[j].firstName + ' ' + response[j].lastName;
                     if (response[j].times.length == 5)
                         $scope.events[index].results[j].result = calculateAverage(response[j].times, response[j].penalties);
-                    if (response[j].times.length == 3)
-                        $scope.events[index].results[j].result = calculateMean(response[j].times, response[j].penalties);
+                    if (response[j].times.length == 3) {
+                        if ($scope.events[i].id == 'x3BLD')
+                            $scope.events[index].results[j].result = calculateSingle(response[j].times, response[j].penalties);
+                        else
+                            $scope.events[index].results[j].result = calculateMean(response[j].times, response[j].penalties);
+                    }
                     var details = '';
                     for (var k = 0; k < response[j].times.length; k++) {
                         details += response[j].times[k] + response[j].penalties[k];
@@ -64,6 +68,25 @@ app.controller('resultsController', function($scope, $http) {
         $scope.selectedEvent = event;
     };
 });
+
+// calculate the best single time from a single week
+function calculateSingle(times, penalties) {
+    var single = 'DNF';
+    var formattedTimes = formatTimes(times, penalties);
+    for (var i = 0; i < formattedTimes.length; i++) {
+        if (formattedTimes[i] != 'DNF') {
+            if (single == 'DNF')
+                single = formattedTimes[i];
+            if (parseFloat(formattedTimes[i]) < single)
+                single = formattedTimes[i];
+        }
+    }
+    if (single == 'DNF')
+        return single
+    else {
+        return reformatTime(single);
+    }
+}
 
 // calculate the trimmed average of 5 given the array of times and penalties
 function calculateAverage(times, penalties) {
