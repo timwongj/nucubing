@@ -31,14 +31,15 @@ app.controller('resultsController', function($scope, $http) {
             $scope.events[i].results = [];
         for (var i = 0; i < $scope.events.length; i++) {
             $http.get('/results/' + $scope.currentWeek + '/' + $scope.events[i].id).success(function(response) {
-                var index = $scope.eventNames.indexOf(response[0].event);
+                if (response.length != 0)
+                    var index = $scope.eventNames.indexOf(response[0].event);
                 for (var j = 0; j < response.length; j++) {
                     $scope.events[index].results[j] = {};
                     $scope.events[index].results[j].name = response[j].firstName + ' ' + response[j].lastName;
                     if (response[j].times.length == 5)
                         $scope.events[index].results[j].result = calculateAverage(response[j].times, response[j].penalties);
                     if (response[j].times.length == 3) {
-                        if ($scope.events[i].id == 'x3BLD')
+                        if (response[j].event == 'x3BLD')
                             $scope.events[index].results[j].result = calculateSingle(response[j].times, response[j].penalties);
                         else
                             $scope.events[index].results[j].result = calculateMean(response[j].times, response[j].penalties);

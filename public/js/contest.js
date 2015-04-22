@@ -33,8 +33,12 @@ app.controller('contestController', function($scope, $http) {
                 var result;
                 if (response[i].times.length == 5)
                     result = calculateAverage(response[i].times, response[i].penalties);
-                else if (response[i].times.length == 3)
-                    result = calculateMean(response[i].times, response[i].penalties);
+                else if (response[i].times.length == 3) {
+                    if (response[i].event == 'x3BLD')
+                        result = calculateSingle(response[i].times, response[i].penalties);
+                    else
+                        result = calculateMean(response[i].times, response[i].penalties);
+                }
                 if (response[i].event == 'x3Cube')
                     $scope.events[0].result = result;
                 if (response[i].event == 'x4Cube')
@@ -112,7 +116,7 @@ app.controller('contestController', function($scope, $http) {
                         if (response[i].times.length == 5)
                             result = calculateAverage(response[i].times, response[i].penalties);
                         else if (response[i].times.length == 3) {
-                            if ($scope.eventId == 'x3BLD')
+                            if (response[i].event == 'x3BLD')
                                 result = calculateSingle(response[i].times, response[i].penalties);
                             else
                                 result = calculateMean(response[i].times, response[i].penalties);
