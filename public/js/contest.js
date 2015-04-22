@@ -111,8 +111,12 @@ app.controller('contestController', function($scope, $http) {
                         var result;
                         if (response[i].times.length == 5)
                             result = calculateAverage(response[i].times, response[i].penalties);
-                        else if (response[i].times.length == 3)
-                            result = calculateMean(response[i].times, response[i].penalties);
+                        else if (response[i].times.length == 3) {
+                            if ($scope.eventId == 'x3BLD')
+                                result = calculateSingle(response[i].times, response[i].penalties);
+                            else
+                                result = calculateMean(response[i].times, response[i].penalties);
+                        }
                         if (response[i].event == 'x3Cube')
                             $scope.events[0].result = result;
                         if (response[i].event == 'x4Cube')
@@ -136,6 +140,25 @@ app.controller('contestController', function($scope, $http) {
         $scope.showManualEntry = 0;
     };
 });
+
+// calculate the best single time from a single week
+function calculateSingle(times, penalties) {
+    var single = 'DNF';
+    var formattedTimes = formatTimes(times, penalties);
+    for (var i = 0; i < formattedTimes.length; i++) {
+        if (formattedTimes[i] != 'DNF') {
+            if (single == 'DNF')
+                single = formattedTimes[i];
+            if (parseFloat(formattedTimes[i]) < single)
+                single = formattedTimes[i];
+        }
+    }
+    if (single == 'DNF')
+        return single
+    else {
+        return reformatTime(single);
+    }
+}
 
 // calculate the trimmed average of 5 given the array of times and penalties
 function calculateAverage(times, penalties) {
