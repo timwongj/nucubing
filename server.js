@@ -45,9 +45,14 @@ app.get('/', function(req, res) {
 // render profile page
 app.get('/profile', function(req, res) {
     if (req.user)
-        res.sendfile(__dirname + '/templates/profile.html');
+        res.redirect('/profile/' + req.user.facebook_id);
     else
         res.sendfile(__dirname + '/templates/login.html');
+});
+
+// render profile page
+app.get('/profile/:id', function(req, res) {
+    res.sendfile(__dirname + '/templates/profile.html');
 });
 
 // render contest page
@@ -154,6 +159,15 @@ app.get('/userInfo', function(req, res) {
     res.send(req.user);
 });
 
+app.get('/userInfo/id/:id', function(req, res) {
+    User.findOne({'facebook_id':req.params['id']}, function(err, user) {
+        if (err)
+            throw err;
+        else
+            res.json(user);
+    });
+});
+
 // set current week
 var currentWeek = '080215';
 
@@ -218,22 +232,34 @@ app.post('/contest/:week/:event', function(req, res) {
 });
 
 // get user's contest results for current week
-app.get('/contest/results/current', function(req, res) {
-    Result.find({'week':currentWeek, 'email':req.user.email}, function(err, result) {
+app.get('/contest/results/current/:id', function(req, res) {
+    User.findOne({'facebook_id':req.params['id']}, function(err, user) {
         if (err)
             throw err;
-        else
-            res.json(result);
+        else if (user) {
+            Result.find({'email':user.email, 'week':currentWeek}, function(err, result) {
+                if (err)
+                    throw err;
+                else
+                    res.json(result);
+            });
+        }
     });
 });
 
 // get user's contest results for all weeks
-app.get('/contest/results/all', function(req, res) {
-    Result.find({'email':req.user.email}, function(err, result) {
+app.get('/contest/results/all/:id', function(req, res) {
+    User.findOne({'facebook_id':req.params['id']}, function(err, user) {
         if (err)
             throw err;
-        else
-            res.json(result);
+        else if (user) {
+            Result.find({'email':user.email}, function(err, result) {
+                if (err)
+                    throw err;
+                else
+                    res.json(result);
+            });
+        }
     });
 });
 

@@ -1,6 +1,6 @@
 var app = angular.module('nuCubingApp', ['ui.bootstrap']);
 
-app.controller('profileController', function($scope, $http) {
+app.controller('profileController', function($scope, $http, $location) {
 
     // get authorization status
     $scope.authStatus = '';
@@ -11,9 +11,14 @@ app.controller('profileController', function($scope, $http) {
             $scope.authStatus = 'Login';
     });
 
+    var url = $location.$$absUrl.split('/');
+    var profileId = url[url.indexOf('profile') + 1];
+
+    //var id = 1056354001045640;
+
     // get user information
     $scope.user = {};
-    $http.get('/userInfo').success(function(response) {
+    $http.get('/userInfo/id/' + profileId).success(function(response) {
         $scope.user.firstName = response.firstName;
         $scope.user.lastName = response.lastName;
         $scope.user.email = response.email;
@@ -29,7 +34,7 @@ app.controller('profileController', function($scope, $http) {
         $scope.personalResults[i].results = [];
 
     // get current week results for user
-    $http.get('/contest/results/current').success(function(response) {
+    $http.get('/contest/results/current/' + profileId).success(function(response) {
         if (response != null) {
             for (var i = 0; i < response.length; i++) {
                 $scope.personalResults[0].results[i] = {};
@@ -58,7 +63,7 @@ app.controller('profileController', function($scope, $http) {
     });
 
     // get personal results for user
-    $http.get('/contest/results/all').success(function(response) {
+    $http.get('/contest/results/all/' + profileId).success(function(response) {
         if (response != null) {
             var events = [];
             for (var i = 0; i < response.length; i++) {
