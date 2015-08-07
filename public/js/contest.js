@@ -1,5 +1,18 @@
 var app = angular.module('nuCubingApp', ['ui.bootstrap']);
 
+app.filter('orderObjectBy', function() {
+    return function(items, field) {
+        var filtered = [];
+        angular.forEach(items, function(item) {
+            filtered.push(item);
+        });
+        filtered.sort(function (a, b) {
+            return (a[field] > b[field] ? 1 : -1);
+        });
+        return filtered;
+    };
+});
+
 // contest controller
 app.controller('contestController', function($scope, $http) {
 
@@ -17,47 +30,44 @@ app.controller('contestController', function($scope, $http) {
     $scope.showManualEntry = 0;
 
     // events list
-    $scope.events = [];
-    $scope.events[0] = {name:"Rubik's Cube", result:' '};
-    $scope.events[1] = {name:"4x4 Cube", result:' '};
-    $scope.events[2] = {name:"5x5 Cube", result:' '};
-    $scope.events[3] = {name:"2x2 Cube", result:' '};
-    $scope.events[4] = {name:"3x3 Blindfolded", result:' '};
-    $scope.events[5] = {name:"3x3 One-Handed", result:' '};
-    $scope.events[6] = {name:"Pyraminx", result:' '};
+    $scope.eventMap = {'x3Cube' : {name : 'Rubik\'s Cube', format: 'avg5', result : ' ', index: 0},
+        'x4Cube' : {name: '4x4 Cube', format: 'avg5', result : ' ', index: 1},
+        'x5Cube' : {name: '5x5 Cube', format: 'avg5', result : ' ', index: 2},
+        'x2Cube' : {name: '2x2 Cube', format: 'avg5', result : ' ', index: 3},
+        'x3BLD' : {name: '3x3 blindfolded', format: 'bo3', result : ' ', index: 4},
+        'x3OH' : {name: '3x3 one-handed', format: 'avg5', result : ' ', index: 5},
+        'x3FMC' : {name: '3x3 fewest moves', format: 'mo3', result : ' ', index: 6},
+        'x3FT' : {name: '3x3 with feet', format: 'mo3', result : ' ', index: 7},
+        'mega' : {name: 'Megaminx', format: 'avg5', result : ' ', index: 8},
+        'pyra' : {name: 'Pyraminx', format: 'avg5', result : ' ', index: 9},
+        'sq1' : {name: 'Square-1', format: 'avg5', result : ' ', index: 10},
+        'clock' : {name: 'Rubik\'s Clock', format: 'avg5', result : ' ', index: 11},
+        'skewb' : {name: 'Skewb', format: 'avg5', result : ' ', index: 12},
+        'x6Cube' : {name: '6x6 Cube', format: 'mo3', result : ' ', index: 13},
+        'x7Cube' : {name: '7x7 Cube', format: 'mo3', result : ' ', index: 14},
+        'x4BLD' : {name: '4x4 blindfolded', format: 'bo3', result : ' ', index: 15},
+        'x5BLD' : {name: '5x5 blindfolded', format: 'bo3', result : ' ', index: 16},
+        'x3MBLD' : {name: '3x3x3 multi blind', format: 'bo1', result : ' ', index: 17}
+    };
 
     // get current week contest results for user
     $http.get('/contest/results/current').success(function(response) {
         if (response != null) {
             for (var i = 0; i < response.length; i++) {
-                var result;
-                if (response[i].times.length == 5)
-                    result = calculateAverage(response[i].times, response[i].penalties);
-                else if (response[i].times.length == 3) {
-                    if (response[i].event == 'x3BLD')
-                        result = calculateSingle(response[i].times, response[i].penalties);
-                    else
-                        result = calculateMean(response[i].times, response[i].penalties);
+                switch($scope.eventMap[response[i].event].format) {
+                    case 'avg5' : $scope.eventMap[response[i].event].result = calculateAverage(response[i].times, response[i].penalties); break;
+                    case 'mo3' : $scope.eventMap[response[i].event].result = calculateMean(response[i].times, response[i].penalties); break;
+                    case 'bo3' : $scope.eventMap[response[i].event].result = calculateSingle(response[i].times, response[i].penalties); break;
+                    case 'bo1' : $scope.eventMap[response[i].event].result = response[i].times; break;
                 }
-                if (response[i].event == 'x3Cube')
-                    $scope.events[0].result = result;
-                if (response[i].event == 'x4Cube')
-                    $scope.events[1].result = result;
-                if (response[i].event == 'x5Cube')
-                    $scope.events[2].result = result;
-                if (response[i].event == 'x2Cube')
-                    $scope.events[3].result = result;
-                if (response[i].event == 'x3BLD')
-                    $scope.events[4].result = result;
-                if (response[i].event == 'x3OH')
-                    $scope.events[5].result = result;
-                if (response[i].event == 'pyra')
-                    $scope.events[6].result = result;
             }
         }
-        for (var i = 0; i < $scope.events.length; i++) {
-            if ($scope.events[i].result == ' ')
-                $scope.events[i].result = 'Not Completed';
+        for (var event in $scope.eventMap) {
+            if ($scope.eventMap.hasOwnProperty(event)) {
+                if ($scope.eventMap[event].result == ' ') {
+                    $scope.eventMap[event].result = 'Not Completed';
+                }
+            }
         }
     });
 
@@ -67,20 +77,14 @@ app.controller('contestController', function($scope, $http) {
 
     // go to manual entry page for the event
     $scope.manualEntry = function(event) {
-        if (event.name == "Rubik's Cube")
-            $scope.eventId = 'x3Cube';
-        if (event.name == "4x4 Cube")
-            $scope.eventId = 'x4Cube';
-        if (event.name == "5x5 Cube")
-            $scope.eventId = 'x5Cube';
-        if (event.name == "2x2 Cube")
-            $scope.eventId = 'x2Cube';
-        if (event.name == "3x3 Blindfolded")
-            $scope.eventId = 'x3BLD';
-        if (event.name == "3x3 One-Handed")
-            $scope.eventId = 'x3OH';
-        if (event.name == "Pyraminx")
-            $scope.eventId = 'pyra';
+        for (var e in $scope.eventMap) {
+            if ($scope.eventMap.hasOwnProperty(e)) {
+                if ($scope.eventMap[e].name == event.name) {
+                    $scope.eventId = e;
+                }
+            }
+        }
+
         $http.get('/contest/currentWeek').success(function(response) {
             $scope.week = response;
             $http.get('/contest/' + $scope.week + '/' + $scope.eventId + '/scrambles').success(function(response) {
@@ -112,29 +116,19 @@ app.controller('contestController', function($scope, $http) {
             $http.get('/contest/results/current').success(function(response) {
                 if (response != null) {
                     for (var i = 0; i < response.length; i++) {
-                        var result;
-                        if (response[i].times.length == 5)
-                            result = calculateAverage(response[i].times, response[i].penalties);
-                        else if (response[i].times.length == 3) {
-                            if (response[i].event == 'x3BLD')
-                                result = calculateSingle(response[i].times, response[i].penalties);
-                            else
-                                result = calculateMean(response[i].times, response[i].penalties);
+                        switch($scope.eventMap[response[i].event].format) {
+                            case 'avg5' : $scope.eventMap[response[i].event].result = calculateAverage(response[i].times, response[i].penalties); break;
+                            case 'mo3' : $scope.eventMap[response[i].event].result = calculateMean(response[i].times, response[i].penalties); break;
+                            case 'bo3' : $scope.eventMap[response[i].event].result = calculateSingle(response[i].times, response[i].penalties); break;
+                            case 'bo1' : $scope.eventMap[response[i].event].result = response[i].times; break;
                         }
-                        if (response[i].event == 'x3Cube')
-                            $scope.events[0].result = result;
-                        if (response[i].event == 'x4Cube')
-                            $scope.events[1].result = result;
-                        if (response[i].event == 'x5Cube')
-                            $scope.events[2].result = result;
-                        if (response[i].event == 'x2Cube')
-                            $scope.events[3].result = result;
-                        if (response[i].event == 'x3BLD')
-                            $scope.events[4].result = result;
-                        if (response[i].event == 'x3OH')
-                            $scope.events[5].result = result;
-                        if (response[i].event == 'pyra')
-                            $scope.events[6].result = result;
+                    }
+                }
+                for (var event in $scope.eventMap) {
+                    if ($scope.eventMap.hasOwnProperty(event)) {
+                        if ($scope.eventMap[event].result == ' ') {
+                            $scope.eventMap[event].result = 'Not Completed';
+                        }
                     }
                 }
             });

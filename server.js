@@ -155,7 +155,7 @@ app.get('/userInfo', function(req, res) {
 });
 
 // set current week
-var currentWeek = '042115';
+var currentWeek = '080215';
 
 // get current week
 app.get('/contest/currentWeek', function(req, res) {
@@ -164,24 +164,30 @@ app.get('/contest/currentWeek', function(req, res) {
 
 // get scrambles given the week and event
 app.get('/contest/:week/:event/scrambles', function(req, res) {
-    var filename = '';
-    if (req.params['event'] == 'x3Cube')
-        filename = '3x3x3 Cube Round 1.txt';
-    if (req.params['event'] == 'x4Cube')
-        filename = '4x4x4 Cube Round 1.txt';
-    if (req.params['event'] == 'x5Cube')
-        filename = '5x5x5 Cube Round 1.txt';
-    if (req.params['event'] == 'x2Cube')
-        filename = '2x2x2 Cube Round 1.txt';
-    if (req.params['event'] == 'x3BLD')
-        filename = '3x3x3 Blindfolded Round 1.txt';
-    if (req.params['event'] == 'x3OH')
-        filename = '3x3x3 One-Handed Round 1.txt';
-    if (req.params['event'] == 'pyra')
-        filename = 'Pyraminx Round 1.txt';
-    var file = fs.readFileSync('./scrambles/' + req.params['week'] + '/' + filename, 'utf-8');
+    var eventMap = {'x3Cube' : {fileName : '3x3x3 Cube Round 1.txt', scrambles : 5, extras : 2},
+        'x4Cube' : {fileName: '4x4x4 Cube Round 1.txt', scrambles : 5, extras : 2},
+        'x5Cube' : {fileName: '5x5x5 Cube Round 1.txt', scrambles : 5, extras : 2},
+        'x2Cube' : {fileName: '2x2x2 Cube Round 1.txt', scrambles : 5, extras : 2},
+        'x3BLD' : {fileName: '3x3x3 Blindfolded Round 1.txt', scrambles : 3, extras : 2},
+        'x3OH' : {fileName: '3x3x3 One-Handed Round 1.txt', scrambles : 5, extras : 2},
+        'x3FMC' : {fileName: '3x3x3 Fewest Moves Round 1.txt', scrambles : 3, extras : 0},
+        'x3FT' : {fileName: '3x3x3 With Feet Round 1.txt', scrambles : 3, extras : 2},
+        'mega' : {fileName: 'Megaminx Round 1.txt', scrambles : 5, extras : 2},
+        'pyra' : {fileName: 'Pyraminx Round 1.txt', scrambles : 5, extras : 2},
+        'sq1' : {fileName: 'Square-1 Round 1.txt', scrambles : 5, extras : 2},
+        'clock' : {fileName: 'Rubik\'s Clock Round 1.txt', scrambles : 5, extras : 2},
+        'skewb' : {fileName: 'Skewb Round 1.txt', scrambles : 5, extras : 2},
+        'x6Cube' : {fileName: '6x6x6 Cube Round 1.txt', scrambles : 3, extras : 2},
+        'x7Cube' : {fileName: '7x7x7 Cube Round 1.txt', scrambles : 3, extras : 2},
+        'x4BLD' : {fileName: '4x4x4 Cube Blindfolded Round 1.txt', scrambles : 3, extras : 2},
+        'x5BLD' : {fileName: '5x5x5 Cube Blindfolded Round 1.txt', scrambles : 3, extras : 2},
+        'x3MBLD' : {fileName: '3x3x3 Multiple Blindfolded Round 1.txt', scrambles : 35, extras : 0}
+    };
+    var filename = eventMap[req.params['event']].fileName;
+    var weekPath = 'NU_CUBING_' + req.params['week'].substr(0, 2) + '-' + req.params['week'].substr(2, 2) + '-20' + req.params['week'].substr(4, 2);
+    var file = fs.readFileSync('./scrambles/' + weekPath + '/txt/' + filename, 'utf-8');
     var scrambles = file.split('\n');
-    scrambles.splice(scrambles.length - 2, 2);
+    scrambles.splice(scrambles.length - eventMap[req.params['event']].extras, eventMap[req.params['event']].extras);
     res.json(scrambles);
 });
 

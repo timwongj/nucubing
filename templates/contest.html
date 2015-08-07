@@ -54,7 +54,7 @@
     </div>
     <!-- Contest Home Page-->
     <div class="row" ng-show="showHome">
-        <div class="col-md-3 col-sm-6" ng-repeat="event in events">
+        <div class="col-md-3 col-sm-6" ng-repeat="event in eventMap | orderObjectBy:'index'">
             <div class="panel panel-default">
                 <div class="panel-heading centered">
                     <h1 class="panel-title">{{event.name}}</h1>
