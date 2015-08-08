@@ -16,6 +16,7 @@
     "bootstrap": "~3.3.5",
     "jquery": "~2.1.4",
     "angular": "~1.4.3",
-    "angular-bootstrap": "~0.13.2"
+    "angular-bootstrap": "~0.13.2",
+    "jquery-ui": "~1.11.4"
   }
 }
