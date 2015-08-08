@@ -1,0 +1,21 @@
+{
+  "name": "nucubing",
+  "version": "0.0.0",
+  "authors": [
+    "timwongj <wong.t@husky.neu.edu>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.5",
+    "jquery": "~2.1.4",
+    "angular": "~1.4.3",
+    "angular-bootstrap": "~0.13.2"
+  }
+}
