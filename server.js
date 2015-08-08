@@ -65,7 +65,7 @@ app.get('/contest', function(req, res) {
     if (req.user)
         res.sendfile(__dirname + '/public/components/contest/contest.html');
     else
-        res.sendfile(__dirname + '/templates/login.html');
+        res.sendfile(__dirname + '/public/components/login/login.html');
 });
 
 // render results page
