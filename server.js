@@ -211,6 +211,16 @@ app.get('/contest/:week/:event/scrambles', function(req, res) {
 });
 
 // submit results for the given week and event
+app.get('/contest/:week/:event', function(req, res) {
+    Result.findOne({'week':req.params['week'], 'email':req.user.email, 'event':req.params['event']}, function(err, result) {
+        if (err)
+            throw err;
+        else if (result)
+            res.json(result);
+    });
+});
+
+// submit results for the given week and event
 app.post('/contest/:week/:event', function(req, res) {
     var result = new Result();
     result.week = req.params['week'];
@@ -233,7 +243,7 @@ app.post('/contest/:week/:event', function(req, res) {
         if (err)
             throw err;
     });
-    res.send(result);
+    res.json(result);
 });
 
 // get user's contest results for current week

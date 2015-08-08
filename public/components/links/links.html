@@ -38,10 +38,10 @@
                 <li><a href="/profile" tabindex="-1">Profile</a></li>
                 <li><a href="/contest" tabindex="-1">Contest</a></li>
                 <li><a href="/results" tabindex="-1">Results</a></li>
-                <li><a href="/links" tabindex="-1">Links</a></li>
+                <li class="active"><a href="/links" tabindex="-1">Links</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="/auth" tabindex="-1">{{authStatus}}</a></li>
+                <li><a href="/auth" tabindex="-1" ng-bind="authStatus"></a></li>
             </ul>
         </div>
     </div>
