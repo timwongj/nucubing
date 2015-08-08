@@ -1,3 +1,5 @@
+'use strict';
+
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
@@ -37,9 +39,12 @@ mongoose.connect(connectionString);
 // render static files
 app.use(express.static(__dirname + '/public'));
 
+// render client side dependencies
+app.use('/bower_components',  express.static(__dirname + '/bower_components'));
+
 // render home page
 app.get('/', function(req, res) {
-    res.sendfile(__dirname + '/templates/home.html');
+    res.sendfile(__dirname + '/public/components/home/home.html');
 });
 
 // render profile page
@@ -47,30 +52,30 @@ app.get('/profile', function(req, res) {
     if (req.user)
         res.redirect('/profile/' + req.user.facebook_id);
     else
-        res.sendfile(__dirname + '/templates/login.html');
+        res.sendfile(__dirname + '/public/components/login/login.html');
 });
 
 // render profile page
 app.get('/profile/:id', function(req, res) {
-    res.sendfile(__dirname + '/templates/profile.html');
+    res.sendfile(__dirname + '/public/components/profile/profile.html');
 });
 
 // render contest page
 app.get('/contest', function(req, res) {
     if (req.user)
-        res.sendfile(__dirname + '/templates/contest.html');
+        res.sendfile(__dirname + '/public/components/contest/contest.html');
     else
         res.sendfile(__dirname + '/templates/login.html');
 });
 
 // render results page
 app.get('/results', function(req, res) {
-    res.sendfile(__dirname + '/templates/results.html');
+    res.sendfile(__dirname + '/public/components/results/results.html');
 });
 
 // render links page
 app.get('/links', function(req, res) {
-    res.sendfile(__dirname + '/templates/links.html');
+    res.sendfile(__dirname + '/public/components/links/links.html');
 });
 
 // authorization
@@ -80,7 +85,7 @@ app.get('/auth', function(req, res) {
         res.redirect('/');
     }
     else
-        res.sendfile(__dirname + '/templates/login.html');
+        res.sendfile(__dirname + '/public/components/login/login.html');
 });
 
 // define Schemas

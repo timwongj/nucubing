@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
+    <!-- jQuery -->
+    <script src="/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="/bower_components/jquery-ui/jquery-ui.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- Angular -->
+    <script src="/bower_components/angular/angular.min.js"></script>
+    <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+    <!-- Local -->
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <script src="/components/profile/profile.js"></script>
+    <!-- Title -->
+    <link rel="shortcut icon" type="image/x-icon" href="images/cubeLogo.png"/>
+    <title>NU Cubing - Profile</title>
+</head>
+<body ng-app="nuCubingApp" ng-controller="ProfileController">
+<div class="navbar navbar-default" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/" tabindex="-1"><img class="logo" alt="NU Cubing" src="/images/cubeLogo.png"></a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-left">
+                <li><a href="/" tabindex="-1">Home</a></li>
+                <li><a href="/profile" tabindex="-1">Profile</a></li>
+                <li><a href="/contest" tabindex="-1">Contest</a></li>
+                <li><a href="/results" tabindex="-1">Results</a></li>
+                <li><a href="/links" tabindex="-1">Links</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="/auth" tabindex="-1">{{authStatus}}</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 col-sm-6 col-xs-12 centered">
+            <div class="panel panel-default">
+                <div class="panel-heading centered">
+                    <h1 class="panel-title">{{user.firstName}} {{user.lastName}}</h1>
+                </div>
+                <div class="panel-body centered panelBodyProfile">
+                    <img ng-src="http://graph.facebook.com/{{user.id}}/picture?width=250&height=250" class="img-responsive profilePic">
+                </div>
+                <div class="panel-footer centered">
+                    <p>Email: {{user.email}}</p>
+                </div>
+            </div>
+        </div>
+        <!-- Panels for Different Types of Results-->
+        <div class="col-md-4 col-sm-6 col-xs-12" ng-repeat="personalResult in personalResults">
+            <div class="panel panel-default">
+                <div class="panel-heading centered">
+                    <h1 class="panel-title">{{personalResult.type}}</h1>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>Event</th>
+                            <th>Single</th>
+                            <th>Average</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="result in personalResult.results">
+                            <td>{{result.event}}</td>
+                            <td>{{result.single}}</td>
+                            <td>{{result.average}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
