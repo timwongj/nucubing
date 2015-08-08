@@ -43,7 +43,7 @@
   "devDependencies": {},
   "bundleDependencies": [],
   "scripts": {
-    "postinstall": "export HOME=$HOME/app-root/runtime/repo & app-root/runtime/repo/node_modules/bower/bin/bower install"
+    "postinstall": "if [ -d \"$OPENSHIFT_REPO_DIR\" ]; then (export HOME=\"$OPENSHIFT_REPO_DIR\"/..; bower install) else (bower install) fi"
   },
   "private": true,
   "main": "server.js"
