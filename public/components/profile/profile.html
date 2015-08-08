@@ -35,13 +35,13 @@
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-left">
                 <li><a href="/" tabindex="-1">Home</a></li>
-                <li><a href="/profile" tabindex="-1">Profile</a></li>
+                <li class="active"><a href="/profile" tabindex="-1">Profile</a></li>
                 <li><a href="/contest" tabindex="-1">Contest</a></li>
                 <li><a href="/results" tabindex="-1">Results</a></li>
                 <li><a href="/links" tabindex="-1">Links</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="/auth" tabindex="-1">{{authStatus}}</a></li>
+                <li><a href="/auth" tabindex="-1" ng-bind="authStatus"></a></li>
             </ul>
         </div>
     </div>
@@ -51,13 +51,13 @@
         <div class="col-md-4 col-sm-6 col-xs-12 centered">
             <div class="panel panel-default">
                 <div class="panel-heading centered">
-                    <h1 class="panel-title">{{user.firstName}} {{user.lastName}}</h1>
+                    <h1 class="panel-title" ng-bind="user.firstName + ' ' + user.lastName"></h1>
                 </div>
                 <div class="panel-body centered panelBodyProfile">
                     <img ng-src="http://graph.facebook.com/{{user.id}}/picture?width=250&height=250" class="img-responsive profilePic">
                 </div>
                 <div class="panel-footer centered">
-                    <p>Email: {{user.email}}</p>
+                    <p ng-bind="'Email: ' + user.email"></p>
                 </div>
             </div>
         </div>
@@ -65,7 +65,7 @@
         <div class="col-md-4 col-sm-6 col-xs-12" ng-repeat="personalResult in personalResults">
             <div class="panel panel-default">
                 <div class="panel-heading centered">
-                    <h1 class="panel-title">{{personalResult.type}}</h1>
+                    <h1 class="panel-title" ng-bind="personalResult.type"></h1>
                 </div>
                 <div class="table-responsive">
                     <table class="table table-hover">
@@ -78,9 +78,9 @@
                         </thead>
                         <tbody>
                         <tr ng-repeat="result in personalResult.results">
-                            <td>{{result.event}}</td>
-                            <td>{{result.single}}</td>
-                            <td>{{result.average}}</td>
+                            <td ng-bind="result.event"></td>
+                            <td ng-bind="result.single"></td>
+                            <td ng-bind="result.average"></td>
                         </tr>
                         </tbody>
                     </table>

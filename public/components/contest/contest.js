@@ -75,7 +75,6 @@
                     }
                 }
             }
-
             $http.get('/contest/currentWeek').success(function(response) {
                 $scope.week = response;
                 $http.get('/contest/' + $scope.week + '/' + $scope.eventId + '/scrambles').success(function(response) {
@@ -87,6 +86,17 @@
                         $scope.solves[i].penalty = '';
                         $scope.solves[i].scramble = response[i];
                     }
+                });
+                $http.get('/userInfo').success(function(response) {
+                    var user = response;
+                    $http.get('/contest/' + $scope.week + '/' + $scope.eventId).success(function(response) {
+                        if (response) {
+                            for (var i = 0; i < response.times.length; i++) {
+                                $scope.solves[i].result = response.times[i];
+                                $scope.solves[i].penalty = response.penalties[i];
+                            }
+                        }
+                    });
                 });
             });
             $scope.showHome = 0;
@@ -104,24 +114,27 @@
         // submit results for the given event for the current week
         $scope.submit = function() {
             $http.post('/contest/' + $scope.week + '/' + $scope.eventId, $scope.solves).success(function (response) {
-                $http.get('/contest/results/current').success(function(response) {
-                    if (response != null) {
-                        for (var i = 0; i < response.length; i++) {
-                            switch($scope.eventMap[response[i].event].format) {
-                                case 'avg5' : $scope.eventMap[response[i].event].result = calculateAverage(response[i].times, response[i].penalties); break;
-                                case 'mo3' : $scope.eventMap[response[i].event].result = calculateMean(response[i].times, response[i].penalties); break;
-                                case 'bo3' : $scope.eventMap[response[i].event].result = calculateSingle(response[i].times, response[i].penalties); break;
-                                case 'bo1' : $scope.eventMap[response[i].event].result = response[i].times; break;
+                $http.get('/userInfo').success(function(response) {
+                    var user = response;
+                    $http.get('/contest/results/current/' + user.facebook_id).success(function(response) {
+                        if (response) {
+                            for (var i = 0; i < response.length; i++) {
+                                switch($scope.eventMap[response[i].event].format) {
+                                    case 'avg5' : $scope.eventMap[response[i].event].result = calculateAverage(response[i].times, response[i].penalties); break;
+                                    case 'mo3' : $scope.eventMap[response[i].event].result = calculateMean(response[i].times, response[i].penalties); break;
+                                    case 'bo3' : $scope.eventMap[response[i].event].result = calculateSingle(response[i].times, response[i].penalties); break;
+                                    case 'bo1' : $scope.eventMap[response[i].event].result = response[i].times; break;
+                                }
                             }
                         }
-                    }
-                    for (var event in $scope.eventMap) {
-                        if ($scope.eventMap.hasOwnProperty(event)) {
-                            if ($scope.eventMap[event].result == ' ') {
-                                $scope.eventMap[event].result = 'Not Completed';
+                        for (var event in $scope.eventMap) {
+                            if ($scope.eventMap.hasOwnProperty(event)) {
+                                if ($scope.eventMap[event].result == ' ') {
+                                    $scope.eventMap[event].result = 'Not Completed';
+                                }
                             }
                         }
-                    }
+                    });
                 });
             });
             $scope.event = '';

@@ -37,21 +37,21 @@
                 <li><a href="/" tabindex="-1">Home</a></li>
                 <li><a href="/profile" tabindex="-1">Profile</a></li>
                 <li><a href="/contest" tabindex="-1">Contest</a></li>
-                <li><a href="/results" tabindex="-1">Results</a></li>
+                <li class="active"><a href="/results" tabindex="-1">Results</a></li>
                 <li><a href="/links" tabindex="-1">Links</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="/auth" tabindex="-1">{{authStatus}}</a></li>
+                <li><a href="/auth" tabindex="-1" ng-bind="authStatus"></a></li>
             </ul>
         </div>
     </div>
 </div>
 <div class="container">
     <div class="page-header">
-        <h1>Results - {{selectedEvent.name}}</h1>
+        <h1 ng-bind="'Results - ' + selectedEvent.name"></h1>
     </div>
     <div class="btn-group" role="group">
-        <button type="button" class="btn btn-default" ng-repeat="event in events" ng-click="selectEvent(event)">{{event.name}}</button>
+        <button type="button" class="btn btn-default" ng-repeat="event in events" ng-click="selectEvent(event)" ng-bind="event.name"></button>
     </div>
     <div class="table table-responsive table-results">
         <table class="table table-hover">
@@ -64,9 +64,9 @@
             </thead>
             <tbody>
             <tr ng-repeat="result in selectedEvent.results | orderBy:'raw'">
-                <td>{{result.name}}</td>
-                <td>{{result.result}}</td>
-                <td>{{result.details}}</td>
+                <td ng-bind="result.name"></td>
+                <td ng-bind="result.result"></td>
+                <td ng-bind="result.details"></td>
             </tr>
             </tbody>
         </table>
