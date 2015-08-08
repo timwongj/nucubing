@@ -16,6 +16,8 @@
         // variables for ng-show
         $scope.showHome = 1;
         $scope.showManualEntry = 0;
+        $scope.showFMC = 0;
+        $scope.showMBLD = 0;
 
         // events list
         $scope.eventMap = {'x3Cube' : {name : 'Rubik\'s Cube', format: 'avg5', result : ' ', index: 0},
@@ -35,7 +37,7 @@
             'x7Cube' : {name: '7x7 Cube', format: 'mo3', result : ' ', index: 14},
             'x4BLD' : {name: '4x4 blindfolded', format: 'bo3', result : ' ', index: 15},
             'x5BLD' : {name: '5x5 blindfolded', format: 'bo3', result : ' ', index: 16},
-            'x3MBLD' : {name: '3x3x3 multi blind', format: 'bo1', result : ' ', index: 17}
+            'x3MBLD' : {name: '3x3 multi blind', format: 'bo1', result : ' ', index: 17}
         };
 
         // get current week contest results for user
@@ -48,7 +50,7 @@
                             case 'avg5' : $scope.eventMap[response[i].event].result = calculateAverage(response[i].times, response[i].penalties); break;
                             case 'mo3' : $scope.eventMap[response[i].event].result = calculateMean(response[i].times, response[i].penalties); break;
                             case 'bo3' : $scope.eventMap[response[i].event].result = calculateSingle(response[i].times, response[i].penalties); break;
-                            case 'bo1' : $scope.eventMap[response[i].event].result = response[i].times; break;
+                            case 'bo1' : $scope.eventMap[response[i].event].result = response[i].times[0]; break;
                         }
                     }
                 }
@@ -65,6 +67,7 @@
         // event variables
         $scope.event;
         $scope.eventId;
+        $scope.mbldResult = {'solved':'', 'attempted':'', 'time':''};
 
         // go to manual entry page for the event
         $scope.manualEntry = function(event) {
@@ -99,9 +102,15 @@
                     });
                 });
             });
-            $scope.showHome = 0;
-            $scope.showManualEntry = 1;
             $scope.event = event.name;
+            $scope.showHome = 0;
+            if (event.name == '3x3 fewest moves') {
+                $scope.showFMC = 1;
+            } else if (event.name == '3x3 multi blind') {
+                $scope.showMBLD = 1;
+            } else {
+                $scope.showManualEntry = 1;
+            }
         };
 
         // go back to the contest home page
@@ -109,10 +118,19 @@
             $scope.event = '';
             $scope.showHome = 1;
             $scope.showManualEntry = 0;
+            $scope.showFMC = 0;
+            $scope.showMBLD = 0;
+        };
+
+        $scope.countMoves = function(index) {
+            $scope.solves[index].result = $scope.solves[index].solution.split(' ').length;
         };
 
         // submit results for the given event for the current week
         $scope.submit = function() {
+            if ($scope.eventId == 'x3MBLD') {
+                $scope.solves[0].result = $scope.mbldResult.solved + '/' + $scope.mbldResult.attempted + ' in ' + $scope.mbldResult.time;
+            }
             $http.post('/contest/' + $scope.week + '/' + $scope.eventId, $scope.solves).success(function (response) {
                 $http.get('/userInfo').success(function(response) {
                     var user = response;
@@ -123,7 +141,7 @@
                                     case 'avg5' : $scope.eventMap[response[i].event].result = calculateAverage(response[i].times, response[i].penalties); break;
                                     case 'mo3' : $scope.eventMap[response[i].event].result = calculateMean(response[i].times, response[i].penalties); break;
                                     case 'bo3' : $scope.eventMap[response[i].event].result = calculateSingle(response[i].times, response[i].penalties); break;
-                                    case 'bo1' : $scope.eventMap[response[i].event].result = response[i].times; break;
+                                    case 'bo1' : $scope.eventMap[response[i].event].result = response[i].times[0]; break;
                                 }
                             }
                         }
@@ -140,6 +158,8 @@
             $scope.event = '';
             $scope.showHome = 1;
             $scope.showManualEntry = 0;
+            $scope.showFMC = 0;
+            $scope.showMBLD = 0;
         };
 
     }
