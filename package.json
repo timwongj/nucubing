@@ -43,7 +43,7 @@
   "devDependencies": {},
   "bundleDependencies": [],
   "scripts": {
-    "postinstall": "export HOME=$HOME/app-root/runtime/repo & app-root/runtime/repo/node_modules/bower/bin/bower install"
+    "postinstall": "export HOME=$HOME/app-root/runtime/repo & pwd & app-root/runtime/repo/node_modules/bower/bin/bower install"
   },
   "private": true,
   "main": "server.js"
