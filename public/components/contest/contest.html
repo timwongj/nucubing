@@ -100,7 +100,7 @@
         </div>
     </form>
     <!-- FMC Form Page-->
-    <form name="contestForm" class="form-horizontal" ng-show="showFMC" ng-submit="contestForm.$valid && submit()">
+    <form name="fmcContestForm" class="form-horizontal" ng-show="showFMC" ng-submit="fmcContestForm.$valid && submit()">
         <div class="form-group" ng-repeat="solve in solves">
             <div class="col-sm-12">
                 <pre ng-bind="solve.scramble"></pre>
@@ -122,7 +122,7 @@
         </div>
     </form>
     <!-- MBLD Form Page-->
-    <form name="contestForm" class="form-horizontal" ng-show="showMBLD" ng-submit="contestForm.$valid && submit()">
+    <form name="mbldContestForm" class="form-horizontal" ng-show="showMBLD" ng-submit="mbldContestForm.$valid && submit()">
         <div class="form-group">
             <div class="col-sm-12">
                 <pre ng-repeat="solve in solves" ng-bind="$index + 1 + '. ' + solve.scramble"></pre>
