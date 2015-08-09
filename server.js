@@ -330,9 +330,9 @@ app.get('/contest/results/all/:id', function(req, res) {
 });
 
 // get all results given the week and event
-app.get('/results/:week/:event', function(req, res) {
-    console.log('GET /results' + req.params.week + '/' + req.params.event);
-    Result.find({'week':req.params['week'], 'event':req.params['event']}, function(err, result) {
+app.get('/results/:week', function(req, res) {
+    console.log('GET /results/' + req.params.week);
+    Result.find({'week':req.params['week']}, function(err, result) {
         if (err) {
             throw err;
         } else {

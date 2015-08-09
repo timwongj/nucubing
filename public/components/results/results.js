@@ -14,65 +14,99 @@
         });
 
         // events list
-        $scope.events = [];
-        $scope.events[0] = {id:'x3Cube', name:"Rubik's Cube"};
-        $scope.events[1] = {id:'x4Cube', name:"4x4 Cube"};
-        $scope.events[2] = {id:'x5Cube', name:"5x5 Cube"};
-        $scope.events[3] = {id:'x2Cube', name:"2x2 Cube"};
-        $scope.events[4] = {id:'x3BLD', name:"3x3 Blindfolded"};
-        $scope.events[5] = {id:'x3OH', name:"3x3 One-Handed"};
-        $scope.events[6] = {id:'pyra', name:"Pyraminx"};
-
-        $scope.eventNames = ['x3Cube', 'x4Cube', 'x5Cube', 'x2Cube', 'x3BLD', 'x3OH', 'pyra'];
+        $scope.eventMap = {'x3Cube' : {name : 'Rubik\'s Cube', format: 'avg5', results : [], index: 0},
+            'x4Cube' : {name: '4x4 Cube', format: 'avg5', results : [], index: 1},
+            'x5Cube' : {name: '5x5 Cube', format: 'avg5', results : [], index: 2},
+            'x2Cube' : {name: '2x2 Cube', format: 'avg5', results : [], index: 3},
+            'x3BLD' : {name: '3x3 blindfolded', format: 'bo3', results : [], index: 4},
+            'x3OH' : {name: '3x3 one-handed', format: 'avg5', results : [], index: 5},
+            'x3FMC' : {name: '3x3 fewest moves', format: 'fmc', results : [], index: 6},
+            'x3FT' : {name: '3x3 with feet', format: 'mo3', results : [], index: 7},
+            'mega' : {name: 'Megaminx', format: 'avg5', results : [], index: 8},
+            'pyra' : {name: 'Pyraminx', format: 'avg5', results : [], index: 9},
+            'sq1' : {name: 'Square-1', format: 'avg5', results : [], index: 10},
+            'clock' : {name: 'Rubik\'s Clock', format: 'avg5', results : [], index: 11},
+            'skewb' : {name: 'Skewb', format: 'avg5', results : [], index: 12},
+            'x6Cube' : {name: '6x6 Cube', format: 'mo3', results : [], index: 13},
+            'x7Cube' : {name: '7x7 Cube', format: 'mo3', results : [], index: 14},
+            'x4BLD' : {name: '4x4 blindfolded', format: 'bo3', results : [], index: 15},
+            'x5BLD' : {name: '5x5 blindfolded', format: 'bo3', results : [], index: 16},
+            'x3MBLD' : {name: '3x3 multi blind', format: 'mbld', results : [], index: 17}
+        };
 
         // get all contest results for all events for the current week
-        $http.get('/contest/currentWeek').success(function(response) {
-            $scope.currentWeek = response;
-            for (var i = 0; i < $scope.events.length; i++)
-                $scope.events[i].results = [];
-            for (var i = 0; i < $scope.events.length; i++) {
-                $http.get('/results/' + $scope.currentWeek + '/' + $scope.events[i].id).success(function(response) {
-                    if (response.length != 0)
-                        var index = $scope.eventNames.indexOf(response[0].event);
-                    for (var j = 0; j < response.length; j++) {
-                        $scope.events[index].results[j] = {};
-                        $scope.events[index].results[j].name = response[j].firstName + ' ' + response[j].lastName;
-                        if (response[j].times.length == 5)
-                            $scope.events[index].results[j].result = calculateAverage(response[j].times, response[j].penalties);
-                        if (response[j].times.length == 3) {
-                            if (response[j].event == 'x3BLD')
-                                $scope.events[index].results[j].result = calculateSingle(response[j].times, response[j].penalties);
-                            else
-                                $scope.events[index].results[j].result = calculateMean(response[j].times, response[j].penalties);
-                        }
-                        var details = '';
-                        for (var k = 0; k < response[j].times.length; k++) {
-                            details += response[j].times[k] + response[j].penalties[k];
-                            if (k != response[j].times.length - 1)
-                                details += ', ';
-                        }
-                        $scope.events[index].results[j].details = details;
-                        if ($scope.events[index].results[j].result == 'DNF')
-                            $scope.events[index].results[j].raw = 'DNF';
-                        else {
-                            var res = $scope.events[index].results[j].result.split(':');
-                            if (res.length > 1)
-                                $scope.events[index].results[j].raw = (parseFloat(res[0]) * 60) + parseFloat(res[1]);
-                            else
-                                $scope.events[index].results[j].raw = parseFloat(res[0]);
-                        }
+        $http.get('/contest/currentWeek').success(function(currentWeek) {
+            $http.get('/results/' + currentWeek).success(function(results) {
+                for (var i = 0; i < results.length; i++) {
+                    var result = {'name': results[i].firstName + ' ' + results[i].lastName, 'id': results[i].facebook_id};
+                    var data = JSON.parse(results[i].data);
+                    switch($scope.eventMap[results[i].event].format) {
+                        case 'avg5': result.result = calculateAverage(data.times, data.penalties); break;
+                        case 'mo3' : result.result = calculateMean(data.times, data.penalties); break;
+                        case 'bo3' : result.result = calculateSingle(data.times, data.penalties); break;
+                        case 'fmc' : result.result = calculateMean(data.moves, 'FMC'); break;
+                        case 'mbld' : result.result = data.solved + '/' + data.attempted + ' in ' + data.time; break;
                     }
-                });
-            }
+                    var details = '';
+                    if (results[i].event != 'x3MBLD') {
+                        if (results[i].event != 'x3FMC') {
+                            for (var j = 0; j < data.times.length; j++) {
+                                details += data.times[j] + data.penalties[j];
+                                if (j != data.times.length - 1) {
+                                    details += ', ';
+                                }
+                            }
+                            if (result.result == 'DNF') {
+                                result.raw = 'DNF';
+                            } else {
+                                var res = result.result.split(':');
+                                if (res.length > 1)
+                                    result.raw = (parseFloat(res[0]) * 60) + parseFloat(res[1]);
+                                else
+                                    result.raw = parseFloat(res[0]);
+                            }
+                        } else {
+                            details = data.moves[0] + ', ' + data.moves[1] + ', ' + data.moves[2];
+                            result.raw = result.result;
+                        }
+                    } else {
+                        var rawScore = parseFloat(data.solved) - (parseFloat(data.attempted) - parseFloat(data.solved));
+                        var rawTime = (parseFloat(data.time.split(':')[0]) * 60) + parseFloat(data.time.split(':')[1]);
+                        result.raw = rawScore.toString() + rawTime.toString();
+                    }
+                    result.details = details;
+                    $scope.eventMap[results[i].event].results.push(result);
+                }
+            });
+
         });
-        $scope.selectedEvent = $scope.events[0];
+
+        $scope.selectedEvent = $scope.eventMap['x3Cube'];
+
         $scope.selectEvent = function(event) {
             $scope.selectedEvent = event;
         };
 
     }
 
+    function OrderObjectByFilter() {
+
+        return function(items, field) {
+            var filtered = [];
+            angular.forEach(items, function(item) {
+                filtered.push(item);
+            });
+            filtered.sort(function (a, b) {
+                return (a[field] > b[field] ? 1 : -1);
+            });
+            return filtered;
+        };
+
+    }
+
     angular.module('nuCubingApp', ['ui.bootstrap']);
+
+    angular.module('nuCubingApp').filter('orderObjectBy', OrderObjectByFilter);
 
     angular.module('nuCubingApp').controller('ResultsController', ResultsController);
 
