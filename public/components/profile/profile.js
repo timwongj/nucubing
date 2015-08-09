@@ -219,6 +219,9 @@ function calculateAverage(times, penalties) {
 
 // calculate the mean of 3 given the array of times and penalties
 function calculateMean(times, penalties) {
+    if (penalties = 'FMC') {
+        return ((times[0] + times[1] + times[2]) / 3).toFixed(2);
+    }
     var formattedTimes = formatTimes(times, penalties);
     var DNFCount = 0;
     for (var i = 0; i < formattedTimes.length; i++) {
