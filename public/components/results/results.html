@@ -48,10 +48,10 @@
 </div>
 <div class="container">
     <div class="page-header">
-        <h1 ng-bind="'Results - ' + selectedEvent.name"></h1>
+        <h1 ng-bind="selectedEvent.name"></h1>
     </div>
     <div class="btn-group" role="group">
-        <button type="button" class="btn btn-default" ng-repeat="event in events" ng-click="selectEvent(event)" ng-bind="event.name"></button>
+        <button type="button" class="btn btn-default" ng-repeat="event in eventMap | orderObjectBy:'index'" ng-click="selectEvent(event)" ng-bind="event.name"></button>
     </div>
     <div class="table table-responsive table-results">
         <table class="table table-hover">
