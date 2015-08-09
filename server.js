@@ -191,7 +191,8 @@ app.get('/contest/currentWeek', function(req, res) {
     res.send(currentWeek);
 });
 
-var eventMap = {'x3Cube' : {fileName : '3x3x3 Cube Round 1.txt', scrambles : 5, extras : 2},
+var eventMap = {
+    'x3Cube' : {fileName : '3x3x3 Cube Round 1.txt', scrambles : 5, extras : 2},
     'x4Cube' : {fileName: '4x4x4 Cube Round 1.txt', scrambles : 5, extras : 2},
     'x5Cube' : {fileName: '5x5x5 Cube Round 1.txt', scrambles : 5, extras : 2},
     'x2Cube' : {fileName: '2x2x2 Cube Round 1.txt', scrambles : 5, extras : 2},
@@ -276,7 +277,7 @@ app.get('/contest/results/current', function(req, res) {
 });
 
 // get contest results for current week given user id
-app.get('/contest/results/current/:id', function(req, res) {
+app.get('/profile/results/current/:id', function(req, res) {
     console.log('GET /contest/results/current/' + req.params.id);
     User.findOne({'facebook_id':req.params['id']}, function(err, user) {
         if (err) {
@@ -312,7 +313,7 @@ app.get('/contest/results/all', function(req, res) {
 });
 
 // get contest results for all weeks given user id
-app.get('/contest/results/all/:id', function(req, res) {
+app.get('/profile/results/all/:id', function(req, res) {
     console.log('GET /contest/results/all/' + req.params.id);
     User.findOne({'facebook_id':req.params['id']}, function(err, user) {
         if (err) {

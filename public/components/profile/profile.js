@@ -26,81 +26,85 @@
             $scope.user.id = response.facebook_id;
         });
 
+        // events list
+        $scope.eventMap = {
+            'x3Cube' : {name : 'Rubik\'s Cube', format: 'avg5', index: 0},
+            'x4Cube' : {name: '4x4 Cube', format: 'avg5', index: 1},
+            'x5Cube' : {name: '5x5 Cube', format: 'avg5', index: 2},
+            'x2Cube' : {name: '2x2 Cube', format: 'avg5', index: 3},
+            'x3BLD' : {name: '3x3 blindfolded', format: 'bo3', index: 4},
+            'x3OH' : {name: '3x3 one-handed', format: 'avg5', index: 5},
+            'x3FMC' : {name: '3x3 fewest moves', format: 'fmc', index: 6},
+            'x3FT' : {name: '3x3 with feet', format: 'mo3', index: 7},
+            'mega' : {name: 'Megaminx', format: 'avg5', index: 8},
+            'pyra' : {name: 'Pyraminx', format: 'avg5', index: 9},
+            'sq1' : {name: 'Square-1', format: 'avg5', index: 10},
+            'clock' : {name: 'Rubik\'s Clock', format: 'avg5', index: 11},
+            'skewb' : {name: 'Skewb', format: 'avg5', index: 12},
+            'x6Cube' : {name: '6x6 Cube', format: 'mo3', index: 13},
+            'x7Cube' : {name: '7x7 Cube', format: 'mo3', index: 14},
+            'x4BLD' : {name: '4x4 blindfolded', format: 'bo3', index: 15},
+            'x5BLD' : {name: '5x5 blindfolded', format: 'bo3', index: 16},
+            'x3MBLD' : {name: '3x3 multi blind', format: 'mbld', index: 17}
+        };
+
         // list for current week results and overall personal best results
         $scope.personalResults = [];
-        $scope.personalResults[0] = {type:'Current Week Results'};
-        $scope.personalResults[1] = {type:'Contest Personal Records'};
+        $scope.personalResults[0] = {type:'This Week'};
+        $scope.personalResults[1] = {type:'Personal Records'};
         for (var i = 0; i < $scope.personalResults.length; i++)
             $scope.personalResults[i].results = [];
 
         // get current week results for user
-        $http.get('/contest/results/current/' + profileId).success(function(response) {
-            if (response != null) {
-                for (var i = 0; i < response.length; i++) {
-                    $scope.personalResults[0].results[i] = {};
-                    $scope.personalResults[0].results[i].single = calculateSingle(response[i].times, response[i].penalties);
-                    if (response[i].times.length == 5)
-                        $scope.personalResults[0].results[i].average = calculateAverage(response[i].times, response[i].penalties);
-                    else if (response[i].times.length == 3)
-                        $scope.personalResults[0].results[i].average = calculateMean(response[i].times, response[i].penalties);
-                    if (response[i].event == 'x3Cube')
-                        $scope.personalResults[0].results[i].event = "Rubik's Cube";
-                    if (response[i].event == 'x4Cube')
-                        $scope.personalResults[0].results[i].event = "4x4 Cube";
-                    if (response[i].event == 'x5Cube')
-                        $scope.personalResults[0].results[i].event = "5x5 Cube";
-                    if (response[i].event == 'x2Cube')
-                        $scope.personalResults[0].results[i].event = "2x2 Cube";
-                    if (response[i].event == 'x3BLD')
-                        $scope.personalResults[0].results[i].event = "3x3 Blindfolded";
-                    if (response[i].event == 'x3OH')
-                        $scope.personalResults[0].results[i].event = "3x3 One-Handed";
-                    if (response[i].event == 'pyra')
-                        $scope.personalResults[0].results[i].event = "Pyraminx";
+        $http.get('/profile/results/current/' + profileId).success(function(results) {
+            for (var i = 0; i < results.length; i++) {
+                $scope.personalResults[0].results[i] = {'event':$scope.eventMap[results[i].event].name, 'index':$scope.eventMap[results[i].event].index};
+                var data = JSON.parse(results[i].data);
+                switch($scope.eventMap[results[i].event].format) {
+                    case 'avg5' :
+                        $scope.personalResults[0].results[i].single = calculateSingle(data.times, data.penalties);
+                        $scope.personalResults[0].results[i].average = calculateAverage(data.times, data.penalties);
+                        break;
+                    case 'mo3' :
+                    case 'bo3' :
+                        $scope.personalResults[0].results[i].single = calculateSingle(data.times, data.penalties);
+                        $scope.personalResults[0].results[i].average = calculateMean(data.times, data.penalties);
+                        break;
+                    case 'fmc' :
+                        $scope.personalResults[0].results[i].single = calculateFMCSingle(data.moves);
+                        $scope.personalResults[0].results[i].average = calculateFMCMean(data.moves);
+                        break;
+                    case 'mbld' :
+                        $scope.personalResults[0].results[i].single = data.solved + '/' + data.attempted + ' in ' + data.time;
+                        break;
                 }
-                sortByEvent($scope.personalResults[0].results);
             }
         });
 
         // get personal results for user
-        $http.get('/contest/results/all/' + profileId).success(function(response) {
-            if (response != null) {
-                var events = [];
-                for (var i = 0; i < response.length; i++) {
-                    if (events.indexOf(response[i].event) == -1)
-                        events.push(response[i].event);
+        $http.get('/profile/results/all/' + profileId).success(function(results) {
+            for (var i = 0; i < results.length; i++) {
+                $scope.personalResults[1].results[i] = {'event':$scope.eventMap[results[i].event].name, 'index':$scope.eventMap[results[i].event].index};
+                var data = JSON.parse(results[i].data);
+                switch($scope.eventMap[results[i].event].format) {
+                    case 'avg5' :
+                        $scope.personalResults[1].results[i].single = compareResults($scope.personalResults[1].results[i].single, calculateSingle(data.times, data.penalties));
+                        $scope.personalResults[1].results[i].average = compareResults($scope.personalResults[1].results[i].average, calculateAverage(data.times, data.penalties));
+                        break;
+                    case 'mo3' :
+                    case 'bo3' :
+                        $scope.personalResults[1].results[i].single = compareResults($scope.personalResults[1].results[i].single, calculateSingle(data.times, data.penalties));
+                        $scope.personalResults[1].results[i].average = compareResults($scope.personalResults[1].results[i].average, calculateMean(data.times, data.penalties));
+                        break;
+                    case 'fmc' :
+                        $scope.personalResults[1].results[i].single = compareResults($scope.personalResults[1].results[i].single, calculateFMCSingle(data.moves));
+                        $scope.personalResults[1].results[i].average = compareResults($scope.personalResults[1].results[i].average, calculateFMCMean(data.moves));
+                        break;
+                    case 'mbld' :
+                        var mbldResult = compareMBLDResults($scope.personalResults[1].results[i].single, data);
+                        $scope.personalResults[1].results[i].single = mbldResult.solved + '/' + mbldResult.attempted + ' in ' + mbldResult.time;
+                        break;
                 }
-                for (var i = 0; i < events.length; i++) {
-                    $scope.personalResults[1].results[i] = {};
-                    if (events[i] == 'x3Cube')
-                        $scope.personalResults[1].results[i].event = "Rubik's Cube";
-                    if (events[i] == 'x4Cube')
-                        $scope.personalResults[1].results[i].event = "4x4 Cube";
-                    if (events[i] == 'x5Cube')
-                        $scope.personalResults[1].results[i].event = "5x5 Cube";
-                    if (events[i] == 'x2Cube')
-                        $scope.personalResults[1].results[i].event = "2x2 Cube";
-                    if (events[i] == 'x3BLD')
-                        $scope.personalResults[1].results[i].event = "3x3 Blindfolded";
-                    if (events[i] == 'x3OH')
-                        $scope.personalResults[1].results[i].event = "3x3 One-Handed";
-                    if (events[i] == 'pyra')
-                        $scope.personalResults[1].results[i].event = "Pyraminx";
-                    var singles = [];
-                    var averages = [];
-                    for (var j = 0; j < response.length; j++) {
-                        if (response[j].event == events[i]) {
-                            singles.push(calculateSingle(response[j].times, response[j].penalties));
-                            if (response[j].times.length == 5)
-                                averages.push(calculateAverage(response[j].times, response[j].penalties));
-                            else if (response[j].times.length == 3)
-                                averages.push(calculateAverage(response[j].times, response[j].penalties));
-                        }
-                    }
-                    $scope.personalResults[1].results[i].single = findBest(singles);
-                    $scope.personalResults[1].results[i].average = findBest(averages);
-                }
-                sortByEvent($scope.personalResults[1].results);
             }
         });
 
@@ -112,49 +116,82 @@
 
 })();
 
-// sort results by event order
-function sortByEvent(results) {
-    var events = ["Rubik's Cube", "4x4 Cube", "5x5 Cube", "2x2 Cube", "3x3 Blindfolded", "3x3 One-Handed", "Pyraminx"];
-    for (var i = 0; i < results.length; i++) {
-        for (var j = i; j < results.length; j++) {
-            if (events.indexOf(results[i].event) > events.indexOf(results[j].event)) {
-                var temp = results[i];
-                results[i] = results[j];
-                results[j] = temp;
-            }
+// compare two results
+function compareResults(res1, res2) {
+    if (!res1) {
+        return res2;
+    } else if (res1 == 'DNF') {
+        if (res2 == 'DNF') {
+            return 'DNF';
+        } else {
+            return res2;
+        }
+    } else if (res2 == 'DNF') {
+        return res1;
+    } else {
+        var res1Arr = res1.split(':'), res2Arr = res2.split(':'), res1Formatted, res2Formatted;
+        if (res1Arr.length > 1) {
+            res1Formatted = (parseFloat(res1Arr[0]) * 60) + parseFloat(res1Arr[1]);
+        } else {
+            res1Formatted = parseFloat(res1Arr[0]);
+        }
+        if (res2Arr.length > 2) {
+            res2Formatted = (parseFloat(res2Arr[0]) * 60) + parseFloat(res2Arr[2]);
+        } else {
+            res2Formatted = parseFloat(res2Arr[0]);
+        }
+        if (res1Formatted > res2Formatted) {
+            return res2;
+        } else {
+            return res1;
         }
     }
 }
 
-// calculate best result from a list of results
-function findBest(results) {
-    var best = 'DNF';
-    var unsplitTimes = [];
-    for (var i = 0; i < results.length; i++) {
-        var res = results[i].split(':');
-        if (res.length > 1)
-            unsplitTimes[i] = (parseFloat(res[0]) * 60) + parseFloat(res[1]);
-        else
-            unsplitTimes[i] = parseFloat(res[0]);
+function compareMBLDResults(res1, res2) {
+    if (!res1) {
+        return res2;
     }
-    for (var i = 0; i < results.length; i++) {
-        if ((best == 'DNF') && (unsplitTimes[i] != 'DNF'))
-            best = unsplitTimes[i];
-        if (parseFloat(unsplitTimes[i]) < best)
-            best = unsplitTimes[i];
+    var score1 = res1.solved - (res1.attempted - res1.solved), score2 = res2.solved - (res2.attempted - res2.solved);
+    if (score1 > score2) {
+        return res1;
+    } else if (score1 < score2) {
+        return res2;
+    } else if (res1.time < res2.time) {
+        return res1;
+    } else if (res1.time > res2.time) {
+        return res2;
+    } else if (res1.attempted < res2.attempted) {
+        return res1;
+    } else {
+        return res2;
     }
-    return reformatTime(best);
 }
 
-// calculate the best single time from a single week
+// calculate the best fmc single
+function calculateFMCSingle(moves) {
+    var single = 'DNF';
+    for (var i = 0; i < moves.length; i++) {
+        if (moves[i] != 'DNF') {
+            if (single == 'DNF')
+                single = moves[i];
+            if (parseFloat(moves[i]) < single)
+                single = moves[i];
+        }
+    }
+    return single;
+}
+
+// calculate the best single time
 function calculateSingle(times, penalties) {
     var single = 'DNF', formattedTimes = formatTimes(times, penalties);
     for (var i = 0; i < formattedTimes.length; i++) {
         if (formattedTimes[i] != 'DNF') {
-            if (single == 'DNF')
+            if (single == 'DNF') {
                 single = formattedTimes[i];
-            if (parseFloat(formattedTimes[i]) < single)
+            } else if (parseFloat(formattedTimes[i]) < single) {
                 single = formattedTimes[i];
+            }
         }
     }
     if (single == 'DNF') {
@@ -217,11 +254,13 @@ function calculateAverage(times, penalties) {
     return reformatTime(average);
 }
 
+// calculate FMC mean of 3
+function calculateFMCMean(moves) {
+    return ((moves[0] + moves[1] + moves[2]) / 3).toFixed(2);
+}
+
 // calculate the mean of 3 given the array of times and penalties
 function calculateMean(times, penalties) {
-    if (penalties = 'FMC') {
-        return ((times[0] + times[1] + times[2]) / 3).toFixed(2);
-    }
     var formattedTimes = formatTimes(times, penalties);
     var DNFCount = 0;
     for (var i = 0; i < formattedTimes.length; i++) {

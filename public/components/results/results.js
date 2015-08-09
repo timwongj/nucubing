@@ -14,25 +14,29 @@
         });
 
         // events list
-        $scope.eventMap = {'x3Cube' : {name : 'Rubik\'s Cube', format: 'avg5', results : [], index: 0},
-            'x4Cube' : {name: '4x4 Cube', format: 'avg5', results : [], index: 1},
-            'x5Cube' : {name: '5x5 Cube', format: 'avg5', results : [], index: 2},
-            'x2Cube' : {name: '2x2 Cube', format: 'avg5', results : [], index: 3},
-            'x3BLD' : {name: '3x3 blindfolded', format: 'bo3', results : [], index: 4},
-            'x3OH' : {name: '3x3 one-handed', format: 'avg5', results : [], index: 5},
-            'x3FMC' : {name: '3x3 fewest moves', format: 'fmc', results : [], index: 6},
-            'x3FT' : {name: '3x3 with feet', format: 'mo3', results : [], index: 7},
-            'mega' : {name: 'Megaminx', format: 'avg5', results : [], index: 8},
-            'pyra' : {name: 'Pyraminx', format: 'avg5', results : [], index: 9},
-            'sq1' : {name: 'Square-1', format: 'avg5', results : [], index: 10},
-            'clock' : {name: 'Rubik\'s Clock', format: 'avg5', results : [], index: 11},
-            'skewb' : {name: 'Skewb', format: 'avg5', results : [], index: 12},
-            'x6Cube' : {name: '6x6 Cube', format: 'mo3', results : [], index: 13},
-            'x7Cube' : {name: '7x7 Cube', format: 'mo3', results : [], index: 14},
-            'x4BLD' : {name: '4x4 blindfolded', format: 'bo3', results : [], index: 15},
-            'x5BLD' : {name: '5x5 blindfolded', format: 'bo3', results : [], index: 16},
-            'x3MBLD' : {name: '3x3 multi blind', format: 'mbld', results : [], index: 17}
+        $scope.eventMap = {
+            'x3Cube' : {name : 'Rubik\'s Cube', format: 'avg5', results : []},
+            'x4Cube' : {name: '4x4 Cube', format: 'avg5', results : []},
+            'x5Cube' : {name: '5x5 Cube', format: 'avg5', results : []},
+            'x2Cube' : {name: '2x2 Cube', format: 'avg5', results : []},
+            'x3BLD' : {name: '3x3 blindfolded', format: 'bo3', results : []},
+            'x3OH' : {name: '3x3 one-handed', format: 'avg5', results : []},
+            'x3FMC' : {name: '3x3 fewest moves', format: 'fmc', results : []},
+            'x3FT' : {name: '3x3 with feet', format: 'mo3', results : []},
+            'mega' : {name: 'Megaminx', format: 'avg5', results : []},
+            'pyra' : {name: 'Pyraminx', format: 'avg5', results : []},
+            'sq1' : {name: 'Square-1', format: 'avg5', results : []},
+            'clock' : {name: 'Rubik\'s Clock', format: 'avg5', results : []},
+            'skewb' : {name: 'Skewb', format: 'avg5', results : []},
+            'x6Cube' : {name: '6x6 Cube', format: 'mo3', results : []},
+            'x7Cube' : {name: '7x7 Cube', format: 'mo3', results : []},
+            'x4BLD' : {name: '4x4 blindfolded', format: 'bo3', results : []},
+            'x5BLD' : {name: '5x5 blindfolded', format: 'bo3', results : []},
+            'x3MBLD' : {name: '3x3 multi blind', format: 'mbld', results : []}
         };
+
+        // default selected event
+        $scope.selectedEvent = $scope.eventMap['x3Cube'];
 
         // get all contest results for all events for the current week
         $http.get('/contest/currentWeek').success(function(currentWeek) {
@@ -41,10 +45,10 @@
                     var result = {'name': results[i].firstName + ' ' + results[i].lastName, 'id': results[i].facebook_id};
                     var data = JSON.parse(results[i].data);
                     switch($scope.eventMap[results[i].event].format) {
-                        case 'avg5': result.result = calculateAverage(data.times, data.penalties); break;
+                        case 'avg5' : result.result = calculateAverage(data.times, data.penalties); break;
                         case 'mo3' : result.result = calculateMean(data.times, data.penalties); break;
                         case 'bo3' : result.result = calculateSingle(data.times, data.penalties); break;
-                        case 'fmc' : result.result = calculateMean(data.moves, 'FMC'); break;
+                        case 'fmc' : result.result = calculateFMCMean(data.moves); break;
                         case 'mbld' : result.result = data.solved + '/' + data.attempted + ' in ' + data.time; break;
                     }
                     var details = '';
@@ -80,12 +84,6 @@
             });
 
         });
-
-        $scope.selectedEvent = $scope.eventMap['x3Cube'];
-
-        $scope.selectEvent = function(event) {
-            $scope.selectedEvent = event;
-        };
 
     }
 
@@ -203,11 +201,13 @@ function calculateAverage(times, penalties) {
     return reformatTime(average);
 }
 
+// calculate FMC mean of 3
+function calculateFMCMean(moves) {
+    return ((moves[0] + moves[1] + moves[2]) / 3).toFixed(2);
+}
+
 // calculate the mean of 3 given the array of times and penalties
 function calculateMean(times, penalties) {
-    if (penalties = 'FMC') {
-        return ((times[0] + times[1] + times[2]) / 3).toFixed(2);
-    }
     var formattedTimes = formatTimes(times, penalties);
     var DNFCount = 0;
     for (var i = 0; i < formattedTimes.length; i++) {

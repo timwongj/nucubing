@@ -77,7 +77,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr ng-repeat="result in personalResult.results">
+                        <tr ng-repeat="result in personalResult.results | orderBy:'index'">
                             <td ng-bind="result.event"></td>
                             <td ng-bind="result.single"></td>
                             <td ng-bind="result.average"></td>

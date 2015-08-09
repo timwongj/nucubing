@@ -20,7 +20,8 @@
         $scope.showMBLD = 0;
 
         // events list
-        $scope.eventMap = {'x3Cube' : {name : 'Rubik\'s Cube', format: 'avg5', result : ' ', index: 0},
+        $scope.eventMap = {
+            'x3Cube' : {name : 'Rubik\'s Cube', format: 'avg5', result : ' ', index: 0},
             'x4Cube' : {name: '4x4 Cube', format: 'avg5', result : ' ', index: 1},
             'x5Cube' : {name: '5x5 Cube', format: 'avg5', result : ' ', index: 2},
             'x2Cube' : {name: '2x2 Cube', format: 'avg5', result : ' ', index: 3},
@@ -50,7 +51,7 @@
                         case 'avg5': $scope.eventMap[results[i].event].result = calculateAverage(data.times, data.penalties); break;
                         case 'mo3' : $scope.eventMap[results[i].event].result = calculateMean(data.times, data.penalties); break;
                         case 'bo3' : $scope.eventMap[results[i].event].result = calculateSingle(data.times, data.penalties); break;
-                        case 'fmc' : $scope.eventMap[results[i].event].result = calculateMean(data.moves, 'FMC'); break;
+                        case 'fmc' : $scope.eventMap[results[i].event].result = calculateFMCMean(data.moves); break;
                         case 'mbld' : $scope.eventMap[results[i].event].result = data.solved + '/' + data.attempted + ' in ' + data.time; break;
                     }
                 }
@@ -92,6 +93,7 @@
                         $scope.solves[i].result = '';
                         $scope.solves[i].penalty = '';
                         $scope.solves[i].solution = '';
+                        $scope.solves[i].moves = '';
                         $scope.solves[i].scramble = response[i];
                     }
                 });
@@ -111,7 +113,7 @@
                             case 'fmc' :
                                 for (var i = 0; i < $scope.solves.length; i++) {
                                     $scope.solves[i].solution = data.solutions[i];
-                                    $scope.solves[i].result = data.moves[i];
+                                    $scope.solves[i].moves = data.moves[i];
                                 }
                                 break;
                             case 'mbld' :
@@ -142,7 +144,7 @@
         };
 
         $scope.countMoves = function(index) {
-            $scope.solves[index].result = $scope.solves[index].solution.split(' ').length;
+            $scope.solves[index].moves = $scope.solves[index].solution.split(' ').length;
         };
 
         // submit results for the given event for the current week
@@ -157,7 +159,7 @@
                 results.data.moves = [];
                 for (var i = 0; i < $scope.solves.length; i++) {
                     results.data.solutions[i] = $scope.solves[i].solution;
-                    results.data.moves[i] = $scope.solves[i].result;
+                    results.data.moves[i] = $scope.solves[i].moves;
                 }
             } else {
                 results.data.times = [];
@@ -177,7 +179,7 @@
                                 case 'avg5' : $scope.eventMap[results[i].event].result = calculateAverage(data.times, data.penalties); break;
                                 case 'mo3' : $scope.eventMap[results[i].event].result = calculateMean(data.times, data.penalties); break;
                                 case 'bo3' : $scope.eventMap[results[i].event].result = calculateSingle(data.times, data.penalties); break;
-                                case 'fmc' : $scope.eventMap[results[i].event].result = calculateMean(data.moves, 'FMC'); break;
+                                case 'fmc' : $scope.eventMap[results[i].event].result = calculateFMCMean(data.moves); break;
                                 case 'mbld' : $scope.eventMap[results[i].event].result = data.solved + '/' + data.attempted + ' in ' + data.time; break;
                             }
                         }
@@ -314,11 +316,13 @@ function calculateAverage(times, penalties) {
     return reformatTime(average);
 }
 
+// calculate FMC mean of 3
+function calculateFMCMean(moves) {
+    return ((moves[0] + moves[1] + moves[2]) / 3).toFixed(2);
+}
+
 // calculate the mean of 3 given the array of times and penalties
 function calculateMean(times, penalties) {
-    if (penalties = 'FMC') {
-        return ((times[0] + times[1] + times[2]) / 3).toFixed(2);
-    }
     var formattedTimes = formatTimes(times, penalties);
     var DNFCount = 0;
     for (var i = 0; i < formattedTimes.length; i++) {

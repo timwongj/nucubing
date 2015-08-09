@@ -50,13 +50,12 @@
     <div class="page-header">
         <h1 ng-bind="selectedEvent.name"></h1>
     </div>
-    <div class="btn-group" role="group">
-        <button type="button" class="btn btn-default" ng-repeat="event in eventMap | orderObjectBy:'index'" ng-click="selectEvent(event)" ng-bind="event.name"></button>
-    </div>
+    <select class="form-control" ng-model="selectedEvent" ng-options="event.name for event in eventMap"></select>
     <div class="table table-responsive table-results">
         <table class="table table-hover">
             <thead>
             <tr>
+                <th></th>
                 <th>Name</th>
                 <th>Result</th>
                 <th>Details</th>
@@ -64,6 +63,7 @@
             </thead>
             <tbody>
             <tr ng-repeat="result in selectedEvent.results | orderBy:'raw'">
+                <td ng-bind="$index + 1"></td>
                 <td ng-bind="result.name"></td>
                 <td ng-bind="result.result"></td>
                 <td ng-bind="result.details"></td>
