@@ -42,25 +42,20 @@
         };
 
         // get current week contest results for user
-        $http.get('/contest/results/current').success(function(response) {
-            var results = response;
-            if (results) {
-                for (var i = 0; i < results.length; i++) {
-                    var data = JSON.parse(results[i].data);
-                    switch($scope.eventMap[results[i].event].format) {
-                        case 'avg5': $scope.eventMap[results[i].event].result = calculateAverage(data.times, data.penalties); break;
-                        case 'mo3' : $scope.eventMap[results[i].event].result = calculateMean(data.times, data.penalties); break;
-                        case 'bo3' : $scope.eventMap[results[i].event].result = calculateSingle(data.times, data.penalties); break;
-                        case 'fmc' : $scope.eventMap[results[i].event].result = calculateFMCMean(data.moves); break;
-                        case 'mbld' : $scope.eventMap[results[i].event].result = data.solved + '/' + data.attempted + ' in ' + data.time; break;
-                    }
+        $http.get('/contest/results/current').success(function(results) {
+            for (var i = 0; i < results.length; i++) {
+                var data = JSON.parse(results[i].data);
+                switch($scope.eventMap[results[i].event].format) {
+                    case 'avg5': $scope.eventMap[results[i].event].result = calculateAverage(data.times, data.penalties); break;
+                    case 'mo3' : $scope.eventMap[results[i].event].result = calculateMean(data.times, data.penalties); break;
+                    case 'bo3' : $scope.eventMap[results[i].event].result = calculateSingle(data.times, data.penalties); break;
+                    case 'fmc' : $scope.eventMap[results[i].event].result = calculateFMCMean(data.moves); break;
+                    case 'mbld' : $scope.eventMap[results[i].event].result = data.solved + '/' + data.attempted + ' in ' + data.time; break;
                 }
             }
             for (var event in $scope.eventMap) {
-                if ($scope.eventMap.hasOwnProperty(event)) {
-                    if ($scope.eventMap[event].result == ' ') {
-                        $scope.eventMap[event].result = 'Not Completed';
-                    }
+                if (($scope.eventMap.hasOwnProperty(event)) && ($scope.eventMap[event].result == ' ')) {
+                    $scope.eventMap[event].result = 'Not Completed';
                 }
             }
         });
@@ -81,47 +76,41 @@
                     }
                 }
             }
-            // get current week
-            $http.get('/contest/currentWeek').success(function(response) {
-                $scope.week = response;
-                // get scrambles
-                $http.get('/contest/' + $scope.week + '/' + $scope.eventId + '/scrambles').success(function(response) {
-                    $scope.solves = [];
-                    for (var i = 0; i < response.length; i++)
-                    {
-                        $scope.solves[i] = {};
-                        $scope.solves[i].result = '';
-                        $scope.solves[i].penalty = '';
-                        $scope.solves[i].solution = '';
-                        $scope.solves[i].moves = '';
-                        $scope.solves[i].scramble = response[i];
-                    }
-                });
-                // get results if they exist
-                $http.get('/contest/results/' + $scope.week + '/' + $scope.eventId).success(function(results) {
-                    if (results) {
-                        var data = JSON.parse(results.data);
-                        switch($scope.eventMap[results.event].format) {
-                            case 'avg5' :
-                            case 'mo3' :
-                            case 'bo3' :
-                                for (var i = 0; i < $scope.solves.length; i++) {
-                                    $scope.solves[i].result = data.times[i];
-                                    $scope.solves[i].penalty = data.penalties[i];
-                                }
-                                break;
-                            case 'fmc' :
-                                for (var i = 0; i < $scope.solves.length; i++) {
-                                    $scope.solves[i].solution = data.solutions[i];
-                                    $scope.solves[i].moves = data.moves[i];
-                                }
-                                break;
-                            case 'mbld' :
-                                $scope.mbldResult = {'solved':data.solved, 'attempted':data.attempted, 'time':data.time};
-                                break;
+            // get scrambles
+            $http.get('/contest/scrambles/' + $scope.eventId).success(function(response) {
+                $scope.solves = [];
+                for (var i = 0; i < response.length; i++)
+                {
+                    $scope.solves[i] = {};
+                    $scope.solves[i].result = '';
+                    $scope.solves[i].penalty = '';
+                    $scope.solves[i].solution = '';
+                    $scope.solves[i].moves = '';
+                    $scope.solves[i].scramble = response[i];
+                }
+            });
+            // get results if they exist
+            $http.get('/contest/results/' + $scope.eventId).success(function(results) {
+                var data = JSON.parse(results.data);
+                switch($scope.eventMap[results.event].format) {
+                    case 'avg5' :
+                    case 'mo3' :
+                    case 'bo3' :
+                        for (var i = 0; i < $scope.solves.length; i++) {
+                            $scope.solves[i].result = data.times[i];
+                            $scope.solves[i].penalty = data.penalties[i];
                         }
-                    }
-                });
+                        break;
+                    case 'fmc' :
+                        for (var i = 0; i < $scope.solves.length; i++) {
+                            $scope.solves[i].solution = data.solutions[i];
+                            $scope.solves[i].moves = data.moves[i];
+                        }
+                        break;
+                    case 'mbld' :
+                        $scope.mbldResult = {'solved':data.solved, 'attempted':data.attempted, 'time':data.time};
+                        break;
+                }
             });
             $scope.event = event.name;
             $scope.showHome = 0;
@@ -149,49 +138,36 @@
 
         // submit results for the given event for the current week
         $scope.submit = function() {
-            var results = {'event':$scope.eventId, 'week':$scope.week, 'data':{}};
+            var result = {'event':$scope.eventId, 'data':{}};
             if ($scope.eventId == 'x3MBLD') {
-                results.data.solved = $scope.mbldResult.solved;
-                results.data.attempted = $scope.mbldResult.attempted;
-                results.data.time = $scope.mbldResult.time;
+                result.data.solved = $scope.mbldResult.solved;
+                result.data.attempted = $scope.mbldResult.attempted;
+                result.data.time = $scope.mbldResult.time;
             } else if ($scope.eventId == 'x3FMC') {
-                results.data.solutions = [];
-                results.data.moves = [];
+                result.data.solutions = [];
+                result.data.moves = [];
                 for (var i = 0; i < $scope.solves.length; i++) {
-                    results.data.solutions[i] = $scope.solves[i].solution;
-                    results.data.moves[i] = $scope.solves[i].moves;
+                    result.data.solutions[i] = $scope.solves[i].solution;
+                    result.data.moves[i] = $scope.solves[i].moves;
                 }
             } else {
-                results.data.times = [];
-                results.data.penalties = [];
+                result.data.times = [];
+                result.data.penalties = [];
                 for (var i = 0; i < $scope.solves.length; i++) {
-                    results.data.times[i] = $scope.solves[i].result;
-                    results.data.penalties[i] = $scope.solves[i].penalty;
+                    result.data.times[i] = $scope.solves[i].result;
+                    result.data.penalties[i] = $scope.solves[i].penalty;
                 }
             }
-            results.data = JSON.stringify(results.data);
-            $http.post('/contest/submit', results).success(function (response) {
-                $http.get('/contest/results/current').success(function(results) {
-                    if (results) {
-                        for (var i = 0; i < results.length; i++) {
-                            var data = JSON.parse(results[i].data);
-                            switch($scope.eventMap[results[i].event].format) {
-                                case 'avg5' : $scope.eventMap[results[i].event].result = calculateAverage(data.times, data.penalties); break;
-                                case 'mo3' : $scope.eventMap[results[i].event].result = calculateMean(data.times, data.penalties); break;
-                                case 'bo3' : $scope.eventMap[results[i].event].result = calculateSingle(data.times, data.penalties); break;
-                                case 'fmc' : $scope.eventMap[results[i].event].result = calculateFMCMean(data.moves); break;
-                                case 'mbld' : $scope.eventMap[results[i].event].result = data.solved + '/' + data.attempted + ' in ' + data.time; break;
-                            }
-                        }
-                    }
-                    for (var event in $scope.eventMap) {
-                        if ($scope.eventMap.hasOwnProperty(event)) {
-                            if ($scope.eventMap[event].result == ' ') {
-                                $scope.eventMap[event].result = 'Not Completed';
-                            }
-                        }
-                    }
-                });
+            switch($scope.eventMap[result.event].format) {
+                case 'avg5': $scope.eventMap[result.event].result = calculateAverage(result.data.times, result.data.penalties); break;
+                case 'mo3' : $scope.eventMap[result.event].result = calculateMean(result.data.times, result.data.penalties); break;
+                case 'bo3' : $scope.eventMap[result.event].result = calculateSingle(result.data.times, result.data.penalties); break;
+                case 'fmc' : $scope.eventMap[result.event].result = calculateFMCMean(result.data.moves); break;
+                case 'mbld' : $scope.eventMap[result.event].result = result.data.solved + '/' + result.data.attempted + ' in ' + result.data.time; break;
+            }
+            result.data = JSON.stringify(result.data);
+            $http.post('/contest/submit', result).success(function (response) {
+
             });
             $scope.event = '';
             $scope.showHome = 1;

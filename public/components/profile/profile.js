@@ -18,7 +18,7 @@
 
         // get user information
         $scope.user = {};
-        $http.get('/userInfo/id/' + profileId).success(function(response) {
+        $http.get('/profile/userInfo/' + profileId).success(function(response) {
             $scope.user.firstName = response.firstName;
             $scope.user.lastName = response.lastName;
             $scope.user.email = response.email;
