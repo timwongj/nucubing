@@ -26,7 +26,7 @@ app.use(session({
     store: new redisStore({
         host: process.env.OPENSHIFT_REDIS_DB_HOST || 'localhost',
         port: process.env.OPENSHIFT_REDIS_DB_PORT || 6379,
-        client: redis.createClient(process.env.OPENSHIFT_REDIS_DB_PORT || 6379, process.env.OPENSHIFT_REDIS_DB_HOST || 'localhost')
+        pass: process.env.OPENSHIFT_REDIS_DB_PASSWORD || ''
     }),
     secret: 'keyboard cat',
     resave: false,
