@@ -18,7 +18,7 @@ var app = express();
 
 var client;
 if (process.env.OPENSHIFT_REDIS_DB_HOST)
-    client = redis.createClient(proccess.env.OPENSHIFT_REDIS_DB_PORT, proccess.env.OPENSHIFT_REDIS_DB_HOST);
+    client = redis.createClient(process.env.OPENSHIFT_REDIS_DB_PORT, process.env.OPENSHIFT_REDIS_DB_HOST);
 else
     client = redis.createClient();
 
