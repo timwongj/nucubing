@@ -1,27 +1,37 @@
 'use strict';
 
 var express = require('express');
-var app = express();
+var path = require('path');
+var fs = require('fs');
+var logger = require('morgan');
+var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var multer = require('multer');
 var mongoose = require('mongoose');
 var passport = require('passport'),
-    FacebookStrategy = require('passport-facebook').Strategy;
-var fs = require('fs');
+  FacebookStrategy = require('passport-facebook').Strategy;
+
+var app = express();
 
 // configuration
-app.configure(function() {
-    app.use(bodyParser.json());
-    app.use(bodyParser.urlencoded({extended: true}));
-    app.use(multer());
-    app.use(express.static('public'));
-    app.use(express.cookieParser());
-    app.use(express.bodyParser());
-    app.use(express.session({secret: 'dose you eben gj?'}));
-    app.use(passport.initialize());
-    app.use(passport.session());
-    app.use(app.router);
-});
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(multer());
+app.use(cookieParser());
+app.use(require('express-session')({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+// render static files
+app.use('/public', express.static(__dirname + '/public'));
+
+// render client side dependencies
+app.use('/bower_components',  express.static(__dirname + '/bower_components'));
 
 // passport
 passport.serializeUser(function(user, done) {
@@ -36,12 +46,6 @@ passport.deserializeUser(function(user, done) {
 var connectionString = process.env.OPENSHIFT_MONGODB_DB_URL || 'mongodb://localhost/nucubing';
 mongoose.connect(connectionString);
 
-// render static files
-app.use(express.static(__dirname + '/public'));
-
-// render client side dependencies
-app.use('/bower_components',  express.static(__dirname + '/bower_components'));
-
 // render home page
 app.get('/', function(req, res) {
     res.sendfile(__dirname + '/public/components/home/home.html');
@@ -49,7 +53,6 @@ app.get('/', function(req, res) {
 
 // render profile page
 app.get('/profile', function(req, res) {
-    console.log('GET /profile');
     if (req.user)
         res.redirect('/profile/' + req.user.facebook_id);
     else
@@ -58,13 +61,11 @@ app.get('/profile', function(req, res) {
 
 // render profile page
 app.get('/profile/:id', function(req, res) {
-    console.log('GET /profile/' + req.params.id);
     res.sendfile(__dirname + '/public/components/profile/profile.html');
 });
 
 // render contest page
 app.get('/contest', function(req, res) {
-    console.log('GET /contest');
     if (req.user)
         res.sendfile(__dirname + '/public/components/contest/contest.html');
     else
@@ -73,19 +74,16 @@ app.get('/contest', function(req, res) {
 
 // render results page
 app.get('/results', function(req, res) {
-    console.log('GET /results');
     res.sendfile(__dirname + '/public/components/results/results.html');
 });
 
 // render links page
 app.get('/links', function(req, res) {
-    console.log('GET /links');
     res.sendfile(__dirname + '/public/components/links/links.html');
 });
 
 // authorization
 app.get('/auth', function(req, res) {
-    console.log('GET /auth');
     if (req.user) {
         req.logout();
         res.redirect('/');
@@ -183,7 +181,6 @@ app.get('/auth/facebook/callback', passport.authenticate('facebook', { successRe
 
 // get authorization status
 app.get('/authStatus', function(req, res) {
-    console.log('GET /authStatus');
     if (req.user)
         res.json({status:'connected'});
     else
@@ -192,7 +189,6 @@ app.get('/authStatus', function(req, res) {
 
 // send user info such as name, email, and facebook id
 app.get('/profile/userInfo/:id', function(req, res) {
-    console.log('GET /profile/userInfo/' + req.params.id);
     User.findOne({'facebook_id':req.params['id']}, function(err, user) {
         if (err) {
             throw err;
@@ -204,7 +200,6 @@ app.get('/profile/userInfo/:id', function(req, res) {
 
 // get contest results for current week given user id
 app.get('/profile/results/current/:id', function(req, res) {
-    console.log('GET /contest/results/current/' + req.params.id);
     User.findOne({'facebook_id':req.params['id']}, function(err, user) {
         if (err) {
             throw err;
@@ -222,7 +217,6 @@ app.get('/profile/results/current/:id', function(req, res) {
 
 // get contest results for all weeks given user id
 app.get('/profile/results/all/:id', function(req, res) {
-    console.log('GET /contest/results/all/' + req.params.id);
     User.findOne({'facebook_id':req.params['id']}, function(err, user) {
         if (err) {
             throw err;
@@ -240,7 +234,6 @@ app.get('/profile/results/all/:id', function(req, res) {
 
 // get user's contest results for current week
 app.get('/contest/results/current', function(req, res) {
-    console.log('GET /contest/results/current');
     User.findOne({'facebook_id':req.user.facebook_id}, function(err, user) {
         if (err) {
             throw err;
@@ -258,7 +251,6 @@ app.get('/contest/results/current', function(req, res) {
 
 // get scrambles given the event
 app.get('/contest/scrambles/:event', function(req, res) {
-    console.log('GET /contest/scrambles/' + req.params.event);
     var filename = eventMap[req.params['event']].fileName;
     var weekPath = 'NU_CUBING_' + currentWeek.substr(0, 2) + '-' + currentWeek.substr(2, 2) + '-20' + currentWeek.substr(4, 2);
     var file = fs.readFileSync('./scrambles/' + weekPath + '/txt/' + filename, 'utf-8');
@@ -269,7 +261,6 @@ app.get('/contest/scrambles/:event', function(req, res) {
 
 // get results for the event for the current week if they exist
 app.get('/contest/results/:event', function(req, res) {
-    console.log('GET /contest/results/' + req.params.event);
     Result.findOne({'week':currentWeek, 'event':req.params.event, 'email':req.user.email}, function(err, result) {
         if (err) {
             throw err;
@@ -281,7 +272,6 @@ app.get('/contest/results/:event', function(req, res) {
 
 // submit results for the given week and event
 app.post('/contest/submit', function(req, res) {
-    console.log('POST /contest/submit');
     var result = new Result();
     result.week = currentWeek;
     result.event = req.body.event;
@@ -305,7 +295,6 @@ app.post('/contest/submit', function(req, res) {
 
 // get all results given the week and event
 app.get('/results/results/current', function(req, res) {
-    console.log('GET /results/results');
     Result.find({'week':currentWeek}, function(err, result) {
         if (err) {
             throw err;
