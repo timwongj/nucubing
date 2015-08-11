@@ -16,15 +16,6 @@ var passport = require('passport'),
 
 var app = express();
 
-var client;
-if (process.env.OPENSHIFT_REDIS_DB_HOST) {
-    console.log('ENV = OPENSHIFT');
-    client = redis.createClient(process.env.OPENSHIFT_REDIS_DB_PORT, process.env.OPENSHIFT_REDIS_DB_HOST);
-} else {
-    console.log('ENV = LOCAL');
-    client = redis.createClient();
-}
-
 // configuration
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -33,9 +24,9 @@ app.use(multer());
 app.use(cookieParser());
 app.use(session({
     store: new redisStore({
-        host: 'localhost',
+        host: process.env.OPENSHIFT_REDIS_DB_HOST || 'localhost',
         port: process.env.OPENSHIFT_REDIS_DB_PORT || 6379,
-        client: client
+        pass: process.env.OPENSHIFT_REDIS_DB_PASSWORD || ''
     }),
     secret: 'keyboard cat',
     resave: false,
