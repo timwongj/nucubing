@@ -17,10 +17,13 @@ var passport = require('passport'),
 var app = express();
 
 var client;
-if (process.env.OPENSHIFT_REDIS_DB_HOST)
+if (process.env.OPENSHIFT_REDIS_DB_HOST) {
+    console.log('ENV = OPENSHIFT');
     client = redis.createClient(process.env.OPENSHIFT_REDIS_DB_PORT, process.env.OPENSHIFT_REDIS_DB_HOST);
-else
+} else {
+    console.log('ENV = LOCAL');
     client = redis.createClient();
+}
 
 // configuration
 app.use(logger('dev'));
