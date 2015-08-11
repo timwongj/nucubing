@@ -7,11 +7,20 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var multer = require('multer');
+var session = require('express-session');
+var redis = require('redis');
+var redisStore = require('connect-redis')(session);
 var mongoose = require('mongoose');
 var passport = require('passport'),
   FacebookStrategy = require('passport-facebook').Strategy;
 
 var app = express();
+
+var client;
+if (process.env.OPENSHIFT_REDIS_DB_HOST)
+    client = redis.createClient(process.env.OPENSHIFT_REDIS_DB_PORT, process.env.OPENSHIFT_REDIS_DB_HOST);
+else
+    client = redis.createClient();
 
 // configuration
 app.use(logger('dev'));
@@ -19,7 +28,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(multer());
 app.use(cookieParser());
-app.use(require('express-session')({
+app.use(session({
+    store: new redisStore({
+        host: 'localhost',
+        port: process.env.OPENSHIFT_REDIS_DB_PORT || 6379,
+        client: client
+    }),
     secret: 'keyboard cat',
     resave: false,
     saveUninitialized: false
@@ -93,7 +107,7 @@ app.get('/auth', function(req, res) {
 });
 
 // set current week
-var currentWeek = '080215';
+var currentWeek = '080915';
 
 var eventMap = {
     'x3Cube' : {fileName : '3x3x3 Cube Round 1.txt', scrambles : 5, extras : 2},
