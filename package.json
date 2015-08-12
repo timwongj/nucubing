@@ -43,8 +43,7 @@
     "passport-google": "^0.3.0",
     "passport-local": "^1.0.0",
     "passport-twitter": "^1.0.3",
-    "path": "^0.11.14",
-    "redis": "^0.12.1"
+    "path": "^0.11.14"
   },
   "devDependencies": {},
   "bundleDependencies": [],
