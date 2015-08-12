@@ -54,6 +54,9 @@ passport.deserializeUser(function(user, done) {
 var connectionString = process.env.OPENSHIFT_MONGODB_DB_URL || 'mongodb://localhost/nucubing';
 mongoose.connect(connectionString);
 
+var User = require('./models/user');
+var Result = require('./models/result');
+
 // render home page
 app.get('/', function(req, res) {
     res.sendfile(__dirname + '/public/components/home/home.html');
@@ -123,33 +126,6 @@ var eventMap = {
     'x5BLD' : {fileName: '5x5x5 Cube Blindfolded Round 1.txt', scrambles : 3, extras : 2},
     'x3MBLD' : {fileName: '3x3x3 Multiple Blindfolded Round 1.txt', scrambles : 35, extras : 0}
 };
-
-// define Schemas
-var Schema = mongoose.Schema;
-var ObjectId = Schema.ObjectId;
-
-// User Schema
-var User = mongoose.model('User', new Schema ({
-    id:ObjectId,
-    facebook_id:String,
-    firstName: String,
-    lastName: String,
-    email:String,
-    wcaID:String,
-    provider:String
-}));
-
-// Result Schema
-var Result = mongoose.model('Result', new Schema ({
-    id:ObjectId,
-    facebook_id:String,
-    firstName: String,
-    lastName: String,
-    email:String,
-    week:String,
-    event:String,
-    data:String
-}));
 
 // Facebook login
 passport.use(new FacebookStrategy({
