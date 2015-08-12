@@ -1,0 +1,14 @@
+{
+  "node": {
+    "ip":"OPENSHIFT_NODEJS_IP",
+    "port":"OPENSHIFT_NODEJS_PORT"
+  },
+  "mongo": {
+    "connectionString":"OPENSHIFT_MONGODB_DB_URL"
+  },
+  "redisStore": {
+    "host": "OPENSHIFT_REDIS_DB_HOST",
+    "port": "OPENSHIFT_REDIS_DB_PORT",
+    "pass": "OPENSHIFT_REDIS_DB_PASSWORD"
+  }
+}

@@ -8,11 +8,11 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var multer = require('multer');
 var session = require('express-session');
-var redis = require('redis');
 var redisStore = require('connect-redis')(session);
 var mongoose = require('mongoose');
 var passport = require('passport'),
   FacebookStrategy = require('passport-facebook').Strategy;
+var config = require('config');
 
 var app = express();
 
@@ -24,9 +24,9 @@ app.use(multer());
 app.use(cookieParser());
 app.use(session({
     store: new redisStore({
-        host: process.env.OPENSHIFT_REDIS_DB_HOST || 'localhost',
-        port: process.env.OPENSHIFT_REDIS_DB_PORT || 6379,
-        pass: process.env.OPENSHIFT_REDIS_DB_PASSWORD || ''
+        host: config.get('redisStore.host'),
+        port: config.get('redisStore.port'),
+        pass: config.get('redisStore.pass')
     }),
     secret: 'keyboard cat',
     resave: false,
@@ -51,8 +51,7 @@ passport.deserializeUser(function(user, done) {
 });
 
 // connect to mongoDB
-var connectionString = process.env.OPENSHIFT_MONGODB_DB_URL || 'mongodb://localhost/nucubing';
-mongoose.connect(connectionString);
+mongoose.connect(config.get('mongo.connectionString'));
 
 var User = require('./models/user');
 var Result = require('./models/result');
@@ -129,8 +128,8 @@ var eventMap = {
 
 // Facebook login
 passport.use(new FacebookStrategy({
-        clientID: '1397096627278092',
-        clientSecret: 'e98f10732572cff4bf9a1ccd54288460',
+        clientID: config.get('passport.facebook.clientID'),
+        clientSecret: config.get('passport.facebook.clientSecret'),
         callbackURL: '/auth/facebook/callback'
     }, function(accessToken, refreshToken, profile, done) {
         process.nextTick(function() {
@@ -288,8 +287,5 @@ app.get('/results/results/current', function(req, res) {
     });
 });
 
-// listen on port and ip
-var ip = process.env.OPENSHIFT_NODEJS_IP || "127.0.0.1";
-var port = process.env.OPENSHIFT_NODEJS_PORT || 8080;
-
-app.listen(port, ip);
+//app.listen(port, ip);
+app.listen(config.get('node.port'), config.get('node.ip'));

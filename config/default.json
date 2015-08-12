@@ -1,0 +1,20 @@
+{
+  "node": {
+    "ip":"127.0.0.1",
+    "port":"8080"
+  },
+  "mongo": {
+    "connectionString":"mongodb://localhost/nucubing"
+  },
+  "redisStore": {
+    "host": "localhost",
+    "port": "6379",
+    "pass": ""
+  },
+  "passport": {
+    "facebook": {
+      "clientID":"1397096627278092",
+      "clientSecret":"e98f10732572cff4bf9a1ccd54288460"
+    }
+  }
+}
