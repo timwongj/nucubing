@@ -51,7 +51,6 @@
         // list for current week results and overall personal best results
         $scope.personalResults = [];
         $scope.personalResults[0] = {type:'This Week'};
-        $scope.personalResults[1] = {type:'Personal Records'};
         for (var i = 0; i < $scope.personalResults.length; i++)
             $scope.personalResults[i].results = [];
 
@@ -81,29 +80,50 @@
             }
         });
 
+        $scope.personalBestsMap = $scope.eventMap;
+        $scope.personalBests = [];
+
+        for (var event in $scope.personalBestsMap) {
+            if ($scope.personalBestsMap.hasOwnProperty(event)) {
+                $scope.personalBestsMap[event].single = '';
+                $scope.personalBestsMap[event].average = '';
+            }
+        }
+
         // get personal results for user
         $http.get('/profile/results/all/' + profileId).success(function(results) {
             for (var i = 0; i < results.length; i++) {
-                $scope.personalResults[1].results[i] = {'event':$scope.eventMap[results[i].event].name, 'index':$scope.eventMap[results[i].event].index};
                 var data = JSON.parse(results[i].data);
-                switch($scope.eventMap[results[i].event].format) {
+                switch($scope.personalBestsMap[results[i].event].format) {
                     case 'avg5' :
-                        $scope.personalResults[1].results[i].single = compareResults($scope.personalResults[1].results[i].single, calculateSingle(data.times, data.penalties));
-                        $scope.personalResults[1].results[i].average = compareResults($scope.personalResults[1].results[i].average, calculateAverage(data.times, data.penalties));
+                        $scope.personalBestsMap[results[i].event].single = compareResults($scope.personalBestsMap[results[i].event].single, calculateSingle(data.times, data.penalties));
+                        $scope.personalBestsMap[results[i].event].average = compareResults($scope.personalBestsMap[results[i].event].average, calculateAverage(data.times, data.penalties));
                         break;
                     case 'mo3' :
                     case 'bo3' :
-                        $scope.personalResults[1].results[i].single = compareResults($scope.personalResults[1].results[i].single, calculateSingle(data.times, data.penalties));
-                        $scope.personalResults[1].results[i].average = compareResults($scope.personalResults[1].results[i].average, calculateMean(data.times, data.penalties));
+                        $scope.personalBestsMap[results[i].event].single = compareResults($scope.personalBestsMap[results[i].event].single, calculateSingle(data.times, data.penalties));
+                        $scope.personalBestsMap[results[i].event].average = compareResults($scope.personalBestsMap[results[i].event].average, calculateMean(data.times, data.penalties));
                         break;
                     case 'fmc' :
-                        $scope.personalResults[1].results[i].single = compareResults($scope.personalResults[1].results[i].single, calculateFMCSingle(data.moves));
-                        $scope.personalResults[1].results[i].average = compareResults($scope.personalResults[1].results[i].average, calculateFMCMean(data.moves));
+                        $scope.personalBestsMap[results[i].event].single = compareResults($scope.personalBestsMap[results[i].event].single, calculateFMCSingle(data.moves));
+                        $scope.personalBestsMap[results[i].event].average = compareResults($scope.personalBestsMap[results[i].event].average, calculateFMCMean(data.moves));
                         break;
                     case 'mbld' :
-                        var mbldResult = compareMBLDResults($scope.personalResults[1].results[i].single, data);
-                        $scope.personalResults[1].results[i].single = mbldResult.solved + '/' + mbldResult.attempted + ' in ' + mbldResult.time;
+                        var mbldResult = compareMBLDResults($scope.personalBestsMap[results[i].event].single, data);
+                        $scope.personalBestsMap[results[i].event].single = mbldResult.solved + '/' + mbldResult.attempted + ' in ' + mbldResult.time;
                         break;
+                }
+            }
+            for (var event in $scope.personalBestsMap) {
+                if ($scope.personalBestsMap.hasOwnProperty(event)) {
+                    if (($scope.personalBestsMap[event].single) || ($scope.personalBestsMap[event].average)) {
+                        $scope.personalBests.push({
+                            name: $scope.personalBestsMap[event].name,
+                            single: $scope.personalBestsMap[event].single,
+                            average: $scope.personalBestsMap[event].average,
+                            index: $scope.personalBestsMap[event].index
+                        });
+                    }
                 }
             }
         });
@@ -122,7 +142,7 @@ function compareResults(res1, res2) {
         return res2;
     } else if (res1 == 'DNF') {
         if (res2 == 'DNF') {
-            return 'DNF';
+            return '';
         } else {
             return res2;
         }

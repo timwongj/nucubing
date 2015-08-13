@@ -76,27 +76,6 @@ app.get('/links', function(req, res) {
     res.sendfile(__dirname + '/public/components/links/links.html');
 });
 
-var eventMap = {
-    'x3Cube' : {fileName : '3x3x3 Cube Round 1.txt', scrambles : 5, extras : 2},
-    'x4Cube' : {fileName: '4x4x4 Cube Round 1.txt', scrambles : 5, extras : 2},
-    'x5Cube' : {fileName: '5x5x5 Cube Round 1.txt', scrambles : 5, extras : 2},
-    'x2Cube' : {fileName: '2x2x2 Cube Round 1.txt', scrambles : 5, extras : 2},
-    'x3BLD' : {fileName: '3x3x3 Blindfolded Round 1.txt', scrambles : 3, extras : 2},
-    'x3OH' : {fileName: '3x3x3 One-Handed Round 1.txt', scrambles : 5, extras : 2},
-    'x3FMC' : {fileName: '3x3x3 Fewest Moves Round 1.txt', scrambles : 3, extras : 0},
-    'x3FT' : {fileName: '3x3x3 With Feet Round 1.txt', scrambles : 3, extras : 2},
-    'mega' : {fileName: 'Megaminx Round 1.txt', scrambles : 5, extras : 2},
-    'pyra' : {fileName: 'Pyraminx Round 1.txt', scrambles : 5, extras : 2},
-    'sq1' : {fileName: 'Square-1 Round 1.txt', scrambles : 5, extras : 2},
-    'clock' : {fileName: 'Rubik\'s Clock Round 1.txt', scrambles : 5, extras : 2},
-    'skewb' : {fileName: 'Skewb Round 1.txt', scrambles : 5, extras : 2},
-    'x6Cube' : {fileName: '6x6x6 Cube Round 1.txt', scrambles : 3, extras : 2},
-    'x7Cube' : {fileName: '7x7x7 Cube Round 1.txt', scrambles : 3, extras : 2},
-    'x4BLD' : {fileName: '4x4x4 Cube Blindfolded Round 1.txt', scrambles : 3, extras : 2},
-    'x5BLD' : {fileName: '5x5x5 Cube Blindfolded Round 1.txt', scrambles : 3, extras : 2},
-    'x3MBLD' : {fileName: '3x3x3 Multiple Blindfolded Round 1.txt', scrambles : 35, extras : 0}
-};
-
 // Facebook login
 passport.use(new FacebookStrategy({
         clientID: config.get('passport.facebook.clientID'),
