@@ -6,7 +6,7 @@
 
         // get authorization status
         $scope.authStatus = '';
-        $http.get('/authStatus').success(function(response) {
+        $http.get('/auth/status').success(function(response) {
             if (response.status == 'connected')
                 $scope.authStatus = 'Logout';
             else
