@@ -61,49 +61,20 @@ app.get('/', function(req, res) {
     res.sendfile(__dirname + '/public/components/home/home.html');
 });
 
-// render profile page
-app.get('/profile', function(req, res) {
-    if (req.user)
-        res.redirect('/profile/' + req.user.facebook_id);
-    else
-        res.sendfile(__dirname + '/public/components/login/login.html');
-});
+var profile = require('./routes/profile');
+var contest = require('./routes/contest');
+var results = require('./routes/results');
+var auth = require('./routes/auth');
 
-// render profile page
-app.get('/profile/:id', function(req, res) {
-    res.sendfile(__dirname + '/public/components/profile/profile.html');
-});
-
-// render contest page
-app.get('/contest', function(req, res) {
-    if (req.user)
-        res.sendfile(__dirname + '/public/components/contest/contest.html');
-    else
-        res.sendfile(__dirname + '/public/components/login/login.html');
-});
-
-// render results page
-app.get('/results', function(req, res) {
-    res.sendfile(__dirname + '/public/components/results/results.html');
-});
+app.use('/profile', profile);
+app.use('/contest', contest);
+app.use('/results', results);
+app.use('/auth', auth);
 
 // render links page
 app.get('/links', function(req, res) {
     res.sendfile(__dirname + '/public/components/links/links.html');
 });
-
-// authorization
-app.get('/auth', function(req, res) {
-    if (req.user) {
-        req.logout();
-        res.redirect('/');
-    }
-    else
-        res.sendfile(__dirname + '/public/components/login/login.html');
-});
-
-// set current week
-var currentWeek = '080915';
 
 var eventMap = {
     'x3Cube' : {fileName : '3x3x3 Cube Round 1.txt', scrambles : 5, extras : 2},
@@ -155,137 +126,6 @@ passport.use(new FacebookStrategy({
         });
     }
 ));
-
-// facebook authentication route
-app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', 'public_profile'] }));
-
-// facebook callback route
-app.get('/auth/facebook/callback', passport.authenticate('facebook', { successRedirect: '/profile', failureRedirect: '/auth' }));
-
-// get authorization status
-app.get('/authStatus', function(req, res) {
-    if (req.user)
-        res.json({status:'connected'});
-    else
-        res.json({status:'not_authorized'});
-});
-
-// send user info such as name, email, and facebook id
-app.get('/profile/userInfo/:id', function(req, res) {
-    User.findOne({'facebook_id':req.params['id']}, function(err, user) {
-        if (err) {
-            throw err;
-        } else {
-            res.json(user);
-        }
-    });
-});
-
-// get contest results for current week given user id
-app.get('/profile/results/current/:id', function(req, res) {
-    User.findOne({'facebook_id':req.params['id']}, function(err, user) {
-        if (err) {
-            throw err;
-        } else if (user) {
-            Result.find({'week':currentWeek, 'email':user.email}, function(err, result) {
-                if (err) {
-                    throw err;
-                } else {
-                    res.json(result);
-                }
-            });
-        }
-    });
-});
-
-// get contest results for all weeks given user id
-app.get('/profile/results/all/:id', function(req, res) {
-    User.findOne({'facebook_id':req.params['id']}, function(err, user) {
-        if (err) {
-            throw err;
-        } else if (user) {
-            Result.find({'email':user.email}, function(err, result) {
-                if (err) {
-                    throw err;
-                } else {
-                    res.json(result);
-                }
-            });
-        }
-    });
-});
-
-// get user's contest results for current week
-app.get('/contest/results/current', function(req, res) {
-    User.findOne({'facebook_id':req.user.facebook_id}, function(err, user) {
-        if (err) {
-            throw err;
-        } else if (user) {
-            Result.find({'week':currentWeek, 'email':user.email}, function(err, result) {
-                if (err) {
-                    throw err;
-                } else {
-                    res.json(result);
-                }
-            });
-        }
-    });
-});
-
-// get scrambles given the event
-app.get('/contest/scrambles/:event', function(req, res) {
-    var filename = eventMap[req.params['event']].fileName;
-    var weekPath = 'NU_CUBING_' + currentWeek.substr(0, 2) + '-' + currentWeek.substr(2, 2) + '-20' + currentWeek.substr(4, 2);
-    var file = fs.readFileSync('./scrambles/' + weekPath + '/txt/' + filename, 'utf-8');
-    var scrambles = file.split('\n');
-    scrambles.splice(scrambles.length - eventMap[req.params.event].extras, eventMap[req.params.event].extras);
-    res.json(scrambles);
-});
-
-// get results for the event for the current week if they exist
-app.get('/contest/results/:event', function(req, res) {
-    Result.findOne({'week':currentWeek, 'event':req.params.event, 'email':req.user.email}, function(err, result) {
-        if (err) {
-            throw err;
-        } else if (result) {
-            res.json(result);
-        }
-    });
-});
-
-// submit results for the given week and event
-app.post('/contest/submit', function(req, res) {
-    var result = new Result();
-    result.week = currentWeek;
-    result.event = req.body.event;
-    result.email = req.user.email;
-    result.firstName = req.user.firstName;
-    result.lastName = req.user.lastName;
-    result.facebook_id = req.user.facebook_id;
-    result.data = req.body.data;
-    Result.remove({'week':result.week, 'event':result.event, 'email':result.email}, function(err, result) {
-        if (err) {
-            throw err;
-        }
-    });
-    result.save(function(err) {
-        if (err) {
-            throw err;
-        }
-    });
-    res.json(result);
-});
-
-// get all results given the week and event
-app.get('/results/results/current', function(req, res) {
-    Result.find({'week':currentWeek}, function(err, result) {
-        if (err) {
-            throw err;
-        } else {
-            res.json(result);
-        }
-    });
-});
 
 //app.listen(port, ip);
 app.listen(config.get('node.port'), config.get('node.ip'));
