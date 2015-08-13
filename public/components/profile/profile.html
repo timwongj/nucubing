@@ -61,6 +61,32 @@
                 </div>
             </div>
         </div>
+        <!-- Personal Bests -->
+        <div class="col-md-4 col-sm-6 col-xs-12">
+            <div class="panel panel-default">
+                <div class="panel-heading centered">
+                    <h1 class="panel-title">Personal Bests</h1>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover table-condensed">
+                        <thead>
+                        <tr>
+                            <th>Event</th>
+                            <th>Single</th>
+                            <th>Average</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="result in personalBests | orderBy:'index'">
+                            <td ng-bind="result.name"></td>
+                            <td ng-bind="result.single"></td>
+                            <td ng-bind="result.average"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
         <!-- Panels for Different Types of Results-->
         <div class="col-md-4 col-sm-6 col-xs-12" ng-repeat="personalResult in personalResults">
             <div class="panel panel-default">
