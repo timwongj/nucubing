@@ -62,12 +62,14 @@ app.get('/', function(req, res) {
 });
 
 var profile = require('./routes/profile');
+var users = require('./routes/users');
 var contest = require('./routes/contest');
 var results = require('./routes/results');
 var auth = require('./routes/auth');
 var admin = require('./routes/admin');
 
 app.use('/profile', profile);
+app.use('/users', users);
 app.use('/contest', contest);
 app.use('/results', results);
 app.use('/auth', auth);
