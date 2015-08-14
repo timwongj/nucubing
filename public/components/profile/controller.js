@@ -28,24 +28,24 @@
 
         // events list
         $scope.eventMap = {
-            'x3Cube' : {name : 'Rubik\'s Cube', format: 'avg5', index: 0},
-            'x4Cube' : {name: '4x4 Cube', format: 'avg5', index: 1},
-            'x5Cube' : {name: '5x5 Cube', format: 'avg5', index: 2},
-            'x2Cube' : {name: '2x2 Cube', format: 'avg5', index: 3},
-            'x3BLD' : {name: '3x3 blindfolded', format: 'bo3', index: 4},
-            'x3OH' : {name: '3x3 one-handed', format: 'avg5', index: 5},
-            'x3FMC' : {name: '3x3 fewest moves', format: 'fmc', index: 6},
-            'x3FT' : {name: '3x3 with feet', format: 'mo3', index: 7},
-            'mega' : {name: 'Megaminx', format: 'avg5', index: 8},
-            'pyra' : {name: 'Pyraminx', format: 'avg5', index: 9},
+            '333' : {name : 'Rubik\'s Cube', format: 'avg5', index: 0},
+            '444' : {name: '4x4 Cube', format: 'avg5', index: 1},
+            '555' : {name: '5x5 Cube', format: 'avg5', index: 2},
+            '222' : {name: '2x2 Cube', format: 'avg5', index: 3},
+            '333bf' : {name: '3x3 blindfolded', format: 'bo3', index: 4},
+            '333oh' : {name: '3x3 one-handed', format: 'avg5', index: 5},
+            '333fm' : {name: '3x3 fewest moves', format: 'fmc', index: 6},
+            '333ft' : {name: '3x3 with feet', format: 'mo3', index: 7},
+            'minx' : {name: 'Megaminx', format: 'avg5', index: 8},
+            'pyram' : {name: 'Pyraminx', format: 'avg5', index: 9},
             'sq1' : {name: 'Square-1', format: 'avg5', index: 10},
             'clock' : {name: 'Rubik\'s Clock', format: 'avg5', index: 11},
             'skewb' : {name: 'Skewb', format: 'avg5', index: 12},
-            'x6Cube' : {name: '6x6 Cube', format: 'mo3', index: 13},
-            'x7Cube' : {name: '7x7 Cube', format: 'mo3', index: 14},
-            'x4BLD' : {name: '4x4 blindfolded', format: 'bo3', index: 15},
-            'x5BLD' : {name: '5x5 blindfolded', format: 'bo3', index: 16},
-            'x3MBLD' : {name: '3x3 multi blind', format: 'mbld', index: 17}
+            '666' : {name: '6x6 Cube', format: 'mo3', index: 13},
+            '777' : {name: '7x7 Cube', format: 'mo3', index: 14},
+            '444bf' : {name: '4x4 blindfolded', format: 'bo3', index: 15},
+            '555bf' : {name: '5x5 blindfolded', format: 'bo3', index: 16},
+            '333mbf' : {name: '3x3 multi blind', format: 'mbld', index: 17}
         };
 
         // list for current week results and overall personal best results
@@ -338,21 +338,3 @@ function reformatTime(time) {
         }
     }
 }
-
-// facebook
-window.fbAsyncInit = function() {
-    FB.init({
-        appId: '1397096627278092',
-        cookies: true,
-        xfbml: true,
-        version: 'v2.3'
-    });
-};
-
-(function(d, s, id){
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) {return;}
-    js = d.createElement(s); js.id = id;
-    js.src = "//connect.facebook.net/en_US/sdk.js";
-    fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));

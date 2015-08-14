@@ -21,24 +21,24 @@
 
         // events list
         $scope.eventMap = {
-            'x3Cube' : {name : 'Rubik\'s Cube', format: 'avg5', result : ' ', index: 0},
-            'x4Cube' : {name: '4x4 Cube', format: 'avg5', result : ' ', index: 1},
-            'x5Cube' : {name: '5x5 Cube', format: 'avg5', result : ' ', index: 2},
-            'x2Cube' : {name: '2x2 Cube', format: 'avg5', result : ' ', index: 3},
-            'x3BLD' : {name: '3x3 blindfolded', format: 'bo3', result : ' ', index: 4},
-            'x3OH' : {name: '3x3 one-handed', format: 'avg5', result : ' ', index: 5},
-            'x3FMC' : {name: '3x3 fewest moves', format: 'fmc', result : ' ', index: 6},
-            'x3FT' : {name: '3x3 with feet', format: 'mo3', result : ' ', index: 7},
-            'mega' : {name: 'Megaminx', format: 'avg5', result : ' ', index: 8},
-            'pyra' : {name: 'Pyraminx', format: 'avg5', result : ' ', index: 9},
+            '333' : {name: 'Rubik\'s Cube', format: 'avg5', result : ' ', index: 0},
+            '444' : {name: '4x4 Cube', format: 'avg5', result : ' ', index: 1},
+            '555' : {name: '5x5 Cube', format: 'avg5', result : ' ', index: 2},
+            '222' : {name: '2x2 Cube', format: 'avg5', result : ' ', index: 3},
+            '333bf' : {name: '3x3 blindfolded', format: 'bo3', result : ' ', index: 4},
+            '333oh' : {name: '3x3 one-handed', format: 'avg5', result : ' ', index: 5},
+            '333fm' : {name: '3x3 fewest moves', format: 'fmc', result : ' ', index: 6},
+            '333ft' : {name: '3x3 with feet', format: 'mo3', result : ' ', index: 7},
+            'minx' : {name: 'Megaminx', format: 'avg5', result : ' ', index: 8},
+            'pyram' : {name: 'Pyraminx', format: 'avg5', result : ' ', index: 9},
             'sq1' : {name: 'Square-1', format: 'avg5', result : ' ', index: 10},
             'clock' : {name: 'Rubik\'s Clock', format: 'avg5', result : ' ', index: 11},
             'skewb' : {name: 'Skewb', format: 'avg5', result : ' ', index: 12},
-            'x6Cube' : {name: '6x6 Cube', format: 'mo3', result : ' ', index: 13},
-            'x7Cube' : {name: '7x7 Cube', format: 'mo3', result : ' ', index: 14},
-            'x4BLD' : {name: '4x4 blindfolded', format: 'bo3', result : ' ', index: 15},
-            'x5BLD' : {name: '5x5 blindfolded', format: 'bo3', result : ' ', index: 16},
-            'x3MBLD' : {name: '3x3 multi blind', format: 'mbld', result : ' ', index: 17}
+            '666' : {name: '6x6 Cube', format: 'mo3', result : ' ', index: 13},
+            '777' : {name: '7x7 Cube', format: 'mo3', result : ' ', index: 14},
+            '444bf' : {name: '4x4 blindfolded', format: 'bo3', result : ' ', index: 15},
+            '555bf' : {name: '5x5 blindfolded', format: 'bo3', result : ' ', index: 16},
+            '333mbf' : {name: '3x3 multi blind', format: 'mbld', result : ' ', index: 17}
         };
 
         // get current week contest results for user
@@ -79,14 +79,14 @@
             // get scrambles
             $http.get('/contest/scrambles/' + $scope.eventId).success(function(response) {
                 $scope.solves = [];
-                for (var i = 0; i < response.length; i++)
+                for (var i = 0; i < response[0].scrambles.length; i++)
                 {
                     $scope.solves[i] = {};
                     $scope.solves[i].result = '';
                     $scope.solves[i].penalty = '';
                     $scope.solves[i].solution = '';
                     $scope.solves[i].moves = '';
-                    $scope.solves[i].scramble = response[i];
+                    $scope.solves[i].scramble = response[0].scrambles[i];
                 }
             });
             // get results if they exist
@@ -139,11 +139,11 @@
         // submit results for the given event for the current week
         $scope.submit = function() {
             var result = {'event':$scope.eventId, 'data':{}};
-            if ($scope.eventId == 'x3MBLD') {
+            if ($scope.eventId == '333mbf') {
                 result.data.solved = $scope.mbldResult.solved;
                 result.data.attempted = $scope.mbldResult.attempted;
                 result.data.time = $scope.mbldResult.time;
-            } else if ($scope.eventId == 'x3FMC') {
+            } else if ($scope.eventId == '333fm') {
                 result.data.solutions = [];
                 result.data.moves = [];
                 for (var i = 0; i < $scope.solves.length; i++) {
@@ -365,21 +365,3 @@ function stopRKey(evt) {
 }
 
 document.onkeypress = stopRKey;
-
-// facebook
-window.fbAsyncInit = function() {
-    FB.init({
-        appId: '1397096627278092',
-        cookies: true,
-        xfbml: true,
-        version: 'v2.3'
-    });
-};
-
-(function(d, s, id){
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) {return;}
-    js = d.createElement(s); js.id = id;
-    js.src = "//connect.facebook.net/en_US/sdk.js";
-    fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));

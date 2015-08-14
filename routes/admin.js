@@ -26,7 +26,6 @@ module.exports = (function() {
       if (err) {
         throw err;
       } else {
-        console.log(result);
         res.json(result);
       }
     });

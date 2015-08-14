@@ -3,6 +3,7 @@ var fs = require('fs');
 var mongoose = require('mongoose');
 var User = require('../models/user');
 var Result = require('../models/result');
+var Scramble = require('../models/scramble');
 
 module.exports = (function() {
 
@@ -12,27 +13,6 @@ module.exports = (function() {
 
   // set current week
   var currentWeek = '080915';
-
-  var eventMap = {
-    'x3Cube' : {fileName : '3x3x3 Cube Round 1.txt', scrambles : 5, extras : 2},
-    'x4Cube' : {fileName: '4x4x4 Cube Round 1.txt', scrambles : 5, extras : 2},
-    'x5Cube' : {fileName: '5x5x5 Cube Round 1.txt', scrambles : 5, extras : 2},
-    'x2Cube' : {fileName: '2x2x2 Cube Round 1.txt', scrambles : 5, extras : 2},
-    'x3BLD' : {fileName: '3x3x3 Blindfolded Round 1.txt', scrambles : 3, extras : 2},
-    'x3OH' : {fileName: '3x3x3 One-Handed Round 1.txt', scrambles : 5, extras : 2},
-    'x3FMC' : {fileName: '3x3x3 Fewest Moves Round 1.txt', scrambles : 3, extras : 0},
-    'x3FT' : {fileName: '3x3x3 With Feet Round 1.txt', scrambles : 3, extras : 2},
-    'mega' : {fileName: 'Megaminx Round 1.txt', scrambles : 5, extras : 2},
-    'pyra' : {fileName: 'Pyraminx Round 1.txt', scrambles : 5, extras : 2},
-    'sq1' : {fileName: 'Square-1 Round 1.txt', scrambles : 5, extras : 2},
-    'clock' : {fileName: 'Rubik\'s Clock Round 1.txt', scrambles : 5, extras : 2},
-    'skewb' : {fileName: 'Skewb Round 1.txt', scrambles : 5, extras : 2},
-    'x6Cube' : {fileName: '6x6x6 Cube Round 1.txt', scrambles : 3, extras : 2},
-    'x7Cube' : {fileName: '7x7x7 Cube Round 1.txt', scrambles : 3, extras : 2},
-    'x4BLD' : {fileName: '4x4x4 Cube Blindfolded Round 1.txt', scrambles : 3, extras : 2},
-    'x5BLD' : {fileName: '5x5x5 Cube Blindfolded Round 1.txt', scrambles : 3, extras : 2},
-    'x3MBLD' : {fileName: '3x3x3 Multiple Blindfolded Round 1.txt', scrambles : 35, extras : 0}
-  };
 
   // render contest page
   router.get('/', function(req, res) {
@@ -61,12 +41,13 @@ module.exports = (function() {
 
   // get scrambles given the event
   router.get('/scrambles/:event', function(req, res) {
-    var filename = eventMap[req.params['event']].fileName;
-    var weekPath = 'NU_CUBING_' + currentWeek.substr(0, 2) + '-' + currentWeek.substr(2, 2) + '-20' + currentWeek.substr(4, 2);
-    var file = fs.readFileSync('./scrambles/' + weekPath + '/txt/' + filename, 'utf-8');
-    var scrambles = file.split('\n');
-    scrambles.splice(scrambles.length - eventMap[req.params.event].extras, eventMap[req.params.event].extras);
-    res.json(scrambles);
+    Scramble.find({week:currentWeek, event:req.params.event}, function(err, result) {
+      if (err) {
+        throw err;
+      } else {
+        res.json(result);
+      }
+    });
   });
 
   // get results for the event for the current week if they exist
