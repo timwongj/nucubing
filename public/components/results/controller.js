@@ -41,7 +41,7 @@
         // get all contest results for all events for the current week
         $http.get('/results/results/current').success(function(results) {
             for (var i = 0; i < results.length; i++) {
-                var result = {'name': results[i].firstName + ' ' + results[i].lastName, 'id': results[i].facebook_id};
+                var result = {'name': results[i].firstName + ' ' + results[i].lastName, 'facebook_id': results[i].facebook_id};
                 var data = JSON.parse(results[i].data);
                 switch($scope.eventMap[results[i].event].format) {
                     case 'avg5' : result.result = calculateAverage(data.times, data.penalties); break;

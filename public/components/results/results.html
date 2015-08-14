@@ -67,7 +67,7 @@
             <tbody>
             <tr ng-repeat="result in selectedEvent.results | orderBy:'raw'">
                 <td ng-bind="$index + 1"></td>
-                <td><a href="profile/{{result.facebook_id}}" ng-bind="result.name"></a></td>
+                <td><a href="users/{{result.facebook_id}}" ng-bind="result.name"></a></td>
                 <td ng-bind="result.result"></td>
                 <td ng-bind="result.details"></td>
             </tr>

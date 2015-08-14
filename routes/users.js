@@ -13,7 +13,11 @@ module.exports = (function() {
     res.sendfile('./public/components/users/users.html');
   });
 
-  router.get('/users', function(req, res) {
+  router.get('/:id', function(req, res) {
+    res.sendfile('./public/components/profile/profile.html');
+  });
+
+  router.get('/users/all', function(req, res) {
     User.find({}, function(err, result) {
       if (err) {
         throw err;

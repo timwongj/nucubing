@@ -14,7 +14,16 @@
         });
 
         var url = $location.$$absUrl.split('/');
-        var profileId = url[url.indexOf('profile') + 1];
+        var profileId;
+        if (url.indexOf('users') < 1) {
+            profileId = 'myProfile';
+            $scope.profileClass = 'active';
+            $scope.usersClass = '';
+        } else {
+            profileId = url[url.indexOf('users') + 1];
+            $scope.profileClass = '';
+            $scope.usersClass = 'active';
+        }
 
         // get user information
         $scope.user = {};
