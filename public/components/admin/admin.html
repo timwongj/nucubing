@@ -128,7 +128,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="week in weeks">
+        <tr ng-repeat="week in weeks | orderBy:'-week'">
           <td ng-bind="week.week"></td>
           <td ng-bind="week.events.length"></td>
         </tr>

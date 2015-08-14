@@ -51,8 +51,8 @@
                     case 'mbld' : result.result = data.solved + '/' + data.attempted + ' in ' + data.time; break;
                 }
                 var details = '';
-                if (results[i].event != 'x3MBLD') {
-                    if (results[i].event != 'x3FMC') {
+                if (results[i].event != '333mbf') {
+                    if (results[i].event != '333fm') {
                         for (var j = 0; j < data.times.length; j++) {
                             details += data.times[j] + data.penalties[j];
                             if (j != data.times.length - 1) {
