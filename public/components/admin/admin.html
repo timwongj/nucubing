@@ -49,19 +49,16 @@
   </div>
 </div>
 <div class="container">
-  <div class="page-header">
-    <h1>Upload Scrambles</h1>
-  </div>
   <div class="row">
     <div class="col-md-3">
-      <h3>Select files</h3>
+      <h3>Upload Scrambles</h3>
       <p>Format: NU_CUBING_MM-DD-YYYY.json</p>
       <div ng-show="uploader.isHTML5">
-        <div class="well my-drop-zone" nv-file-over="" uploader="uploader">
+        <div class="well my-drop-zone" nv-file-over accept=".json" uploader="uploader">
           drag and drop files
         </div>
       </div>
-      <input type="file" nv-file-select="" uploader="uploader" multiple  /><br/>
+      <input type="file" nv-file-select accept=".json" uploader="uploader" multiple>
     </div>
     <div class="col-md-9" style="margin-bottom: 40px">
       <h3>Upload queue</h3>
@@ -121,6 +118,22 @@
           <span class="glyphicon glyphicon-trash"></span> Remove all
         </button>
       </div>
+    </div>
+    <div class="col-xs-12">
+      <table class="table">
+        <thead>
+        <tr>
+          <th>Week</th>
+          <th>Events</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="week in weeks">
+          <td ng-bind="week.week"></td>
+          <td ng-bind="week.events.length"></td>
+        </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>

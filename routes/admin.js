@@ -21,11 +21,22 @@ module.exports = (function() {
     res.sendfile('./public/components/admin/admin.html');
   });
 
-  router.post('/scrambles/upload', function(req, res) {
+  router.get('/scrambles', function(req, res) {
+    Scramble.find({}, function(err, result) {
+      if (err) {
+        throw err;
+      } else {
+        console.log(result);
+        res.json(result);
+      }
+    });
+  });
+
+  router.post('/scrambles', function(req, res) {
     try {
       var scrambles = JSON.parse(fs.readFileSync(req.files.file.path));
-      var date = scrambles.competitionName.substr(scrambles.competitionName.length - 10, scrambles.competitionName);
-      var week = date.substr(0, 2) + date.substr(3, 5) + date.substr(6, 10);
+      var date = scrambles.competitionName.substr(scrambles.competitionName.length - 10, scrambles.competitionName.length);
+      var week = date.substr(0, 2) + date.substr(3, 2) + date.substr(8, 2);
       for (var i = 0; i < scrambles.sheets.length; i++) {
         var scramble = new Scramble();
         scramble.event = scrambles.sheets[i].event;

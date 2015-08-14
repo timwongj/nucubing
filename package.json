@@ -45,7 +45,10 @@
     "passport-twitter": "^1.0.3",
     "path": "^0.11.14"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "nodemon": "^1.4.1",
+    "uninstall": "^1.0.0"
+  },
   "bundleDependencies": [],
   "scripts": {
     "postinstall": "if [ -d \"$OPENSHIFT_REPO_DIR\" ]; then (export HOME=\"$OPENSHIFT_REPO_DIR\"/..; bower install) else (bower install) fi"
