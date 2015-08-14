@@ -15,28 +15,28 @@
 
         // events list
         $scope.eventMap = {
-            'x3Cube' : {name : 'Rubik\'s Cube', format: 'avg5', results : []},
-            'x4Cube' : {name: '4x4 Cube', format: 'avg5', results : []},
-            'x5Cube' : {name: '5x5 Cube', format: 'avg5', results : []},
-            'x2Cube' : {name: '2x2 Cube', format: 'avg5', results : []},
-            'x3BLD' : {name: '3x3 blindfolded', format: 'bo3', results : []},
-            'x3OH' : {name: '3x3 one-handed', format: 'avg5', results : []},
-            'x3FMC' : {name: '3x3 fewest moves', format: 'fmc', results : []},
-            'x3FT' : {name: '3x3 with feet', format: 'mo3', results : []},
-            'mega' : {name: 'Megaminx', format: 'avg5', results : []},
-            'pyra' : {name: 'Pyraminx', format: 'avg5', results : []},
+            '333' : {name : 'Rubik\'s Cube', format: 'avg5', results : []},
+            '444' : {name: '4x4 Cube', format: 'avg5', results : []},
+            '555' : {name: '5x5 Cube', format: 'avg5', results : []},
+            '222' : {name: '2x2 Cube', format: 'avg5', results : []},
+            '333bf' : {name: '3x3 blindfolded', format: 'bo3', results : []},
+            '333oh' : {name: '3x3 one-handed', format: 'avg5', results : []},
+            '333fm' : {name: '3x3 fewest moves', format: 'fmc', results : []},
+            '333ft' : {name: '3x3 with feet', format: 'mo3', results : []},
+            'minx' : {name: 'Megaminx', format: 'avg5', results : []},
+            'pyram' : {name: 'Pyraminx', format: 'avg5', results : []},
             'sq1' : {name: 'Square-1', format: 'avg5', results : []},
             'clock' : {name: 'Rubik\'s Clock', format: 'avg5', results : []},
             'skewb' : {name: 'Skewb', format: 'avg5', results : []},
-            'x6Cube' : {name: '6x6 Cube', format: 'mo3', results : []},
-            'x7Cube' : {name: '7x7 Cube', format: 'mo3', results : []},
-            'x4BLD' : {name: '4x4 blindfolded', format: 'bo3', results : []},
-            'x5BLD' : {name: '5x5 blindfolded', format: 'bo3', results : []},
-            'x3MBLD' : {name: '3x3 multi blind', format: 'mbld', results : []}
+            '666' : {name: '6x6 Cube', format: 'mo3', results : []},
+            '777' : {name: '7x7 Cube', format: 'mo3', results : []},
+            '444bf' : {name: '4x4 blindfolded', format: 'bo3', results : []},
+            '555bf' : {name: '5x5 blindfolded', format: 'bo3', results : []},
+            '333mbf' : {name: '3x3 multi blind', format: 'mbld', results : []}
         };
 
         // default selected event
-        $scope.selectedEvent = $scope.eventMap['x3Cube'];
+        $scope.selectedEvent = $scope.eventMap['333'];
 
         // get all contest results for all events for the current week
         $http.get('/results/results/current').success(function(results) {
@@ -263,21 +263,3 @@ function reformatTime(time) {
         }
     }
 }
-
-// facebook
-window.fbAsyncInit = function() {
-    FB.init({
-        appId: '1397096627278092',
-        cookies: true,
-        xfbml: true,
-        version: 'v2.3'
-    });
-};
-
-(function(d, s, id){
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) {return;}
-    js = d.createElement(s); js.id = id;
-    js.src = "//connect.facebook.net/en_US/sdk.js";
-    fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));
