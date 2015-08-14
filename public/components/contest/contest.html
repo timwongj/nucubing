@@ -44,7 +44,7 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li ng-show="authStatus == 'Logout'"><a href="/auth" tabindex="-1"><i class="fa fa-sign-out"></i> Logout</a></li>
-                <li ng-show="authStatus == 'Login'"><a href="/auth" tabindex="-1"><i class="fa fa-sign-out"></i> Login</a></li>
+                <li ng-show="authStatus == 'Login'"><a href="/auth" tabindex="-1"><i class="fa fa-sign-in"></i> Login</a></li>
             </ul>
         </div>
     </div>
@@ -58,14 +58,15 @@
     <div class="row" ng-show="showHome">
         <div class="col-md-3 col-sm-6" ng-repeat="event in eventMap | orderObjectBy:'index'">
             <div class="panel panel-default">
-                <div class="panel-heading centered">
+                <div class="panel-heading text-center">
                     <h1 class="panel-title" ng-bind="event.name"></h1>
                 </div>
-                <div class="panel-body centered">
+                <div class="panel-body text-center">
                     <h1 class="panel-title" ng-bind="event.result"></h1>
                 </div>
-                <div class="panel-footer centered">
-                    <button class="btn btn-primary" ng-click="manualEntry(event)"><i class="fa fa-pencil"></i> Manual Entry</button>
+                <div class="panel-footer text-center">
+                    <button class="btn btn-primary" ng-click="manualEntry(event)"><i class="fa fa-pencil"></i> Entry</button>
+                    <button class="btn btn-warning" ng-click="timer(event)"><i class="fa fa-clock-o"></i> Timer</button>
                 </div>
             </div>
         </div>
