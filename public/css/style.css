@@ -67,9 +67,19 @@
 }
 
 .my-drop-zone {
-    border: dotted 3px lightgray;
+    border:dotted 3px lightgray;
 }
 
 .nv-file-over {
-    border: dotted 3px red;
+    border:dotted 3px red;
+}
+
+.user a {
+    text-decoration:none;
+}
+
+.user a img, .user a h4 {
+    display:inline-block;
+    vertical-align:middle;
+    padding:5px;
 }

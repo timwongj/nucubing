@@ -21,9 +21,7 @@
         $http.get('/profile/userInfo/' + profileId).success(function(response) {
             $scope.user.firstName = response.firstName;
             $scope.user.lastName = response.lastName;
-            $scope.user.email = response.email;
-            $scope.user.wcaID = response.wcaID;
-            $scope.user.id = response.facebook_id;
+            $scope.user.facebook_id = response.facebook_id;
         });
 
         // events list

@@ -57,10 +57,7 @@
                     <h1 class="panel-title" ng-bind="user.firstName + ' ' + user.lastName"></h1>
                 </div>
                 <div class="panel-body centered panelBodyProfile">
-                    <img ng-src="http://graph.facebook.com/{{user.id}}/picture?width=250&height=250" class="img-responsive profilePic">
-                </div>
-                <div class="panel-footer centered">
-                    <p ng-bind="'Email: ' + user.email"></p>
+                    <img ng-src="http://graph.facebook.com/{{user.facebook_id}}/picture?width=250&height=250" class="img-responsive profilePic">
                 </div>
             </div>
         </div>
