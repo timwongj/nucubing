@@ -1,5 +1,7 @@
 var express = require('express');
-var passport = require('passport');
+var mongoose = require('mongoose');
+var fs = require('fs');
+var Scramble = require('../models/scramble');
 
 module.exports = (function() {
 
@@ -17,6 +19,34 @@ module.exports = (function() {
 
   router.get('/', function(req, res) {
     res.sendfile('./public/components/admin/admin.html');
+  });
+
+  router.post('/scrambles/upload', function(req, res) {
+    try {
+      var scrambles = JSON.parse(fs.readFileSync(req.files.file.path));
+      var date = scrambles.competitionName.substr(scrambles.competitionName.length - 10, scrambles.competitionName);
+      var week = date.substr(0, 2) + date.substr(3, 5) + date.substr(6, 10);
+      for (var i = 0; i < scrambles.sheets.length; i++) {
+        var scramble = new Scramble();
+        scramble.event = scrambles.sheets[i].event;
+        scramble.week = week;
+        scramble.scrambles = scrambles.sheets[i].scrambles;
+        scramble.extraScrambles = scrambles.sheets[i].extraScrambles;
+        Scramble.remove({'week':week}, function(err, result) {
+          if (err) {
+            throw err;
+          }
+        });
+        scramble.save(function(err) {
+          if (err) {
+            throw err;
+          }
+        });
+      }
+      res.send({status:'success'});
+    } catch(e) {
+      res.status(500).send({status:'failure', error:e});
+    }
   });
 
   return router;
