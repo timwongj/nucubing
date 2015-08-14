@@ -19,7 +19,6 @@
       for (var i = 0; i < response.length; i++) {
         $scope.users.push({
           name: response[i].firstName + ' ' + response[i].lastName,
-          email: response[i].email,
           facebook_id: response[i].facebook_id
         });
       }
