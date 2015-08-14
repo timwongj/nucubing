@@ -11,9 +11,6 @@ module.exports = (function() {
 
   var router = express.Router();
 
-  // set current week
-  var currentWeek = '080915';
-
   // render contest page
   router.get('/', function(req, res) {
     if (req.user)
@@ -28,7 +25,7 @@ module.exports = (function() {
       if (err) {
         throw err;
       } else if (user) {
-        Result.find({'week':currentWeek, 'email':user.email}, function(err, result) {
+        Result.find({'week':getCurrentWeek(), 'email':user.email}, function(err, result) {
           if (err) {
             throw err;
           } else {
@@ -41,7 +38,7 @@ module.exports = (function() {
 
   // get scrambles given the event
   router.get('/scrambles/:event', function(req, res) {
-    Scramble.find({week:currentWeek, event:req.params.event}, function(err, result) {
+    Scramble.find({week:getCurrentWeek(), event:req.params.event}, function(err, result) {
       if (err) {
         throw err;
       } else {
@@ -52,7 +49,7 @@ module.exports = (function() {
 
   // get results for the event for the current week if they exist
   router.get('/results/:event', function(req, res) {
-    Result.findOne({'week':currentWeek, 'event':req.params.event, 'email':req.user.email}, function(err, result) {
+    Result.findOne({'week':getCurrentWeek(), 'event':req.params.event, 'email':req.user.email}, function(err, result) {
       if (err) {
         throw err;
       } else if (result) {
@@ -64,7 +61,7 @@ module.exports = (function() {
   // submit results for the given week and event
   router.post('/submit', function(req, res) {
     var result = new Result();
-    result.week = currentWeek;
+    result.week = getCurrentWeek();
     result.event = req.body.event;
     result.email = req.user.email;
     result.firstName = req.user.firstName;
@@ -83,6 +80,16 @@ module.exports = (function() {
     });
     res.json(result);
   });
+
+  function getCurrentWeek() {
+    var today = new Date();
+    var sunday = new Date();
+    sunday.setDate(today.getDate() - today.getDay());
+    var date = (sunday.getDate() < 10) ? '0' + sunday.getDate().toString() : sunday.getDate().toString();
+    var month = (sunday.getMonth() < 10) ? '0' + (sunday.getMonth() + 1).toString() : (sunday.getMonth() + 1).toString();
+    var year = sunday.getFullYear().toString().substr(2, 2);
+    return month + date + year;
+  }
 
   return router;
 

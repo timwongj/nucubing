@@ -9,9 +9,6 @@ module.exports = (function() {
 
   var router = express.Router();
 
-  // set current week
-  var currentWeek = '080915';
-
   // render results page
   router.get('/', function(req, res) {
     res.sendfile('./public/components/results/results.html');
@@ -19,7 +16,7 @@ module.exports = (function() {
 
   // get all results given the week and event
   router.get('/results/current', function(req, res) {
-    Result.find({'week':currentWeek}, function(err, result) {
+    Result.find({'week':getCurrentWeek()}, function(err, result) {
       if (err) {
         throw err;
       } else {
@@ -27,6 +24,16 @@ module.exports = (function() {
       }
     });
   });
+
+  function getCurrentWeek() {
+    var today = new Date();
+    var sunday = new Date();
+    sunday.setDate(today.getDate() - today.getDay());
+    var date = (sunday.getDate() < 10) ? '0' + sunday.getDate().toString() : sunday.getDate().toString();
+    var month = (sunday.getMonth() < 10) ? '0' + (sunday.getMonth() + 1).toString() : (sunday.getMonth() + 1).toString();
+    var year = sunday.getFullYear().toString().substr(2, 2);
+    return month + date + year;
+  }
 
   return router;
 
