@@ -5,6 +5,8 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="/bower_components/components-font-awesome/css/font-awesome.min.css">
     <!-- jQuery -->
     <script src="/bower_components/jquery/dist/jquery.min.js"></script>
     <script src="/bower_components/jquery-ui/jquery-ui.min.js"></script>
@@ -30,18 +32,18 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/" tabindex="-1"><img class="logo" alt="NU Cubing" src="/public/images/cubeLogo.png"></a>
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-left">
-                <li><a href="/" tabindex="-1">Home</a></li>
-                <li><a href="/profile" tabindex="-1">Profile</a></li>
-                <li><a href="/contest" tabindex="-1">Contest</a></li>
-                <li class="active"><a href="/results" tabindex="-1">Results</a></li>
-                <li><a href="/links" tabindex="-1">Links</a></li>
+                <li><a href="/" tabindex="-1"><i class="fa fa-home"></i> Home</a></li>
+                <li><a href="/profile" tabindex="-1"><i class="fa fa-user"></i> Profile</a></li>
+                <li><a href="/contest" tabindex="-1"><i class="fa fa-cube"></i> Contest</a></li>
+                <li class="active"><a href="/results" tabindex="-1"><i class="fa fa-trophy"></i> Results</a></li>
+                <li><a href="/links" tabindex="-1"><i class="fa fa-link"></i> Links</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="/auth" tabindex="-1" ng-bind="authStatus"></a></li>
+                <li ng-show="authStatus == 'Logout'"><a href="/auth" tabindex="-1"><i class="fa fa-sign-out"></i> Logout</a></li>
+                <li ng-show="authStatus == 'Login'"><a href="/auth" tabindex="-1"><i class="fa fa-sign-out"></i> Login</a></li>
             </ul>
         </div>
     </div>
