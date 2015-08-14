@@ -2,7 +2,7 @@
 
   'use strict';
 
-  function AdminController($scope, $http) {
+  function AdminController($scope, $http, FileUploader) {
 
     // get authorization status
     $scope.authStatus = '';
@@ -13,9 +13,13 @@
         $scope.authStatus = 'Login';
     });
 
+    $scope.uploader = new FileUploader({
+      url:'/admin/scrambles/upload'
+    });
+
   }
 
-  angular.module('nuCubingApp', []);
+  angular.module('nuCubingApp', ['angularFileUpload']);
 
   angular.module('nuCubingApp').controller('AdminController', AdminController);
 

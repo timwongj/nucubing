@@ -63,8 +63,6 @@ module.exports = (function() {
   router.get('/scrambles/:event', function(req, res) {
     var filename = eventMap[req.params['event']].fileName;
     var weekPath = 'NU_CUBING_' + currentWeek.substr(0, 2) + '-' + currentWeek.substr(2, 2) + '-20' + currentWeek.substr(4, 2);
-    //var jsonScrambles = JSON.parse(fs.readFileSync('./scrambles/' + weekPath + '/' + weekPath + '.json', 'utf-8'));
-    //console.log(jsonScrambles);
     var file = fs.readFileSync('./scrambles/' + weekPath + '/txt/' + filename, 'utf-8');
     var scrambles = file.split('\n');
     scrambles.splice(scrambles.length - eventMap[req.params.event].extras, eventMap[req.params.event].extras);
