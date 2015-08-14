@@ -44,73 +44,59 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li ng-show="authStatus == 'Logout'"><a href="/auth" tabindex="-1"><i class="fa fa-sign-out"></i> Logout</a></li>
-                <li ng-show="authStatus == 'Login'"><a href="/auth" tabindex="-1"><i class="fa fa-sign-out"></i> Login</a></li>
+                <li ng-show="authStatus == 'Login'"><a href="/auth" tabindex="-1"><i class="fa fa-sign-in"></i> Login</a></li>
             </ul>
         </div>
     </div>
 </div>
 <div class="container">
     <div class="row">
-        <div class="col-md-4 col-sm-6 col-xs-12 centered">
-            <div class="panel panel-default">
-                <div class="panel-heading centered">
-                    <h1 class="panel-title" ng-bind="user.firstName + ' ' + user.lastName"></h1>
-                </div>
-                <div class="panel-body centered panelBodyProfile">
-                    <img ng-src="http://graph.facebook.com/{{user.facebook_id}}/picture?width=250&height=250" class="img-responsive profilePic">
-                </div>
-            </div>
+        <div class="col-md-4 col-sm-6 text-center">
+            <h3 ng-bind="user.firstName + ' ' + user.lastName"></h3>
+            <img ng-src="http://graph.facebook.com/{{user.facebook_id}}/picture?width=250&height=250" class="img-responsive profilePic">
         </div>
         <!-- Personal Bests -->
-        <div class="col-md-4 col-sm-6 col-xs-12">
-            <div class="panel panel-default">
-                <div class="panel-heading centered">
-                    <h1 class="panel-title">Personal Bests</h1>
-                </div>
-                <div class="table-responsive">
-                    <table class="table table-hover table-condensed">
-                        <thead>
-                        <tr>
-                            <th>Event</th>
-                            <th>Single</th>
-                            <th>Average</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr ng-repeat="result in personalBests | orderBy:'index'">
-                            <td ng-bind="result.name"></td>
-                            <td ng-bind="result.single"></td>
-                            <td ng-bind="result.average"></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
+        <div class="col-md-4 col-sm-6">
+            <h3 class="text-center">Personal Bests</h3>
+            <div class="table-responsive">
+                <table class="table table-condensed">
+                    <thead>
+                    <tr>
+                        <th>Event</th>
+                        <th>Single</th>
+                        <th>Average</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="result in personalBests | orderBy:'index'">
+                        <td ng-bind="result.name"></td>
+                        <td ng-bind="result.single"></td>
+                        <td ng-bind="result.average"></td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
         <!-- Panels for Different Types of Results-->
-        <div class="col-md-4 col-sm-6 col-xs-12" ng-repeat="personalResult in personalResults">
-            <div class="panel panel-default">
-                <div class="panel-heading centered">
-                    <h1 class="panel-title" ng-bind="personalResult.type"></h1>
-                </div>
-                <div class="table-responsive">
-                    <table class="table table-hover table-condensed">
-                        <thead>
-                        <tr>
-                            <th>Event</th>
-                            <th>Single</th>
-                            <th>Average</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr ng-repeat="result in personalResult.results | orderBy:'index'">
-                            <td ng-bind="result.event"></td>
-                            <td ng-bind="result.single"></td>
-                            <td ng-bind="result.average"></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
+        <div class="col-md-4 col-sm-6" ng-repeat="personalResult in personalResults">
+            <h3 class="text-center" ng-bind="personalResult.type"></h3>
+            <div class="table-responsive">
+                <table class="table table-condensed">
+                    <thead>
+                    <tr>
+                        <th>Event</th>
+                        <th>Single</th>
+                        <th>Average</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="result in personalResult.results | orderBy:'index'">
+                        <td ng-bind="result.event"></td>
+                        <td ng-bind="result.single"></td>
+                        <td ng-bind="result.average"></td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

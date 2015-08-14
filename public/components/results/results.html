@@ -44,7 +44,7 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li ng-show="authStatus == 'Logout'"><a href="/auth" tabindex="-1"><i class="fa fa-sign-out"></i> Logout</a></li>
-                <li ng-show="authStatus == 'Login'"><a href="/auth" tabindex="-1"><i class="fa fa-sign-out"></i> Login</a></li>
+                <li ng-show="authStatus == 'Login'"><a href="/auth" tabindex="-1"><i class="fa fa-sign-in"></i> Login</a></li>
             </ul>
         </div>
     </div>
@@ -55,7 +55,7 @@
     </div>
     <select class="form-control" ng-model="selectedEvent" ng-options="event.name for event in eventMap"></select>
     <div class="table table-responsive table-results">
-        <table class="table table-hover table-condensed">
+        <table class="table table-condensed">
             <thead>
             <tr>
                 <th></th>

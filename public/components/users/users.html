@@ -20,7 +20,7 @@
   <script src="/public/components/users/controller.js"></script>
   <!-- Title -->
   <link rel="shortcut icon" type="image/x-icon" href="/public/images/cubeLogo.png"/>
-  <title>NU Cubing - Home</title>
+  <title>NU Cubing - Users</title>
 </head>
 <body ng-app="nuCubingApp" ng-controller="UsersController">
 <div class="navbar navbar-default" role="navigation">
@@ -44,7 +44,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li ng-show="authStatus == 'Logout'"><a href="/auth" tabindex="-1"><i class="fa fa-sign-out"></i> Logout</a></li>
-        <li ng-show="authStatus == 'Login'"><a href="/auth" tabindex="-1"><i class="fa fa-sign-out"></i> Login</a></li>
+        <li ng-show="authStatus == 'Login'"><a href="/auth" tabindex="-1"><i class="fa fa-sign-in"></i> Login</a></li>
       </ul>
     </div>
   </div>
