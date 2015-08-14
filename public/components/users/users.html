@@ -54,8 +54,8 @@
     <h1>Users</h1>
   </div>
   <div class="row">
-    <div class="col-md-3 col-sm-6 user" ng-repeat="user in users">
-      <a href="profile/{{result.facebook_id}}">
+    <div class="col-md-3 col-sm-6 user" ng-repeat="user in users | orderBy:'name'">
+      <a href="profile/{{user.facebook_id}}">
         <img ng-src="http://graph.facebook.com/{{user.facebook_id}}/picture?width=50&height=50" class="img-responsive">
         <h4 ng-bind="user.name"></h4>
       </a>
