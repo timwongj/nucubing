@@ -58,22 +58,24 @@ var Result = require('./models/result');
 
 // render home page
 app.get('/', function(req, res) {
-    res.sendfile(__dirname + '/public/components/home/home.html');
+    res.sendfile('./public/components/home/home.html');
 });
 
 var profile = require('./routes/profile');
 var contest = require('./routes/contest');
 var results = require('./routes/results');
 var auth = require('./routes/auth');
+var admin = require('./routes/admin');
 
 app.use('/profile', profile);
 app.use('/contest', contest);
 app.use('/results', results);
 app.use('/auth', auth);
+app.use('/admin', admin);
 
 // render links page
 app.get('/links', function(req, res) {
-    res.sendfile(__dirname + '/public/components/links/links.html');
+    res.sendfile('./public/components/links/links.html');
 });
 
 // Facebook login
