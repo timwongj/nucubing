@@ -15,12 +15,9 @@
 
     $scope.users = [];
 
-    $http.get('/users/users').success(function(response) {
+    $http.get('/users/users/all').success(function(response) {
       for (var i = 0; i < response.length; i++) {
-        $scope.users.push({
-          name: response[i].firstName + ' ' + response[i].lastName,
-          facebook_id: response[i].facebook_id
-        });
+        $scope.users.push({name: response[i].firstName + ' ' + response[i].lastName, facebook_id: response[i].facebook_id});
       }
     });
 
