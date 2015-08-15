@@ -1,9 +1,17 @@
 .navbar, .navbar-inverse {
     border-radius:0px;
+    min-height:40px;
 }
 
 .navbar-collapse {
     padding:0px;
+}
+
+.navbar-collapse ul li a {
+    padding-top:10px;
+    padding-bottom:10px;
+    padding-left:15px;
+    padding-right:15px;
 }
 
 .vertical-middle {
