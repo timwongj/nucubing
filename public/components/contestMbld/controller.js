@@ -14,6 +14,7 @@
     });
 
     $scope.scrambles = [];
+    $scope.displayed = 7;
     $scope.mbldResult = {'solved':'', 'attempted':'', 'time':''};
     $scope.valid = false;
     $scope.dnf = '';
@@ -33,6 +34,21 @@
         $scope.valid = true;
       }
     });
+
+    $scope.display = function(option) {
+      switch(option) {
+        case 'more':
+          if ($scope.displayed < $scope.scrambles.length) {
+            $scope.displayed += 7;
+          }
+          break;
+        case 'less':
+          if ($scope.displayed > 7) {
+            $scope.displayed -= 7;
+          }
+          break;
+      }
+    };
 
     $scope.update = function() {
       if ($scope.mbldContestForm.$valid && ($scope.mbldResult.solved <= $scope.mbldResult.attempted)) {
