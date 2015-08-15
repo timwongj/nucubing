@@ -28,7 +28,7 @@ app.use(session({
     port: config.get('redisStore.port'),
     pass: config.get('redisStore.pass')
   }),
-  secret: 'keyboard cat',
+  secret: config.get('express.session.secret'),
   resave: false,
   saveUninitialized: false
 }));
