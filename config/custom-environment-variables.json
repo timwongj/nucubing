@@ -3,6 +3,11 @@
     "ip":"OPENSHIFT_NODEJS_IP",
     "port":"OPENSHIFT_NODEJS_PORT"
   },
+  "express": {
+    "session": {
+      "secret":"NUCUBING_EXPRESS_SESSION_SECRET"
+    }
+  },
   "mongo": {
     "connectionString":"OPENSHIFT_MONGODB_DB_URL"
   },
@@ -10,5 +15,11 @@
     "host": "OPENSHIFT_REDIS_DB_HOST",
     "port": "OPENSHIFT_REDIS_DB_PORT",
     "pass": "OPENSHIFT_REDIS_DB_PASSWORD"
+  },
+  "passport": {
+    "facebook": {
+      "clientID":"NUCUBING_FACEBOOK_CLIENT_ID",
+      "clientSecret":"NUCUBING_FACEBOOK_CLIENT_SECRET"
+    }
   }
 }

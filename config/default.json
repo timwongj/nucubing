@@ -3,6 +3,11 @@
     "ip":"127.0.0.1",
     "port":"8080"
   },
+  "express": {
+    "session": {
+      "secret":"dose you eben gj?"
+    }
+  },
   "mongo": {
     "connectionString":"mongodb://localhost/nucubing"
   },
@@ -13,8 +18,8 @@
   },
   "passport": {
     "facebook": {
-      "clientID":"1397096627278092",
-      "clientSecret":"e98f10732572cff4bf9a1ccd54288460"
+      "clientID":"uh oh riley time",
+      "clientSecret":"don't try to be too clever!"
     }
   }
 }
