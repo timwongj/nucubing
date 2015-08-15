@@ -11,12 +11,33 @@ module.exports = (function() {
 
   var router = express.Router();
 
+  router.use(function(req, res, next) {
+    if (req.user) {
+      next();
+    } else {
+      res.redirect('/login');
+    }
+  });
+
   // render contest page
   router.get('/', function(req, res) {
-    if (req.user)
       res.sendfile('./public/components/contest/contest.html');
-    else
-      res.sendfile('./public/components/login/login.html');
+  });
+
+  router.get('/:event/entry', function(req, res) {
+    res.sendfile('./public/components/contestEntry/contestEntry.html');
+  });
+
+  router.get('/:event/timer', function(req, res) {
+    res.sendfile('./public/components/contestTimer/contestTimer.html');
+  });
+
+  router.get('/333fm', function(req, res) {
+    res.sendfile('./public/components/contestFmc/contestFmc.html');
+  });
+
+  router.get('/333mbf', function(req, res) {
+    res.sendfile('./public/components/contestMbld/contestMbld.html');
   });
 
   // get user's contest results for current week

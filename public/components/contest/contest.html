@@ -65,43 +65,13 @@
                     <h1 class="panel-title" ng-bind="event.result"></h1>
                 </div>
                 <div class="panel-footer text-center">
-                    <button class="btn btn-primary" ng-click="manualEntry(event)"><i class="fa fa-pencil"></i> Entry</button>
-                    <button class="btn btn-warning" ng-click="timer(event)"><i class="fa fa-clock-o"></i> Timer</button>
+                    <a class="btn btn-primary" href="/contest/{{event.eventId}}/entry" ng-show="(event.eventId != '333fm') && (event.eventId != '333mbf')"><i class="fa fa-pencil"></i> Entry</a>
+                    <a class="btn btn-warning" href="/contest/{{event.eventId}}/timer" ng-show="(event.eventId != '333fm') && (event.eventId != '333mbf')"><i class="fa fa-pencil"></i> Timer</a>
+                    <a class="btn btn-primary" href="/contest/{{event.eventId}}" ng-show="(event.eventId == '333fm') || (event.eventId == '333mbf')"><i class="fa fa-pencil"></i> Entry</a>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Contest Form Page-->
-    <form name="contestForm" class="form-horizontal" ng-show="showManualEntry" ng-submit="contestForm.$valid && submit()">
-        <div class="form-group" ng-repeat="solve in solves">
-            <div class="col-sm-12">
-                <pre class="scramble" ng-bind="$index + 1 + '. ' + solve.scramble"></pre>
-            </div>
-            <div class="col-sm-4 result-row">
-                <div class="input-group">
-                    <div class="input-group-addon solve-input-addon">Time</div>
-                    <input type="text" class="form-control solve-input" maxlength="9" ng-model="solve.result" required ng-pattern="/^(([0-5]?[0-9]:)?[0-5])?[0-9].[0-9][0-9][0-9]?$/">
-                </div>
-            </div>
-            <div class="col-sm-4 col-xs-8 result-row">
-                <div class="input-group">
-                    <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-success btn-sm" tabindex="-1" ng-click="solve.penalty = ''"><i class="fa fa-check-circle"></i> OK</button>
-                        <button type="button" class="btn btn-warning btn-sm" tabindex="-1" ng-click="solve.penalty = '(+2)'"><i class="fa fa-plus-circle"></i> +2</button>
-                        <button type="button" class="btn btn-danger btn-sm" tabindex="-1" ng-click="solve.penalty = '(DNF)'"><i class="fa fa-times-circle"></i> DNF</button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-4 col-xs-12 result-row">
-                <pre class="result" ng-bind="solve.result + ' ' + solve.penalty"></pre>
-            </div>
-        </div>
-        <div class="row" ng-show="showManualEntry">
-            <hr class="divider"/>
-            <button class="btn btn-warning btn-left pull-left" tabindex="-1" type="button" ng-click="cancel()"><i class="fa fa-ban"></i> Cancel</button>
-            <button class="btn btn-success btn-right pull-right" tabindex="-1" type="submit"><i class="fa fa-upload"></i> Submit</button>
-        </div>
-    </form>
     <!-- FMC Form Page-->
     <form name="fmcContestForm" class="form-horizontal" ng-show="showFMC" ng-submit="fmcContestForm.$valid && submit()">
         <div class="form-group" ng-repeat="solve in solves">

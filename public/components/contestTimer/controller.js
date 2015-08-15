@@ -2,7 +2,7 @@
 
     'use strict';
 
-    function ContestController($scope, $http) {
+    function ContestTimerController($scope, $http, $location, $interval) {
 
         // get authorization status
         $scope.authStatus = '';
@@ -13,107 +13,6 @@
                 $scope.authStatus = 'Login';
         });
 
-        // variables for ng-show
-        $scope.showHome = 1;
-        $scope.showManualEntry = 0;
-        $scope.showFMC = 0;
-        $scope.showMBLD = 0;
-
-        // events list
-        $scope.eventMap = {
-            '333' : {name: 'Rubik\'s Cube', format: 'avg5', result : ' ', index: 0},
-            '444' : {name: '4x4 Cube', format: 'avg5', result : ' ', index: 1},
-            '555' : {name: '5x5 Cube', format: 'avg5', result : ' ', index: 2},
-            '222' : {name: '2x2 Cube', format: 'avg5', result : ' ', index: 3},
-            '333bf' : {name: '3x3 blindfolded', format: 'bo3', result : ' ', index: 4},
-            '333oh' : {name: '3x3 one-handed', format: 'avg5', result : ' ', index: 5},
-            '333fm' : {name: '3x3 fewest moves', format: 'fmc', result : ' ', index: 6},
-            '333ft' : {name: '3x3 with feet', format: 'mo3', result : ' ', index: 7},
-            'minx' : {name: 'Megaminx', format: 'avg5', result : ' ', index: 8},
-            'pyram' : {name: 'Pyraminx', format: 'avg5', result : ' ', index: 9},
-            'sq1' : {name: 'Square-1', format: 'avg5', result : ' ', index: 10},
-            'clock' : {name: 'Rubik\'s Clock', format: 'avg5', result : ' ', index: 11},
-            'skewb' : {name: 'Skewb', format: 'avg5', result : ' ', index: 12},
-            '666' : {name: '6x6 Cube', format: 'mo3', result : ' ', index: 13},
-            '777' : {name: '7x7 Cube', format: 'mo3', result : ' ', index: 14},
-            '444bf' : {name: '4x4 blindfolded', format: 'bo3', result : ' ', index: 15},
-            '555bf' : {name: '5x5 blindfolded', format: 'bo3', result : ' ', index: 16},
-            '333mbf' : {name: '3x3 multi blind', format: 'mbld', result : ' ', index: 17}
-        };
-
-        // get current week contest results for user
-        $http.get('/contest/results/current').success(function(results) {
-            for (var i = 0; i < results.length; i++) {
-                var data = JSON.parse(results[i].data);
-                switch($scope.eventMap[results[i].event].format) {
-                    case 'avg5': $scope.eventMap[results[i].event].result = calculateAverage(data.times, data.penalties); break;
-                    case 'mo3' : $scope.eventMap[results[i].event].result = calculateMean(data.times, data.penalties); break;
-                    case 'bo3' : $scope.eventMap[results[i].event].result = calculateSingle(data.times, data.penalties); break;
-                    case 'fmc' : $scope.eventMap[results[i].event].result = calculateFMCMean(data.moves); break;
-                    case 'mbld' : $scope.eventMap[results[i].event].result = data.solved + '/' + data.attempted + ' in ' + data.time; break;
-                }
-            }
-            for (var event in $scope.eventMap) {
-                if (($scope.eventMap.hasOwnProperty(event)) && ($scope.eventMap[event].result == ' ')) {
-                    $scope.eventMap[event].result = 'Not Completed';
-                }
-            }
-        });
-
-        // event variables
-        $scope.event;
-        $scope.eventId;
-        $scope.solves;
-        $scope.mbldResult = {'solved':'', 'attempted':'', 'time':''};
-
-        $scope.countMoves = function(index) {
-            $scope.solves[index].moves = $scope.solves[index].solution.split(' ').length;
-        };
-
-        // submit results for the given event for the current week
-        $scope.submit = function() {
-            var result = {'event':$scope.eventId, 'data':{}};
-            if ($scope.eventId == '333mbf') {
-                result.data.solved = $scope.mbldResult.solved;
-                result.data.attempted = $scope.mbldResult.attempted;
-                result.data.time = $scope.mbldResult.time;
-            } else if ($scope.eventId == '333fm') {
-                result.data.solutions = [];
-                result.data.moves = [];
-                for (var i = 0; i < $scope.solves.length; i++) {
-                    result.data.solutions[i] = $scope.solves[i].solution;
-                    result.data.moves[i] = $scope.solves[i].moves;
-                }
-            } else {
-                result.data.times = [];
-                result.data.penalties = [];
-                for (var i = 0; i < $scope.solves.length; i++) {
-                    result.data.times[i] = $scope.solves[i].result;
-                    result.data.penalties[i] = $scope.solves[i].penalty;
-                }
-            }
-            switch($scope.eventMap[result.event].format) {
-                case 'avg5': $scope.eventMap[result.event].result = calculateAverage(result.data.times, result.data.penalties); break;
-                case 'mo3' : $scope.eventMap[result.event].result = calculateMean(result.data.times, result.data.penalties); break;
-                case 'bo3' : $scope.eventMap[result.event].result = calculateSingle(result.data.times, result.data.penalties); break;
-                case 'fmc' : $scope.eventMap[result.event].result = calculateFMCMean(result.data.moves); break;
-                case 'mbld' : $scope.eventMap[result.event].result = result.data.solved + '/' + result.data.attempted + ' in ' + result.data.time; break;
-            }
-            result.data = JSON.stringify(result.data);
-            $http.post('/contest/submit', result).success(function (response) {
-
-            });
-            $scope.event = '';
-            $scope.showHome = 1;
-            $scope.showManualEntry = 0;
-            $scope.showFMC = 0;
-            $scope.showMBLD = 0;
-        };
-
-    }
-
-    function ContestEntryController($scope, $http, $location) {
-
         $scope.eventMap = {
             '333' : {name: 'Rubik\'s Cube', format: 'avg5', result : ' ', index: 0},
             '444' : {name: '4x4 Cube', format: 'avg5', result : ' ', index: 1},
@@ -136,6 +35,11 @@
         };
 
         $scope.event = '';
+        $scope.index = 0;
+        $scope.solves = [];
+        $scope.result = '';
+        $scope.eventFormat = '';
+        $scope.done = false;
 
         var url = $location.$$absUrl.split('/');
         try {
@@ -147,155 +51,114 @@
 
         // get scrambles
         $http.get('/contest/scrambles/' + $scope.eventId).success(function(response) {
-            $scope.solves = [];
             for (var i = 0; i < response[0].scrambles.length; i++)
             {
                 $scope.solves[i] = {};
                 $scope.solves[i].result = '';
                 $scope.solves[i].penalty = '';
-                $scope.solves[i].solution = '';
-                $scope.solves[i].moves = '';
+                $scope.solves[i].displayedResult = '';
+                $scope.solves[i].completed = false;
                 $scope.solves[i].scramble = response[0].scrambles[i];
             }
+            $scope.scramble = $scope.solves[$scope.index].scramble;
         });
 
-        // get results if they exist
-        $http.get('/contest/results/' + $scope.eventId).success(function(results) {
-            var data = JSON.parse(results.data);
-            switch($scope.eventMap[results.event].format) {
-                case 'avg5' :
-                case 'mo3' :
-                case 'bo3' :
-                    for (var i = 0; i < $scope.solves.length; i++) {
-                        $scope.solves[i].result = data.times[i];
-                        $scope.solves[i].penalty = data.penalties[i];
+        // timer
+        $scope.now = 0;
+        $scope.time = 0;
+        $scope.timer_display = '0.00';
+        $scope.timerDelay = 10;
+        $scope.interval = null;
+
+        $scope.isTiming = 0;
+        $scope.isKeydown = 0;
+
+        $scope.keydown = function(event) {
+            if ((event.which === 32) && ($scope.isKeydown === 0) && (!$scope.done)) {
+                $scope.isKeydown = 1;
+                if ($scope.isTiming === 0) {
+                    $scope.timer_display = '0.00';
+                    $scope.timerStyle = {'color':'#33CC00'};
+                } else if ($scope.isTiming === 1) {
+                    $scope.stopTimer();
+                    $scope.solves[$scope.index].result = reformatTime($scope.time / 1000);
+                    $scope.solves[$scope.index].displayedResult = $scope.solves[$scope.index].result;
+                    $scope.solves[$scope.index].completed = true;
+                    if ($scope.index < $scope.solves.length - 1) {
+                        $scope.index++;
+                        $scope.scramble = $scope.solves[$scope.index].scramble;
+                    } else {
+                        $scope.done = true;
+                        var times = [], penalties = [];
+                        for (var i = 0; i < $scope.solves.length; i++) {
+                            times[i] = $scope.solves[i].result;
+                            penalties[i] = $scope.solves[i].penalty;
+                        }
+                        switch($scope.eventMap[$scope.eventId].format) {
+                            case 'avg5': $scope.result = calculateAverage(times, penalties); $scope.eventFormat = 'Average of 5'; break;
+                            case 'mo3' : $scope.result = calculateMean(times, penalties); $scope.eventFormat = 'Mean of 3'; break;
+                            case 'bo3' : $scope.result = calculateSingle(times, penalties); $scope.eventFormat = 'Best of 3'; break;
+                        }
                     }
-                    break;
-                case 'fmc' :
-                    for (var i = 0; i < $scope.solves.length; i++) {
-                        $scope.solves[i].solution = data.solutions[i];
-                        $scope.solves[i].moves = data.moves[i];
-                    }
-                    break;
-                case 'mbld' :
-                    $scope.mbldResult = {'solved':data.solved, 'attempted':data.attempted, 'time':data.time};
-                    break;
+                    $scope.now = 0;
+                    $scope.time = 0;
+                    $scope.interval = null;
+                }
             }
-        });
-
-        $scope.cancel = function() {
-            window.history.back();
         };
 
-        // submit results for the given event for the current week
-        $scope.submit = function() {
-            var result = {'event':$scope.eventId, 'data':{}};
-            if ($scope.eventId == '333mbf') {
-                result.data.solved = $scope.mbldResult.solved;
-                result.data.attempted = $scope.mbldResult.attempted;
-                result.data.time = $scope.mbldResult.time;
-            } else if ($scope.eventId == '333fm') {
-                result.data.solutions = [];
-                result.data.moves = [];
-                for (var i = 0; i < $scope.solves.length; i++) {
-                    result.data.solutions[i] = $scope.solves[i].solution;
-                    result.data.moves[i] = $scope.solves[i].moves;
-                }
-            } else {
-                result.data.times = [];
-                result.data.penalties = [];
-                for (var i = 0; i < $scope.solves.length; i++) {
-                    result.data.times[i] = $scope.solves[i].result;
-                    result.data.penalties[i] = $scope.solves[i].penalty;
+        $scope.keyup = function(event) {
+            if ((event.which === 32) && ($scope.isKeydown === 1) && (!$scope.done)) {
+                $scope.isKeydown = 0;
+                if ($scope.isTiming === 0) {
+                    $scope.isTiming = 1;
+                    $scope.timerStyle = {'color': 'black'};
+                    $scope.startTimer();
+                } else if ($scope.isTiming === 1) {
+                    $scope.isTiming = 0;
                 }
             }
-            switch($scope.eventMap[result.event].format) {
-                case 'avg5': $scope.eventMap[result.event].result = calculateAverage(result.data.times, result.data.penalties); break;
-                case 'mo3' : $scope.eventMap[result.event].result = calculateMean(result.data.times, result.data.penalties); break;
-                case 'bo3' : $scope.eventMap[result.event].result = calculateSingle(result.data.times, result.data.penalties); break;
-                case 'fmc' : $scope.eventMap[result.event].result = calculateFMCMean(result.data.moves); break;
-                case 'mbld' : $scope.eventMap[result.event].result = result.data.solved + '/' + result.data.attempted + ' in ' + result.data.time; break;
+        };
+
+        $scope.startTimer = function() {
+            $scope.now = Date.now();
+
+            $scope.interval = $interval(function() {
+                var tmp = Date.now();
+                var offset = tmp - $scope.now;
+                $scope.time += (offset);
+                $scope.timer_display = reformatTime($scope.time / 1000);
+                $scope.now = tmp;
+            }, $scope.timerDelay);
+        };
+
+        $scope.stopTimer = function() {
+            $interval.cancel($scope.interval);
+        };
+
+        $scope.updateResultWithPenalty = function(solve, penalty) {
+            solve.penalty = penalty;
+            solve.displayedResult = solve.result + ' ' + penalty;
+        };
+
+        $scope.submit = function() {
+            console.log($scope.solves);
+            var result = {'event':$scope.eventId, 'data':{}};
+            result.data.times = [];
+            result.data.penalties = [];
+            for (var i = 0; i < $scope.solves.length; i++) {
+                result.data.times[i] = $scope.solves[i].result;
+                result.data.penalties[i] = $scope.solves[i].penalty;
             }
             result.data = JSON.stringify(result.data);
             $http.post('/contest/submit', result).success(function(response) {
                 window.history.back();
             });
-        };
-
-    }
-
-    function ContestTimerController($scope, $http, $location) {
-
-        $scope.eventMap = {
-            '333' : {name: 'Rubik\'s Cube', format: 'avg5', result : ' ', index: 0},
-            '444' : {name: '4x4 Cube', format: 'avg5', result : ' ', index: 1},
-            '555' : {name: '5x5 Cube', format: 'avg5', result : ' ', index: 2},
-            '222' : {name: '2x2 Cube', format: 'avg5', result : ' ', index: 3},
-            '333bf' : {name: '3x3 blindfolded', format: 'bo3', result : ' ', index: 4},
-            '333oh' : {name: '3x3 one-handed', format: 'avg5', result : ' ', index: 5},
-            '333fm' : {name: '3x3 fewest moves', format: 'fmc', result : ' ', index: 6},
-            '333ft' : {name: '3x3 with feet', format: 'mo3', result : ' ', index: 7},
-            'minx' : {name: 'Megaminx', format: 'avg5', result : ' ', index: 8},
-            'pyram' : {name: 'Pyraminx', format: 'avg5', result : ' ', index: 9},
-            'sq1' : {name: 'Square-1', format: 'avg5', result : ' ', index: 10},
-            'clock' : {name: 'Rubik\'s Clock', format: 'avg5', result : ' ', index: 11},
-            'skewb' : {name: 'Skewb', format: 'avg5', result : ' ', index: 12},
-            '666' : {name: '6x6 Cube', format: 'mo3', result : ' ', index: 13},
-            '777' : {name: '7x7 Cube', format: 'mo3', result : ' ', index: 14},
-            '444bf' : {name: '4x4 blindfolded', format: 'bo3', result : ' ', index: 15},
-            '555bf' : {name: '5x5 blindfolded', format: 'bo3', result : ' ', index: 16},
-            '333mbf' : {name: '3x3 multi blind', format: 'mbld', result : ' ', index: 17}
-        };
-
-        $scope.event = '';
-
-        var url = $location.$$absUrl.split('/');
-        try {
-            $scope.eventId = url[url.indexOf('contest') + 1];
-            $scope.event = $scope.eventMap[$scope.eventId].name;
-        } catch(e) {
-            $scope.event = 'Invalid Event';
         }
-
-        // get scrambles
-        $http.get('/contest/scrambles/' + $scope.eventId).success(function(response) {
-            $scope.solves = [];
-            for (var i = 0; i < response[0].scrambles.length; i++)
-            {
-                $scope.solves[i] = {};
-                $scope.solves[i].result = '';
-                $scope.solves[i].penalty = '';
-                $scope.solves[i].solution = '';
-                $scope.solves[i].moves = '';
-                $scope.solves[i].scramble = response[0].scrambles[i];
-            }
-        });
-
-    }
-
-    function OrderObjectByFilter() {
-
-        return function(items, field) {
-            var filtered = [];
-            angular.forEach(items, function(item, eventId) {
-                item.eventId = eventId;
-                filtered.push(item);
-            });
-            filtered.sort(function (a, b) {
-                return (a[field] > b[field] ? 1 : -1);
-            });
-            return filtered;
-        };
 
     }
 
     angular.module('nuCubingApp', ['ui.bootstrap']);
-
-    angular.module('nuCubingApp').filter('orderObjectBy', OrderObjectByFilter);
-
-    angular.module('nuCubingApp').controller('ContestController', ContestController);
-
-    angular.module('nuCubingApp').controller('ContestEntryController', ContestEntryController);
 
     angular.module('nuCubingApp').controller('ContestTimerController', ContestTimerController);
 
@@ -439,12 +302,11 @@ function formatTimes(times, penalties) {
     return formattedTimes;
 }
 
-// convert the time from milliseconds to minutes:seconds.milliseconds
+// convert the time from seconds.milliseconds to minutes:seconds.milliseconds
 function reformatTime(time) {
     if (isNaN(time)) {
         return 'DNF';
-    }
-    if (parseFloat(time) <  60) {
+    } else if (parseFloat(time) < 60) {
         return parseFloat(time).toFixed(2);
     } else {
         var min = Math.floor(parseFloat(time) / 60);

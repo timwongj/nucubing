@@ -80,7 +80,29 @@
 }
 
 .result {
+    height:30px;
     margin-bottom:0px;
+    padding-top:5px;
+    padding-bottom:5px;
+}
+
+.timer-scramble {
+    font-size:16pt;
+}
+
+.timer-display {
+    font-size:96pt;
+}
+
+.timer-results-penalties {
+    width:150px;
+}
+
+.mbld-scramble {
+    margin-top:5px;
+    margin-bottom:5px;
+    margin-left:0px;
+    margin-right:0px;
     padding-top:5px;
     padding-bottom:5px;
 }

@@ -66,72 +66,6 @@
         $scope.solves;
         $scope.mbldResult = {'solved':'', 'attempted':'', 'time':''};
 
-        // go to manual entry page for the event
-        $scope.manualEntry = function(event) {
-            // get event name
-            for (var e in $scope.eventMap) {
-                if ($scope.eventMap.hasOwnProperty(e)) {
-                    if ($scope.eventMap[e].name == event.name) {
-                        $scope.eventId = e;
-                    }
-                }
-            }
-            // get scrambles
-            $http.get('/contest/scrambles/' + $scope.eventId).success(function(response) {
-                $scope.solves = [];
-                for (var i = 0; i < response[0].scrambles.length; i++)
-                {
-                    $scope.solves[i] = {};
-                    $scope.solves[i].result = '';
-                    $scope.solves[i].penalty = '';
-                    $scope.solves[i].solution = '';
-                    $scope.solves[i].moves = '';
-                    $scope.solves[i].scramble = response[0].scrambles[i];
-                }
-            });
-            // get results if they exist
-            $http.get('/contest/results/' + $scope.eventId).success(function(results) {
-                var data = JSON.parse(results.data);
-                switch($scope.eventMap[results.event].format) {
-                    case 'avg5' :
-                    case 'mo3' :
-                    case 'bo3' :
-                        for (var i = 0; i < $scope.solves.length; i++) {
-                            $scope.solves[i].result = data.times[i];
-                            $scope.solves[i].penalty = data.penalties[i];
-                        }
-                        break;
-                    case 'fmc' :
-                        for (var i = 0; i < $scope.solves.length; i++) {
-                            $scope.solves[i].solution = data.solutions[i];
-                            $scope.solves[i].moves = data.moves[i];
-                        }
-                        break;
-                    case 'mbld' :
-                        $scope.mbldResult = {'solved':data.solved, 'attempted':data.attempted, 'time':data.time};
-                        break;
-                }
-            });
-            $scope.event = event.name;
-            $scope.showHome = 0;
-            if (event.name == '3x3 fewest moves') {
-                $scope.showFMC = 1;
-            } else if (event.name == '3x3 multi blind') {
-                $scope.showMBLD = 1;
-            } else {
-                $scope.showManualEntry = 1;
-            }
-        };
-
-        // go back to the contest home page
-        $scope.cancel = function() {
-            $scope.event = '';
-            $scope.showHome = 1;
-            $scope.showManualEntry = 0;
-            $scope.showFMC = 0;
-            $scope.showMBLD = 0;
-        };
-
         $scope.countMoves = function(index) {
             $scope.solves[index].moves = $scope.solves[index].solution.split(' ').length;
         };
@@ -182,7 +116,8 @@
 
         return function(items, field) {
             var filtered = [];
-            angular.forEach(items, function(item) {
+            angular.forEach(items, function(item, eventId) {
+                item.eventId = eventId;
                 filtered.push(item);
             });
             filtered.sort(function (a, b) {

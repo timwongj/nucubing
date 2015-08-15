@@ -17,12 +17,12 @@
   <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
   <!-- Local -->
   <link rel="stylesheet" type="text/css" href="/public/css/style.css">
-  <script src="/public/components/contest/controller.js"></script>
+  <script src="/public/components/contestFmc/controller.js"></script>
   <!-- Title -->
   <link rel="shortcut icon" type="image/x-icon" href="/public/images/cubeLogo.png"/>
   <title>NU Cubing - Contest</title>
 </head>
-<body ng-app="nuCubingApp" ng-controller="ContestController">
+<body ng-app="nuCubingApp" ng-controller="ContestFmcController">
 <div class="navbar navbar-default" role="navigation">
   <div class="container">
     <div class="navbar-header">
@@ -51,7 +51,7 @@
 </div>
 <div class="container">
   <div class="page-header">
-    <h2 class="page-title" ng-bind="event"></h2>
+    <h2 class="page-title">3x3 fewest moves</h2>
   </div>
   <form name="fmcContestForm" class="form-horizontal" ng-submit="fmcContestForm.$valid && submit()">
     <div class="form-group" ng-repeat="solve in solves">
@@ -61,17 +61,17 @@
       <div class="col-sm-10 result-row">
         <div class="input-group">
           <div class="input-group-addon">Solution</div>
-          <input type="text" class="form-control solve-input" ng-model="solve.solution" ng-change="countMoves($index)">
+          <input type="text" class="form-control solve-input" ng-model="solve.solution" ng-change="update($index)">
         </div>
       </div>
       <div class="col-sm-2 col-xs-12 result-row">
-        <pre ng-bind="solve.moves"></pre>
+        <pre class="result"><span ng-bind="solve.moves" ng-show="solve.valid"></span></pre>
       </div>
     </div>
     <div class="row">
-      <hr/>
-      <button class="btn btn-warning pull-left" tabindex="-1" type="button" ng-click="cancel()"><i class="fa fa-ban"></i> Cancel</button>
-      <button class="btn btn-success pull-right" tabindex="-1" type="submit"><i class="fa fa-upload"></i> Submit</button>
+      <hr class="divider"/>
+      <a href="/contest" class="btn btn-warning btn-left pull-left" tabindex="-1" type="button"><i class="fa fa-ban"></i> Cancel</a>
+      <button class="btn btn-success btn-right pull-right" tabindex="-1" type="submit"><i class="fa fa-upload"></i> Submit</button>
     </div>
   </form>
 </div>
