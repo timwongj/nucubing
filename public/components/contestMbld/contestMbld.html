@@ -53,7 +53,9 @@
   <div class="page-header">
     <h2 class="page-title">3x3 multi blind</h2>
   </div>
-  <pre class="mbld-scramble" ng-repeat="scramble in scrambles" ng-bind="$index + 1 + '. ' + scramble"></pre>
+  <pre class="mbld-scramble" ng-repeat="scramble in scrambles" ng-bind="$index + 1 + '. ' + scramble" ng-show="$index < displayed"></pre>
+  <button class="btn btn-default btn-sm" ng-click="display('more')" ng-disabled="displayed==scrambles.length">More Scrambles</button>
+  <button class="btn btn-default btn-sm" ng-click="display('less')" ng-disabled="displayed==7">Less Scrambles</button>
   <form name="mbldContestForm" class="form-horizontal">
     <div class="form-group">
       <div class="col-sm-5 result-row">
