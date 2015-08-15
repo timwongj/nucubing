@@ -2,7 +2,7 @@
 
   'use strict';
 
-  function HomeController($scope, $http) {
+  function LinksController($scope, $http) {
 
     // get authorization status
     $scope.authStatus = '';
@@ -17,6 +17,6 @@
 
   angular.module('nuCubingApp', []);
 
-  angular.module('nuCubingApp').controller('HomeController', HomeController);
+  angular.module('nuCubingApp').controller('LinksController', LinksController);
 
 })();

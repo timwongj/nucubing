@@ -9,13 +9,17 @@ module.exports = (function() {
 
   var router = express.Router();
 
+  router.use(function(req, res, next) {
+    if (req.user) {
+      next();
+    } else {
+      res.redirect('/auth');
+    }
+  });
+
   // render profile page
   router.get('/', function(req, res) {
-    if (req.user) {
-      res.sendfile('./public/components/profile/profile.html');
-    } else {
-      res.sendfile('./public/components/login/login.html');
-    }
+    res.sendfile('./public/components/profile/profile.html');
   });
 
   // send user info such as name, email, and facebook id
