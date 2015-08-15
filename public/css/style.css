@@ -54,6 +54,7 @@
     margin:0px;
     padding-top:5px;
     padding-bottom:5px;
+    word-break:keep-all;
 }
 
 .solve-input-addon {
