@@ -51,8 +51,8 @@
 </div>
 <div class="container">
     <div class="page-header">
-        <h1 ng-show="showHome">Contest</h1>
-        <h1 ng-show="!showHome" ng-bind="event"></h1>
+        <h2 class="page-title" ng-show="showHome">Contest</h2>
+        <h2 class="page-title" ng-show="!showHome" ng-bind="event"></h2>
     </div>
     <!-- Contest Home Page-->
     <div class="row" ng-show="showHome">
@@ -75,31 +75,31 @@
     <form name="contestForm" class="form-horizontal" ng-show="showManualEntry" ng-submit="contestForm.$valid && submit()">
         <div class="form-group" ng-repeat="solve in solves">
             <div class="col-sm-12">
-                <pre ng-bind="solve.scramble"></pre>
+                <pre class="scramble" ng-bind="$index + 1 + '. ' + solve.scramble"></pre>
             </div>
             <div class="col-sm-4 result-row">
                 <div class="input-group">
-                    <div class="input-group-addon">Time</div>
+                    <div class="input-group-addon solve-input-addon">Time</div>
                     <input type="text" class="form-control solve-input" maxlength="9" ng-model="solve.result" required ng-pattern="/^(([0-5]?[0-9]:)?[0-5])?[0-9].[0-9][0-9][0-9]?$/">
                 </div>
             </div>
             <div class="col-sm-4 col-xs-8 result-row">
                 <div class="input-group">
                     <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-success" tabindex="-1" ng-click="solve.penalty = ''"><i class="fa fa-check-circle"></i> OK</button>
-                        <button type="button" class="btn btn-warning" tabindex="-1" ng-click="solve.penalty = '(+2)'"><i class="fa fa-plus-circle"></i> +2</button>
-                        <button type="button" class="btn btn-danger" tabindex="-1" ng-click="solve.penalty = '(DNF)'"><i class="fa fa-times-circle"></i> DNF</button>
+                        <button type="button" class="btn btn-success btn-sm" tabindex="-1" ng-click="solve.penalty = ''"><i class="fa fa-check-circle"></i> OK</button>
+                        <button type="button" class="btn btn-warning btn-sm" tabindex="-1" ng-click="solve.penalty = '(+2)'"><i class="fa fa-plus-circle"></i> +2</button>
+                        <button type="button" class="btn btn-danger btn-sm" tabindex="-1" ng-click="solve.penalty = '(DNF)'"><i class="fa fa-times-circle"></i> DNF</button>
                     </div>
                 </div>
             </div>
             <div class="col-sm-4 col-xs-12 result-row">
-                <pre ng-bind="solve.result + ' ' + solve.penalty"></pre>
+                <pre class="result" ng-bind="solve.result + ' ' + solve.penalty"></pre>
             </div>
         </div>
         <div class="row" ng-show="showManualEntry">
-            <hr/>
-            <button class="btn btn-warning pull-left" tabindex="-1" type="button" ng-click="cancel()">Cancel</button>
-            <button class="btn btn-success pull-right" tabindex="-1" type="submit">Submit</button>
+            <hr class="divider"/>
+            <button class="btn btn-warning btn-left pull-left" tabindex="-1" type="button" ng-click="cancel()"><i class="fa fa-ban"></i> Cancel</button>
+            <button class="btn btn-success btn-right pull-right" tabindex="-1" type="submit"><i class="fa fa-upload"></i> Submit</button>
         </div>
     </form>
     <!-- FMC Form Page-->
@@ -120,8 +120,8 @@
         </div>
         <div class="row" ng-show="showFMC">
             <hr/>
-            <button class="btn btn-warning pull-left" tabindex="-1" type="button" ng-click="cancel()">Cancel</button>
-            <button class="btn btn-success pull-right" tabindex="-1" type="submit">Submit</button>
+            <button class="btn btn-warning pull-left" tabindex="-1" type="button" ng-click="cancel()"><i class="fa fa-ban"></i> Cancel</button>
+            <button class="btn btn-success pull-right" tabindex="-1" type="submit"><i class="fa fa-upload"></i> Submit</button>
         </div>
     </form>
     <!-- MBLD Form Page-->
@@ -149,8 +149,8 @@
         </div>
         <div class="row" ng-show="showMBLD">
             <hr/>
-            <button class="btn btn-warning pull-left" tabindex="-1" type="button" ng-click="cancel()">Cancel</button>
-            <button class="btn btn-success pull-right" tabindex="-1" type="submit">Submit</button>
+            <button class="btn btn-warning pull-left" tabindex="-1" type="button" ng-click="cancel()"><i class="fa fa-ban"></i> Cancel</button>
+            <button class="btn btn-success pull-right" tabindex="-1" type="submit"><i class="fa fa-upload"></i> Submit</button>
         </div>
     </form>
     <br>
