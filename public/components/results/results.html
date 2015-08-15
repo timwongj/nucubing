@@ -51,7 +51,7 @@
 </div>
 <div class="container">
     <div class="page-header">
-        <h1 ng-bind="selectedEvent.name"></h1>
+        <h2 class="page-title" ng-bind="selectedEvent.name"></h2>
     </div>
     <select class="form-control" ng-model="selectedEvent" ng-options="event.name for event in eventMap"></select>
     <div class="table table-responsive table-results">
