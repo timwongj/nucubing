@@ -56,7 +56,7 @@
   <form name="contestForm" class="form-horizontal" ng-submit="contestForm.$valid && submit()">
     <div class="form-group" ng-repeat="solve in solves">
       <div class="col-sm-12">
-        <pre class="scramble" ng-bind="$index + 1 + '. ' + solve.scramble"></pre>
+        <pre class="scramble" ng-bind="solve.scramble"></pre>
       </div>
       <div class="col-sm-4 result-row">
         <div class="input-group">
