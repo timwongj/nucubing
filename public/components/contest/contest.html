@@ -1,129 +1,129 @@
 <!DOCTYPE html>
 <html>
 <head lang="en">
-    <meta charset="UTF-8">
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="/bower_components/components-font-awesome/css/font-awesome.min.css">
-    <!-- jQuery -->
-    <script src="/bower_components/jquery/dist/jquery.min.js"></script>
-    <script src="/bower_components/jquery-ui/jquery-ui.min.js"></script>
-    <!-- Bootstrap JS -->
-    <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-    <!-- Angular -->
-    <script src="/bower_components/angular/angular.min.js"></script>
-    <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
-    <!-- Local -->
-    <link rel="stylesheet" type="text/css" href="/public/css/style.css">
-    <script src="/public/components/contest/controller.js"></script>
-    <!-- Title -->
-    <link rel="shortcut icon" type="image/x-icon" href="/public/images/cubeLogo.png"/>
-    <title>NU Cubing - Contest</title>
+  <meta charset="UTF-8">
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="/bower_components/components-font-awesome/css/font-awesome.min.css">
+  <!-- jQuery -->
+  <script src="/bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="/bower_components/jquery-ui/jquery-ui.min.js"></script>
+  <!-- Bootstrap JS -->
+  <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+  <!-- Angular -->
+  <script src="/bower_components/angular/angular.min.js"></script>
+  <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+  <!-- Local -->
+  <link rel="stylesheet" type="text/css" href="/public/css/style.css">
+  <script src="/public/components/contest/controller.js"></script>
+  <!-- Title -->
+  <link rel="shortcut icon" type="image/x-icon" href="/public/img/cubeLogo.png"/>
+  <title>NU Cubing - Contest</title>
 </head>
 <body ng-app="nuCubingApp" ng-controller="ContestController">
 <div class="navbar navbar-default" role="navigation">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-        </div>
-        <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav navbar-left">
-                <li><a href="/" tabindex="-1"><i class="fa fa-home"></i> Home</a></li>
-                <li><a href="/profile" tabindex="-1"><i class="fa fa-user"></i> Profile</a></li>
-                <li><a href="/users" tabindex="-1"><i class="fa fa-users"></i> Users</a></li>
-                <li class="active"><a href="/contest" tabindex="-1"><i class="fa fa-cube"></i> Contest</a></li>
-                <li><a href="/results" tabindex="-1"><i class="fa fa-trophy"></i> Results</a></li>
-                <li><a href="/links" tabindex="-1"><i class="fa fa-link"></i> Links</a></li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li ng-show="authStatus == 'Logout'"><a href="/auth" tabindex="-1"><i class="fa fa-sign-out"></i> Logout</a></li>
-                <li ng-show="authStatus == 'Login'"><a href="/auth" tabindex="-1"><i class="fa fa-sign-in"></i> Login</a></li>
-            </ul>
-        </div>
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
     </div>
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-left">
+        <li><a href="/" tabindex="-1"><i class="fa fa-home"></i> Home</a></li>
+        <li><a href="/profile" tabindex="-1"><i class="fa fa-user"></i> Profile</a></li>
+        <li><a href="/users" tabindex="-1"><i class="fa fa-users"></i> Users</a></li>
+        <li class="active"><a href="/contest" tabindex="-1"><i class="fa fa-cube"></i> Contest</a></li>
+        <li><a href="/results" tabindex="-1"><i class="fa fa-trophy"></i> Results</a></li>
+        <li><a href="/links" tabindex="-1"><i class="fa fa-link"></i> Links</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li ng-show="authStatus == 'Logout'"><a href="/auth" tabindex="-1"><i class="fa fa-sign-out"></i> Logout</a></li>
+        <li ng-show="authStatus == 'Login'"><a href="/auth" tabindex="-1"><i class="fa fa-sign-in"></i> Login</a></li>
+      </ul>
+    </div>
+  </div>
 </div>
 <div class="container">
-    <div class="page-header">
-        <h2 class="page-title" ng-show="showHome">Contest</h2>
-        <h2 class="page-title" ng-show="!showHome" ng-bind="event"></h2>
+  <div class="page-header">
+    <h2 class="page-title" ng-show="showHome">Contest</h2>
+    <h2 class="page-title" ng-show="!showHome" ng-bind="event"></h2>
+  </div>
+  <!-- Contest Home Page-->
+  <div class="row" ng-show="showHome">
+    <div class="col-md-3 col-sm-6" ng-repeat="event in eventMap | orderObjectBy:'index'">
+      <div class="panel panel-default">
+        <div class="panel-heading text-center">
+          <h1 class="panel-title" ng-bind="event.name"></h1>
+        </div>
+        <div class="panel-body text-center">
+          <h1 class="panel-title" ng-bind="event.result"></h1>
+        </div>
+        <div class="panel-footer text-center">
+          <a class="btn btn-primary" href="/contest/{{event.eventId}}/entry" ng-show="(event.eventId != '333fm') && (event.eventId != '333mbf')"><i class="fa fa-pencil"></i> Entry</a>
+          <a class="btn btn-warning" href="/contest/{{event.eventId}}/timer" ng-show="(event.eventId != '333fm') && (event.eventId != '333mbf')"><i class="fa fa-pencil"></i> Timer</a>
+          <a class="btn btn-primary" href="/contest/{{event.eventId}}" ng-show="(event.eventId == '333fm') || (event.eventId == '333mbf')"><i class="fa fa-pencil"></i> Entry</a>
+        </div>
+      </div>
     </div>
-    <!-- Contest Home Page-->
-    <div class="row" ng-show="showHome">
-        <div class="col-md-3 col-sm-6" ng-repeat="event in eventMap | orderObjectBy:'index'">
-            <div class="panel panel-default">
-                <div class="panel-heading text-center">
-                    <h1 class="panel-title" ng-bind="event.name"></h1>
-                </div>
-                <div class="panel-body text-center">
-                    <h1 class="panel-title" ng-bind="event.result"></h1>
-                </div>
-                <div class="panel-footer text-center">
-                    <a class="btn btn-primary" href="/contest/{{event.eventId}}/entry" ng-show="(event.eventId != '333fm') && (event.eventId != '333mbf')"><i class="fa fa-pencil"></i> Entry</a>
-                    <a class="btn btn-warning" href="/contest/{{event.eventId}}/timer" ng-show="(event.eventId != '333fm') && (event.eventId != '333mbf')"><i class="fa fa-pencil"></i> Timer</a>
-                    <a class="btn btn-primary" href="/contest/{{event.eventId}}" ng-show="(event.eventId == '333fm') || (event.eventId == '333mbf')"><i class="fa fa-pencil"></i> Entry</a>
-                </div>
-            </div>
+  </div>
+  <!-- FMC Form Page-->
+  <form name="fmcContestForm" class="form-horizontal" ng-show="showFMC" ng-submit="fmcContestForm.$valid && submit()">
+    <div class="form-group" ng-repeat="solve in solves">
+      <div class="col-sm-12">
+        <pre ng-bind="solve.scramble"></pre>
+      </div>
+      <div class="col-sm-10 result-row">
+        <div class="input-group">
+          <div class="input-group-addon">Solution</div>
+          <input type="text" class="form-control solve-input" ng-model="solve.solution" ng-change="countMoves($index)">
         </div>
+      </div>
+      <div class="col-sm-2 col-xs-12 result-row">
+        <pre ng-bind="solve.moves"></pre>
+      </div>
     </div>
-    <!-- FMC Form Page-->
-    <form name="fmcContestForm" class="form-horizontal" ng-show="showFMC" ng-submit="fmcContestForm.$valid && submit()">
-        <div class="form-group" ng-repeat="solve in solves">
-            <div class="col-sm-12">
-                <pre ng-bind="solve.scramble"></pre>
-            </div>
-            <div class="col-sm-10 result-row">
-                <div class="input-group">
-                    <div class="input-group-addon">Solution</div>
-                    <input type="text" class="form-control solve-input" ng-model="solve.solution" ng-change="countMoves($index)">
-                </div>
-            </div>
-            <div class="col-sm-2 col-xs-12 result-row">
-                <pre ng-bind="solve.moves"></pre>
-            </div>
+    <div class="row" ng-show="showFMC">
+      <hr/>
+      <button class="btn btn-warning pull-left" tabindex="-1" type="button" ng-click="cancel()"><i class="fa fa-ban"></i> Cancel</button>
+      <button class="btn btn-success pull-right" tabindex="-1" type="submit"><i class="fa fa-upload"></i> Submit</button>
+    </div>
+  </form>
+  <!-- MBLD Form Page-->
+  <form name="mbldContestForm" class="form-horizontal" ng-show="showMBLD" ng-submit="mbldContestForm.$valid && submit()">
+    <div class="form-group">
+      <div class="col-sm-12">
+        <pre ng-repeat="solve in solves" ng-bind="$index + 1 + '. ' + solve.scramble"></pre>
+      </div>
+      <div class="col-sm-4 result-row">
+        <div class="input-group">
+          <input type="number" class="form-control solve-input" maxlength="2" ng-model="mbldResult.solved" required ng-pattern="/^[0-9]?[0-9]$/">
+          <div class="input-group-addon">out of</div>
+          <input type="number" class="form-control solve-input" maxlength="2" ng-model="mbldResult.attempted" required ng-pattern="/^[0-9]?[0-9]$/">
         </div>
-        <div class="row" ng-show="showFMC">
-            <hr/>
-            <button class="btn btn-warning pull-left" tabindex="-1" type="button" ng-click="cancel()"><i class="fa fa-ban"></i> Cancel</button>
-            <button class="btn btn-success pull-right" tabindex="-1" type="submit"><i class="fa fa-upload"></i> Submit</button>
+      </div>
+      <div class="col-sm-4 result-row">
+        <div class="input-group">
+          <div class="input-group-addon">Time</div>
+          <input type="text" class="form-control solve-input" maxlength="9" ng-model="mbldResult.time" required ng-pattern="/^(([0-5]?[0-9]:)?[0-5])?[0-9]$/">
         </div>
-    </form>
-    <!-- MBLD Form Page-->
-    <form name="mbldContestForm" class="form-horizontal" ng-show="showMBLD" ng-submit="mbldContestForm.$valid && submit()">
-        <div class="form-group">
-            <div class="col-sm-12">
-                <pre ng-repeat="solve in solves" ng-bind="$index + 1 + '. ' + solve.scramble"></pre>
-            </div>
-            <div class="col-sm-4 result-row">
-                <div class="input-group">
-                    <input type="number" class="form-control solve-input" maxlength="2" ng-model="mbldResult.solved" required ng-pattern="/^[0-9]?[0-9]$/">
-                    <div class="input-group-addon">out of</div>
-                    <input type="number" class="form-control solve-input" maxlength="2" ng-model="mbldResult.attempted" required ng-pattern="/^[0-9]?[0-9]$/">
-                </div>
-            </div>
-            <div class="col-sm-4 result-row">
-                <div class="input-group">
-                    <div class="input-group-addon">Time</div>
-                    <input type="text" class="form-control solve-input" maxlength="9" ng-model="mbldResult.time" required ng-pattern="/^(([0-5]?[0-9]:)?[0-5])?[0-9]$/">
-                </div>
-            </div>
-            <div class="col-sm-4 result-row">
-                <pre ng-bind="mbldResult.solved + '/' + mbldResult.attempted + ' ' + mbldResult.time"></pre>
-            </div>
-        </div>
-        <div class="row" ng-show="showMBLD">
-            <hr/>
-            <button class="btn btn-warning pull-left" tabindex="-1" type="button" ng-click="cancel()"><i class="fa fa-ban"></i> Cancel</button>
-            <button class="btn btn-success pull-right" tabindex="-1" type="submit"><i class="fa fa-upload"></i> Submit</button>
-        </div>
-    </form>
-    <br>
+      </div>
+      <div class="col-sm-4 result-row">
+        <pre ng-bind="mbldResult.solved + '/' + mbldResult.attempted + ' ' + mbldResult.time"></pre>
+      </div>
+    </div>
+    <div class="row" ng-show="showMBLD">
+      <hr/>
+      <button class="btn btn-warning pull-left" tabindex="-1" type="button" ng-click="cancel()"><i class="fa fa-ban"></i> Cancel</button>
+      <button class="btn btn-success pull-right" tabindex="-1" type="submit"><i class="fa fa-upload"></i> Submit</button>
+    </div>
+  </form>
+  <br>
 </div>
 </body>
 </html>

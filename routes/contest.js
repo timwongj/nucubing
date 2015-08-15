@@ -15,7 +15,7 @@ module.exports = (function() {
     if (req.user) {
       next();
     } else {
-      res.redirect('/login');
+      res.redirect('/auth');
     }
   });
 
