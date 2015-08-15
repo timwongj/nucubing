@@ -51,7 +51,7 @@
     };
 
     $scope.update = function() {
-      if ($scope.mbldContestForm.$valid && ($scope.mbldResult.solved <= $scope.mbldResult.attempted)) {
+      if ($scope.mbldContestForm.$valid && ($scope.mbldResult.solved <= $scope.mbldResult.attempted) && ($scope.mbldResult.attempted <= $scope.scrambles.length)) {
         $scope.valid = true;
         var rawScore = parseInt($scope.mbldResult.solved - ($scope.mbldResult.attempted - $scope.mbldResult.solved));
         if (((rawScore >= 0) && ($scope.mbldResult.attempted > 2)) || ((rawScore > 0) && ($scope.mbldResult.attempted == 2))) {
