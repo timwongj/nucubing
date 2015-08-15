@@ -2,7 +2,7 @@
 
     'use strict';
 
-    function ContestController($scope, $http) {
+    function ContestFmcController($scope, $http) {
 
         // get authorization status
         $scope.authStatus = '';
@@ -13,126 +13,57 @@
                 $scope.authStatus = 'Login';
         });
 
-        // variables for ng-show
-        $scope.showHome = 1;
-        $scope.showManualEntry = 0;
-        $scope.showFMC = 0;
-        $scope.showMBLD = 0;
+        $scope.solves = [];
 
-        // events list
-        $scope.eventMap = {
-            '333' : {name: 'Rubik\'s Cube', format: 'avg5', result : ' ', index: 0},
-            '444' : {name: '4x4 Cube', format: 'avg5', result : ' ', index: 1},
-            '555' : {name: '5x5 Cube', format: 'avg5', result : ' ', index: 2},
-            '222' : {name: '2x2 Cube', format: 'avg5', result : ' ', index: 3},
-            '333bf' : {name: '3x3 blindfolded', format: 'bo3', result : ' ', index: 4},
-            '333oh' : {name: '3x3 one-handed', format: 'avg5', result : ' ', index: 5},
-            '333fm' : {name: '3x3 fewest moves', format: 'fmc', result : ' ', index: 6},
-            '333ft' : {name: '3x3 with feet', format: 'mo3', result : ' ', index: 7},
-            'minx' : {name: 'Megaminx', format: 'avg5', result : ' ', index: 8},
-            'pyram' : {name: 'Pyraminx', format: 'avg5', result : ' ', index: 9},
-            'sq1' : {name: 'Square-1', format: 'avg5', result : ' ', index: 10},
-            'clock' : {name: 'Rubik\'s Clock', format: 'avg5', result : ' ', index: 11},
-            'skewb' : {name: 'Skewb', format: 'avg5', result : ' ', index: 12},
-            '666' : {name: '6x6 Cube', format: 'mo3', result : ' ', index: 13},
-            '777' : {name: '7x7 Cube', format: 'mo3', result : ' ', index: 14},
-            '444bf' : {name: '4x4 blindfolded', format: 'bo3', result : ' ', index: 15},
-            '555bf' : {name: '5x5 blindfolded', format: 'bo3', result : ' ', index: 16},
-            '333mbf' : {name: '3x3 multi blind', format: 'mbld', result : ' ', index: 17}
-        };
-
-        // get current week contest results for user
-        $http.get('/contest/results/current').success(function(results) {
-            for (var i = 0; i < results.length; i++) {
-                var data = JSON.parse(results[i].data);
-                switch($scope.eventMap[results[i].event].format) {
-                    case 'avg5': $scope.eventMap[results[i].event].result = calculateAverage(data.times, data.penalties); break;
-                    case 'mo3' : $scope.eventMap[results[i].event].result = calculateMean(data.times, data.penalties); break;
-                    case 'bo3' : $scope.eventMap[results[i].event].result = calculateSingle(data.times, data.penalties); break;
-                    case 'fmc' : $scope.eventMap[results[i].event].result = calculateFMCMean(data.moves); break;
-                    case 'mbld' : $scope.eventMap[results[i].event].result = data.solved + '/' + data.attempted + ' in ' + data.time; break;
-                }
-            }
-            for (var event in $scope.eventMap) {
-                if (($scope.eventMap.hasOwnProperty(event)) && ($scope.eventMap[event].result == ' ')) {
-                    $scope.eventMap[event].result = 'Not Completed';
-                }
+        // get scrambles
+        $http.get('/contest/scrambles/333fm').success(function(response) {
+            for (var i = 0; i < response[0].scrambles.length; i++)
+            {
+                $scope.solves[i] = {};
+                $scope.solves[i].scramble = response[0].scrambles[i];
+                $scope.solves[i].solution = '';
+                $scope.solves[i].moves = '';
+                $scope.solves[i].valid = false;
+                $scope.solves[i].dnf = '';
             }
         });
 
-        // event variables
-        $scope.event;
-        $scope.eventId;
-        $scope.solves;
-        $scope.mbldResult = {'solved':'', 'attempted':'', 'time':''};
+        // get results if they exist
+        $http.get('/contest/results/333fm').success(function(results) {
+            var data = JSON.parse(results.data);
+            for (var i = 0; i < $scope.solves.length; i++) {
+                $scope.solves[i].solution = data.solutions[i];
+                $scope.solves[i].moves = data.moves[i];
+                $scope.solves[i].valid = true;
+                $scope.solves[i].dnf = '';
+            }
+        });
 
-        $scope.countMoves = function(index) {
+        $scope.update = function(index) {
+            $scope.solves[index].valid = $scope.solves[index].solution.length != 0;
             $scope.solves[index].moves = $scope.solves[index].solution.split(' ').length;
         };
 
         // submit results for the given event for the current week
         $scope.submit = function() {
-            var result = {'event':$scope.eventId, 'data':{}};
-            if ($scope.eventId == '333mbf') {
-                result.data.solved = $scope.mbldResult.solved;
-                result.data.attempted = $scope.mbldResult.attempted;
-                result.data.time = $scope.mbldResult.time;
-            } else if ($scope.eventId == '333fm') {
-                result.data.solutions = [];
-                result.data.moves = [];
-                for (var i = 0; i < $scope.solves.length; i++) {
-                    result.data.solutions[i] = $scope.solves[i].solution;
-                    result.data.moves[i] = $scope.solves[i].moves;
-                }
-            } else {
-                result.data.times = [];
-                result.data.penalties = [];
-                for (var i = 0; i < $scope.solves.length; i++) {
-                    result.data.times[i] = $scope.solves[i].result;
-                    result.data.penalties[i] = $scope.solves[i].penalty;
-                }
-            }
-            switch($scope.eventMap[result.event].format) {
-                case 'avg5': $scope.eventMap[result.event].result = calculateAverage(result.data.times, result.data.penalties); break;
-                case 'mo3' : $scope.eventMap[result.event].result = calculateMean(result.data.times, result.data.penalties); break;
-                case 'bo3' : $scope.eventMap[result.event].result = calculateSingle(result.data.times, result.data.penalties); break;
-                case 'fmc' : $scope.eventMap[result.event].result = calculateFMCMean(result.data.moves); break;
-                case 'mbld' : $scope.eventMap[result.event].result = result.data.solved + '/' + result.data.attempted + ' in ' + result.data.time; break;
+            var result = {'event':'333fm', 'data':{}};
+            result.data.solutions = [];
+            result.data.moves = [];
+            for (var i = 0; i < $scope.solves.length; i++) {
+                result.data.solutions[i] = $scope.solves[i].solution;
+                result.data.moves[i] = $scope.solves[i].moves;
             }
             result.data = JSON.stringify(result.data);
             $http.post('/contest/submit', result).success(function (response) {
-
+                window.history.back();
             });
-            $scope.event = '';
-            $scope.showHome = 1;
-            $scope.showManualEntry = 0;
-            $scope.showFMC = 0;
-            $scope.showMBLD = 0;
-        };
-
-    }
-
-    function OrderObjectByFilter() {
-
-        return function(items, field) {
-            var filtered = [];
-            angular.forEach(items, function(item, eventId) {
-                item.eventId = eventId;
-                filtered.push(item);
-            });
-            filtered.sort(function (a, b) {
-                return (a[field] > b[field] ? 1 : -1);
-            });
-            return filtered;
         };
 
     }
 
     angular.module('nuCubingApp', ['ui.bootstrap']);
 
-    angular.module('nuCubingApp').filter('orderObjectBy', OrderObjectByFilter);
-
-    angular.module('nuCubingApp').controller('ContestController', ContestController);
+    angular.module('nuCubingApp').controller('ContestFmcController', ContestFmcController);
 
 })();
 

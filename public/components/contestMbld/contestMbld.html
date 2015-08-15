@@ -17,12 +17,12 @@
   <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
   <!-- Local -->
   <link rel="stylesheet" type="text/css" href="/public/css/style.css">
-  <script src="/public/components/contest/controller.js"></script>
+  <script src="/public/components/contestMbld/controller.js"></script>
   <!-- Title -->
   <link rel="shortcut icon" type="image/x-icon" href="/public/images/cubeLogo.png"/>
   <title>NU Cubing - Contest</title>
 </head>
-<body ng-app="nuCubingApp" ng-controller="ContestController">
+<body ng-app="nuCubingApp" ng-controller="ContestMbldController">
 <div class="navbar navbar-default" role="navigation">
   <div class="container">
     <div class="navbar-header">
@@ -51,36 +51,33 @@
 </div>
 <div class="container">
   <div class="page-header">
-    <h2 class="page-title" ng-bind="event"></h2>
+    <h2 class="page-title">3x3 multi blind</h2>
   </div>
-  <form name="mbldContestForm" class="form-horizontal" ng-submit="mbldContestForm.$valid && submit()">
+  <pre class="mbld-scramble" ng-repeat="scramble in scrambles" ng-bind="$index + 1 + '. ' + scramble"></pre>
+  <form name="mbldContestForm" class="form-horizontal">
     <div class="form-group">
-      <div class="col-sm-12">
-        <pre ng-repeat="solve in solves" ng-bind="$index + 1 + '. ' + solve.scramble"></pre>
-      </div>
-      <div class="col-sm-4 result-row">
+      <div class="col-sm-5 result-row">
         <div class="input-group">
-          <input type="number" class="form-control solve-input" maxlength="2" ng-model="mbldResult.solved" required ng-pattern="/^[0-9]?[0-9]$/">
-          <div class="input-group-addon">out of</div>
-          <input type="number" class="form-control solve-input" maxlength="2" ng-model="mbldResult.attempted" required ng-pattern="/^[0-9]?[0-9]$/">
+          <div class="input-group-addon">Solved</div>
+          <input type="text" class="form-control solve-input" maxlength="2" ng-model="mbldResult.solved" ng-change="update()" ng-pattern="/^[0-9]?[0-9]$/" required>
+          <div class="input-group-addon">Attempted</div>
+          <input type="text" class="form-control solve-input" maxlength="2" ng-model="mbldResult.attempted" ng-change="update()" ng-pattern="/^[0-9]?[0-9]$/" required>
         </div>
       </div>
-      <div class="col-sm-4 result-row">
+      <div class="col-sm-3 result-row">
         <div class="input-group">
           <div class="input-group-addon">Time</div>
-          <input type="text" class="form-control solve-input" maxlength="9" ng-model="mbldResult.time" required ng-pattern="/^(([0-5]?[0-9]:)?[0-5])?[0-9]$/">
+          <input type="text" class="form-control solve-input" maxlength="5" ng-model="mbldResult.time" ng-change="update()" ng-pattern="/^([0-5]?[0-9]:[0-5][0-9])|([6][0]:[0][0])$/" required>
         </div>
       </div>
       <div class="col-sm-4 result-row">
-        <pre ng-bind="mbldResult.solved + '/' + mbldResult.attempted + ' ' + mbldResult.time"></pre>
+        <pre class="result"><span ng-bind="mbldResult.solved + '/' + mbldResult.attempted + ' ' + mbldResult.time + ' ' + mbldResult.dnf" ng-show="valid"></span></pre>
       </div>
     </div>
-    <div class="row">
-      <hr/>
-      <button class="btn btn-warning pull-left" tabindex="-1" type="button" ng-click="cancel()"><i class="fa fa-ban"></i> Cancel</button>
-      <button class="btn btn-success pull-right" tabindex="-1" type="submit"><i class="fa fa-upload"></i> Submit</button>
-    </div>
+    <hr/>
   </form>
+  <a href="/contest" class="btn btn-warning pull-left" tabindex="-1" type="button"><i class="fa fa-ban"></i> Cancel</a>
+  <button class="btn btn-success pull-right" tabindex="-1" ng-click="submit()" ng-disabled="!valid"><i class="fa fa-upload"></i> Submit</button>
 </div>
 </body>
 </html>

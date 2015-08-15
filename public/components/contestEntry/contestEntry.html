@@ -17,7 +17,7 @@
   <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
   <!-- Local -->
   <link rel="stylesheet" type="text/css" href="/public/css/style.css">
-  <script src="/public/components/contest/controller.js"></script>
+  <script src="/public/components/contestEntry/controller.js"></script>
   <!-- Title -->
   <link rel="shortcut icon" type="image/x-icon" href="/public/images/cubeLogo.png"/>
   <title>NU Cubing - Contest</title>
@@ -79,7 +79,7 @@
     </div>
     <div class="row">
       <hr class="divider"/>
-      <button class="btn btn-warning btn-left pull-left" tabindex="-1" type="button" ng-click="cancel()"><i class="fa fa-ban"></i> Cancel</button>
+      <a href="/contest" class="btn btn-warning btn-left pull-left" tabindex="-1" type="button"><i class="fa fa-ban"></i> Cancel</a>
       <button class="btn btn-success btn-right pull-right" tabindex="-1" type="submit"><i class="fa fa-upload"></i> Submit</button>
     </div>
   </form>
