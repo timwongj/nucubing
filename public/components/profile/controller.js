@@ -100,7 +100,7 @@
             $scope.personalBests.push({
               name: $scope.personalBestsMap[event].name,
               single: $scope.personalBestsMap[event].single,
-              average: $scope.personalBestsMap[event].average,
+              average: ($scope.personalBestsMap[event].average == 'DNF') ? '' : $scope.personalBestsMap[event].average,
               index: $scope.personalBestsMap[event].index
             });
           }
