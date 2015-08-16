@@ -55,38 +55,6 @@
       '333mbf' : {name: '3x3 multi blind', format: 'mbld', index: 17}
     };
 
-    // list for current week results and overall personal best results
-    $scope.personalResults = [];
-    $scope.personalResults[0] = {type:'This Week'};
-    for (var i = 0; i < $scope.personalResults.length; i++)
-      $scope.personalResults[i].results = [];
-
-    // get current week results for user
-    $http.get('/profile/results/current/' + profileId).success(function(results) {
-      for (var i = 0; i < results.length; i++) {
-        $scope.personalResults[0].results[i] = {'event':$scope.eventMap[results[i].event].name, 'index':$scope.eventMap[results[i].event].index};
-        var data = JSON.parse(results[i].data);
-        switch($scope.eventMap[results[i].event].format) {
-          case 'avg5' :
-            $scope.personalResults[0].results[i].single = calculateSingle(data.times, data.penalties);
-            $scope.personalResults[0].results[i].average = calculateAverage(data.times, data.penalties);
-            break;
-          case 'mo3' :
-          case 'bo3' :
-            $scope.personalResults[0].results[i].single = calculateSingle(data.times, data.penalties);
-            $scope.personalResults[0].results[i].average = calculateMean(data.times, data.penalties);
-            break;
-          case 'fmc' :
-            $scope.personalResults[0].results[i].single = calculateFMCSingle(data.moves);
-            $scope.personalResults[0].results[i].average = calculateFMCMean(data.moves);
-            break;
-          case 'mbld' :
-            $scope.personalResults[0].results[i].single = data.solved + '/' + data.attempted + ' in ' + data.time;
-            break;
-        }
-      }
-    });
-
     $scope.personalBestsMap = $scope.eventMap;
     $scope.personalBests = [];
 
@@ -97,8 +65,11 @@
       }
     }
 
-    // get personal results for user
+    $scope.resultsByWeek = {};
+
+    // get personal results
     $http.get('/profile/results/all/' + profileId).success(function(results) {
+      // Personal Bests
       for (var i = 0; i < results.length; i++) {
         var data = JSON.parse(results[i].data);
         switch($scope.personalBestsMap[results[i].event].format) {
@@ -133,11 +104,69 @@
           }
         }
       }
+
+      // Results by Week
+      for (var i = 0; i < results.length; i++) {
+        if (!$scope.resultsByWeek[results[i].week]) {
+          $scope.resultsByWeek[results[i].week] = [];
+        }
+        var data = JSON.parse(results[i].data);
+        var result = {'event':$scope.eventMap[results[i].event].name, 'index':$scope.eventMap[results[i].event].index};
+        switch($scope.eventMap[results[i].event].format) {
+          case 'avg5' :
+            result.best = calculateSingle(data.times, data.penalties);
+            result.average = calculateAverage(data.times, data.penalties);
+            result.details = '';
+            for (var j = 0; j < data.times.length; j++) {
+              result.details += (j == data.times.length - 1) ? data.times[j] + data.penalties[j] : data.times[j] + data.penalties[j] + ', ';
+            }
+            break;
+          case 'mo3' :
+          case 'bo3' :
+            result.best = calculateSingle(data.times, data.penalties);
+            result.average = calculateMean(data.times, data.penalties);
+            result.details = '';
+            for (var j = 0; j < data.times.length; j++) {
+              result.details += (j == data.times.length - 1) ? data.times[j] + data.penalties[j] : data.times[j] + data.penalties[j] + ', ';
+            }
+            break;
+          case 'fmc' :
+            result.best = calculateFMCSingle(data.moves);
+            result.average = calculateFMCMean(data.moves);
+            result.details = data.moves[0] + ', ' + data.moves[1] + ', ' + data.moves[2];
+            break;
+          case 'mbld' :
+            var mbldResult = compareMBLDResults($scope.personalBestsMap[results[i].event].single, data);
+            result.best = mbldResult.solved + '/' + mbldResult.attempted + ' in ' + mbldResult.time;
+            result.details = result.best;
+            break;
+        }
+
+        $scope.resultsByWeek[results[i].week].push(result);
+      }
     });
 
   }
 
+  function OrderObjectByFilter() {
+
+    return function(items, field) {
+      var filtered = [];
+      angular.forEach(items, function(item, key) {
+        item.key = key;
+        filtered.push(item);
+      });
+      filtered.sort(function (a, b) {
+        return (a[field] > b[field] ? 1 : -1);
+      });
+      return filtered;
+    };
+
+  }
+
   angular.module('nuCubingApp', ['ui.bootstrap']);
+
+  angular.module('nuCubingApp').filter('orderObjectBy', OrderObjectByFilter);
 
   angular.module('nuCubingApp').controller('ProfileController', ProfileController);
 
@@ -156,7 +185,7 @@ function compareResults(res1, res2) {
   } else if (res2 == 'DNF') {
     return res1;
   } else {
-    var res1Arr = res1.split(':'), res2Arr = res2.split(':'), res1Formatted, res2Formatted;
+    var res1Arr = res1.toString().split(':'), res2Arr = res2.toString().split(':'), res1Formatted, res2Formatted;
     if (res1Arr.length > 1) {
       res1Formatted = (parseFloat(res1Arr[0]) * 60) + parseFloat(res1Arr[1]);
     } else {
