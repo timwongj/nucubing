@@ -62,7 +62,7 @@
     // get results if they exist
     $http.get('/contest/results/' + $scope.eventId).success(function(results) {
       savedData = JSON.parse(results.data);
-      for (var i = 0; i < $scope.solves.length; i++) {
+      for (var i = 0; i < savedData.times.length; i++) {
         $scope.solves[i].time = savedData.times[i];
         $scope.solves[i].penalty = savedData.penalties[i];
       }
