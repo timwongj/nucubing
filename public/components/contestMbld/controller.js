@@ -24,8 +24,9 @@
 
     // get scrambles
     $http.get('/contest/scrambles/333mbf').success(function(response) {
-      for (var i = 0; i < response[0].scrambles.length; i++) {
-        $scope.scrambles[i] = response[0].scrambles[i];
+      $scope.week = response.week;
+      for (var i = 0; i < response.data[0].scrambles.length; i++) {
+        $scope.scrambles[i] = response.data[0].scrambles[i];
       }
 
       // get results if they exist
@@ -99,7 +100,7 @@
 
     // submit results for the given event for the current week
     $scope.save = function() {
-      var result = {'event':'333mbf', 'status':'In Progress', 'data':{}};
+      var result = {'event':'333mbf', 'week':$scope.week, 'status':'In Progress', 'data':{}};
       result.data.solved = $scope.mbldResult.solved;
       result.data.attempted = $scope.mbldResult.attempted;
       result.data.time = $scope.mbldResult.time;
@@ -113,7 +114,7 @@
 
     // submit results for the given event for the current week
     $scope.submit = function() {
-      var result = {'event':'333mbf', 'status':'Completed', 'data':{}};
+      var result = {'event':'333mbf', 'week':$scope.week, 'status':'Completed', 'data':{}};
       result.data.solved = $scope.mbldResult.solved;
       result.data.attempted = $scope.mbldResult.attempted;
       result.data.time = $scope.mbldResult.time;
