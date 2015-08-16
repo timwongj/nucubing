@@ -74,6 +74,24 @@
           $scope.solves[i].penalty = savedData.penalties[i];
           $scope.solves[i].displayedResult = $scope.solves[i].time + ' ' + $scope.solves[i].penalty;
           $scope.solves[i].completed = ($scope.solves[i].time != '');
+          if ($scope.solves[i].completed && ($scope.index == i)) {
+            if ($scope.index < $scope.solves.length - 1) {
+              $scope.index++;
+              $scope.scramble = $scope.solves[$scope.index].scramble;
+            } else {
+              $scope.done = true;
+              var times = [], penalties = [];
+              for (var i = 0; i < $scope.solves.length; i++) {
+                times[i] = $scope.solves[i].time;
+                penalties[i] = $scope.solves[i].penalty;
+              }
+              switch($scope.eventMap[$scope.eventId].format) {
+                case 'avg5': $scope.result = calculateAverage(times, penalties); $scope.eventFormat = 'Average of 5'; break;
+                case 'mo3' : $scope.result = calculateMean(times, penalties); $scope.eventFormat = 'Mean of 3'; break;
+                case 'bo3' : $scope.result = calculateSingle(times, penalties); $scope.eventFormat = 'Best of 3'; break;
+              }
+            }
+          }
         }
       });
     });
@@ -164,8 +182,10 @@
           $scope.solves[$scope.index].displayedResult = $scope.solves[$scope.index].time;
           $scope.solves[$scope.index].completed = true;
           if ($scope.index < $scope.solves.length - 1) {
-            $scope.index++;
-            $scope.scramble = $scope.solves[$scope.index].scramble;
+            while (($scope.solves[$scope.index].completed == true) && ($scope.index < $scope.solves.length - 1)) {
+              $scope.index++;
+              $scope.scramble = $scope.solves[$scope.index].scramble;
+            }
           } else {
             $scope.done = true;
             var times = [], penalties = [];
