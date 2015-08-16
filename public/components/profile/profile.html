@@ -86,7 +86,7 @@
     </ul>
     <br>
     <!-- Results by Week -->
-    <div class="col-xs-12" ng-repeat="(week, results) in resultsByWeek | orderObjectBy:'week':true" ng-show="displayFormat=='Week'">
+    <div class="col-xs-12" ng-repeat="(week, results) in resultsByWeek | orderObjectBy:'week':false" ng-show="displayFormat=='Week'">
       <h4><span class="label label-primary" ng-bind="displayWeek(results.key)"></span></h4>
       <div class="table-responsive">
         <table class="table table-condensed profile-results-table">
@@ -110,7 +110,7 @@
       </div>
     </div>
     <!-- Results by Event -->
-    <div class="col-xs-12" ng-repeat="(event, results) in resultsByEvent | orderObjectBy:'index'" ng-show="displayFormat=='Event'">
+    <div class="col-xs-12" ng-repeat="(event, results) in resultsByEvent | orderObjectBy:'index':false" ng-show="displayFormat=='Event'">
       <h4><span class="label label-primary" ng-bind="results.name"></span></h4>
       <div class="table-responsive">
         <table class="table table-condensed profile-results-table">
