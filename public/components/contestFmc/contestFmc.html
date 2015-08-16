@@ -61,7 +61,7 @@
       <div class="col-sm-10 result-row">
         <div class="input-group">
           <div class="input-group-addon">Solution</div>
-          <input type="text" class="form-control solve-input" ng-model="solve.solution" ng-change="update($index)">
+          <input type="text" class="form-control solve-input" ng-model="solve.solution" ng-change="update(solve)">
         </div>
       </div>
       <div class="col-sm-2 col-xs-12 result-row">
@@ -70,10 +70,15 @@
     </div>
     <div class="row">
       <hr class="divider"/>
-      <a href="/contest" class="btn btn-warning btn-left pull-left" tabindex="-1" type="button"><i class="fa fa-ban"></i> Cancel</a>
-      <button class="btn btn-success btn-right pull-right" tabindex="-1" type="submit"><i class="fa fa-upload"></i> Submit</button>
+      <div class="pull-right btn-right">
+        <button class="btn btn-warning" tabindex="-1" type="button" ng-click="back()"><i class="fa fa-backward"> Back</i></button>
+        <button class="btn btn-info" tabindex="-1" type="button" ng-click="info()"><i class="fa fa-info-circle"> Info</i></button>
+        <button class="btn btn-primary" tabindex="-1" type="button" ng-click="save()" ng-disabled="!changed"><i class="fa fa-save"> Save</i></button>
+        <button class="btn btn-success" tabindex="-1" type="submit" ng-click="submit()" ng-disabled="!valid"><i class="fa fa-upload"></i> Submit</button>
+      </div>
     </div>
   </form>
 </div>
+<br>
 </body>
 </html>

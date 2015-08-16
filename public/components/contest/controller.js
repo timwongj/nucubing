@@ -44,13 +44,17 @@
     // get current week contest results for user
     $http.get('/contest/results/current').success(function(results) {
       for (var i = 0; i < results.length; i++) {
-        var data = JSON.parse(results[i].data);
-        switch($scope.eventMap[results[i].event].format) {
-          case 'avg5': $scope.eventMap[results[i].event].result = calculateAverage(data.times, data.penalties); break;
-          case 'mo3' : $scope.eventMap[results[i].event].result = calculateMean(data.times, data.penalties); break;
-          case 'bo3' : $scope.eventMap[results[i].event].result = calculateSingle(data.times, data.penalties); break;
-          case 'fmc' : $scope.eventMap[results[i].event].result = calculateFMCMean(data.moves); break;
-          case 'mbld' : $scope.eventMap[results[i].event].result = data.solved + '/' + data.attempted + ' in ' + data.time; break;
+        if (results[i].status == 'Completed') {
+          var data = JSON.parse(results[i].data);
+          switch($scope.eventMap[results[i].event].format) {
+            case 'avg5': $scope.eventMap[results[i].event].result = calculateAverage(data.times, data.penalties); break;
+            case 'mo3' : $scope.eventMap[results[i].event].result = calculateMean(data.times, data.penalties); break;
+            case 'bo3' : $scope.eventMap[results[i].event].result = calculateSingle(data.times, data.penalties); break;
+            case 'fmc' : $scope.eventMap[results[i].event].result = calculateFMCMean(data.moves); break;
+            case 'mbld' : $scope.eventMap[results[i].event].result = data.solved + '/' + data.attempted + ' in ' + data.time; break;
+          }
+        } else if (results[i].status == 'In Progress') {
+          $scope.eventMap[results[i].event].result = 'In Progress';
         }
       }
       for (var event in $scope.eventMap) {
@@ -59,56 +63,6 @@
         }
       }
     });
-
-    // event variables
-    $scope.event;
-    $scope.eventId;
-    $scope.solves;
-    $scope.mbldResult = {'solved':'', 'attempted':'', 'time':''};
-
-    $scope.countMoves = function(index) {
-      $scope.solves[index].moves = $scope.solves[index].solution.split(' ').length;
-    };
-
-    // submit results for the given event for the current week
-    $scope.submit = function() {
-      var result = {'event':$scope.eventId, 'data':{}};
-      if ($scope.eventId == '333mbf') {
-        result.data.solved = $scope.mbldResult.solved;
-        result.data.attempted = $scope.mbldResult.attempted;
-        result.data.time = $scope.mbldResult.time;
-      } else if ($scope.eventId == '333fm') {
-        result.data.solutions = [];
-        result.data.moves = [];
-        for (var i = 0; i < $scope.solves.length; i++) {
-          result.data.solutions[i] = $scope.solves[i].solution;
-          result.data.moves[i] = $scope.solves[i].moves;
-        }
-      } else {
-        result.data.times = [];
-        result.data.penalties = [];
-        for (var i = 0; i < $scope.solves.length; i++) {
-          result.data.times[i] = $scope.solves[i].result;
-          result.data.penalties[i] = $scope.solves[i].penalty;
-        }
-      }
-      switch($scope.eventMap[result.event].format) {
-        case 'avg5': $scope.eventMap[result.event].result = calculateAverage(result.data.times, result.data.penalties); break;
-        case 'mo3' : $scope.eventMap[result.event].result = calculateMean(result.data.times, result.data.penalties); break;
-        case 'bo3' : $scope.eventMap[result.event].result = calculateSingle(result.data.times, result.data.penalties); break;
-        case 'fmc' : $scope.eventMap[result.event].result = calculateFMCMean(result.data.moves); break;
-        case 'mbld' : $scope.eventMap[result.event].result = result.data.solved + '/' + result.data.attempted + ' in ' + result.data.time; break;
-      }
-      result.data = JSON.stringify(result.data);
-      $http.post('/contest/submit', result).success(function (response) {
-
-      });
-      $scope.event = '';
-      $scope.showHome = 1;
-      $scope.showManualEntry = 0;
-      $scope.showFMC = 0;
-      $scope.showMBLD = 0;
-    };
 
   }
 

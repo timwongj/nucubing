@@ -15,7 +15,7 @@
 
     $scope.scrambles = [];
     $scope.displayed = 7;
-    $scope.mbldResult = {'solved':'', 'attempted':'', 'time':''};
+    $scope.mbldResult = {'solved':'', 'attempted':'', 'time':'', 'dnf':''};
     $scope.valid = false;
     $scope.dnf = '';
 
@@ -26,12 +26,14 @@
       }
     });
 
+    var savedData = {'solved':'', 'attempted':'', 'time':'', 'dnf':''};
+    $scope.changed = false;
+    
     // get results if they exist
     $http.get('/contest/results/333mbf').success(function(results) {
-      var data = JSON.parse(results.data);
-      if (data) {
-        $scope.mbldResult = {'solved':data.solved, 'attempted':data.attempted, 'time':data.time, 'dnf':''};
-        $scope.valid = true;
+      savedData = JSON.parse(results.data);
+      if (savedData) {
+        $scope.mbldResult = {'solved':savedData.solved, 'attempted':savedData.attempted, 'time':savedData.time};
       }
     });
 
@@ -69,9 +71,49 @@
       }
     };
 
+    $scope.$watch('mbldResult', function() {
+      console.log($scope.mbldContestForm.$valid);
+      $scope.mbldResult.solved =  ($scope.mbldResult.solved == undefined) ? '' : $scope.mbldResult.solved;
+      $scope.mbldResult.attempted =  ($scope.mbldResult.attempted == undefined) ? '' : $scope.mbldResult.attempted;
+      $scope.changed = (($scope.mbldResult.solved != savedData.solved) || ($scope.mbldResult.attempted != savedData.attempted) || ($scope.mbldResult.time != savedData.time));
+      $scope.update();
+    }, true);
+
+    $scope.$watch('mbldContestForm.$valid', function() {
+      $scope.update();
+    });
+    
+    $scope.back = function() {
+      if ($scope.changed) {
+        if (confirm('You have unsaved changes, are you sure you want to go back?')) {
+          window.location.replace('/contest');
+        }
+      } else {
+        window.location.replace('/contest');
+      }
+    };
+
+    $scope.info = function() {
+      alert('Info');
+    };
+
+    // submit results for the given event for the current week
+    $scope.save = function() {
+      var result = {'event':'333mbf', 'status':'In Progress', 'data':{}};
+      result.data.solved = $scope.mbldResult.solved;
+      result.data.attempted = $scope.mbldResult.attempted;
+      result.data.time = $scope.mbldResult.time;
+      result.data.dnf = $scope.mbldResult.dnf;
+      result.data = JSON.stringify(result.data);
+      $http.post('/contest/submit', result).success(function (response) {
+        savedData = {'solved':$scope.mbldResult.solved, 'attempted':$scope.mbldResult.attempted, 'time':$scope.mbldResult.time};
+        $scope.changed = false;
+      });
+    };
+
     // submit results for the given event for the current week
     $scope.submit = function() {
-      var result = {'event':'333mbf', 'data':{}};
+      var result = {'event':'333mbf', 'status':'Completed', 'data':{}};
       result.data.solved = $scope.mbldResult.solved;
       result.data.attempted = $scope.mbldResult.attempted;
       result.data.time = $scope.mbldResult.time;

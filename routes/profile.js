@@ -41,7 +41,7 @@ module.exports = (function() {
       if (err) {
         throw err;
       } else if (user) {
-        Result.find({'week':getCurrentWeek(), 'email':user.email}, function(err, result) {
+        Result.find({'week':getCurrentWeek(), 'email':user.email, 'status':'Completed'}, function(err, result) {
           if (err) {
             throw err;
           } else {
@@ -59,7 +59,7 @@ module.exports = (function() {
       if (err) {
         throw err;
       } else if (user) {
-        Result.find({'email':user.email}, function(err, result) {
+        Result.find({'email':user.email, 'status':'Completed'}, function(err, result) {
           if (err) {
             throw err;
           } else {

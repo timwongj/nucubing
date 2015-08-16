@@ -54,7 +54,6 @@
     <h2 class="page-title" ng-show="showHome">Contest</h2>
     <h2 class="page-title" ng-show="!showHome" ng-bind="event"></h2>
   </div>
-  <!-- Contest Home Page-->
   <div class="row" ng-show="showHome">
     <div class="col-md-3 col-sm-6" ng-repeat="event in eventMap | orderObjectBy:'index'">
       <div class="panel panel-default">
@@ -65,65 +64,13 @@
           <h1 class="panel-title" ng-bind="event.result"></h1>
         </div>
         <div class="panel-footer text-center">
-          <a class="btn btn-primary" href="/contest/{{event.eventId}}/entry" ng-show="(event.eventId != '333fm') && (event.eventId != '333mbf')"><i class="fa fa-pencil"></i> Entry</a>
-          <a class="btn btn-warning" href="/contest/{{event.eventId}}/timer" ng-show="(event.eventId != '333fm') && (event.eventId != '333mbf')"><i class="fa fa-pencil"></i> Timer</a>
-          <a class="btn btn-primary" href="/contest/{{event.eventId}}" ng-show="(event.eventId == '333fm') || (event.eventId == '333mbf')"><i class="fa fa-pencil"></i> Entry</a>
+          <a class="btn btn-info" href="/contest/{{event.eventId}}/entry" ng-show="(event.eventId != '333fm') && (event.eventId != '333mbf')" ng-disabled="(event.result != 'Not Completed') && (event.result != 'In Progress')"><i class="fa fa-pencil"></i> Entry</a>
+          <a class="btn btn-warning" href="/contest/{{event.eventId}}/timer" ng-show="(event.eventId != '333fm') && (event.eventId != '333mbf')" ng-disabled="(event.result != 'Not Completed') && (event.result != 'In Progress')"><i class="fa fa-clock-o"></i> Timer</a>
+          <a class="btn btn-info" href="/contest/{{event.eventId}}" ng-show="(event.eventId == '333fm') || (event.eventId == '333mbf')" ng-disabled="(event.result != 'Not Completed') && (event.result != 'In Progress')"><i class="fa fa-pencil"></i> Entry</a>
         </div>
       </div>
     </div>
   </div>
-  <!-- FMC Form Page-->
-  <form name="fmcContestForm" class="form-horizontal" ng-show="showFMC" ng-submit="fmcContestForm.$valid && submit()">
-    <div class="form-group" ng-repeat="solve in solves">
-      <div class="col-sm-12">
-        <pre ng-bind="solve.scramble"></pre>
-      </div>
-      <div class="col-sm-10 result-row">
-        <div class="input-group">
-          <div class="input-group-addon">Solution</div>
-          <input type="text" class="form-control solve-input" ng-model="solve.solution" ng-change="countMoves($index)">
-        </div>
-      </div>
-      <div class="col-sm-2 col-xs-12 result-row">
-        <pre ng-bind="solve.moves"></pre>
-      </div>
-    </div>
-    <div class="row" ng-show="showFMC">
-      <hr/>
-      <button class="btn btn-warning pull-left" tabindex="-1" type="button" ng-click="cancel()"><i class="fa fa-ban"></i> Cancel</button>
-      <button class="btn btn-success pull-right" tabindex="-1" type="submit"><i class="fa fa-upload"></i> Submit</button>
-    </div>
-  </form>
-  <!-- MBLD Form Page-->
-  <form name="mbldContestForm" class="form-horizontal" ng-show="showMBLD" ng-submit="mbldContestForm.$valid && submit()">
-    <div class="form-group">
-      <div class="col-sm-12">
-        <pre ng-repeat="solve in solves" ng-bind="$index + 1 + '. ' + solve.scramble"></pre>
-      </div>
-      <div class="col-sm-4 result-row">
-        <div class="input-group">
-          <input type="number" class="form-control solve-input" maxlength="2" ng-model="mbldResult.solved" required ng-pattern="/^[0-9]?[0-9]$/">
-          <div class="input-group-addon">out of</div>
-          <input type="number" class="form-control solve-input" maxlength="2" ng-model="mbldResult.attempted" required ng-pattern="/^[0-9]?[0-9]$/">
-        </div>
-      </div>
-      <div class="col-sm-4 result-row">
-        <div class="input-group">
-          <div class="input-group-addon">Time</div>
-          <input type="text" class="form-control solve-input" maxlength="9" ng-model="mbldResult.time" required ng-pattern="/^(([0-5]?[0-9]:)?[0-5])?[0-9]$/">
-        </div>
-      </div>
-      <div class="col-sm-4 result-row">
-        <pre ng-bind="mbldResult.solved + '/' + mbldResult.attempted + ' ' + mbldResult.time"></pre>
-      </div>
-    </div>
-    <div class="row" ng-show="showMBLD">
-      <hr/>
-      <button class="btn btn-warning pull-left" tabindex="-1" type="button" ng-click="cancel()"><i class="fa fa-ban"></i> Cancel</button>
-      <button class="btn btn-success pull-right" tabindex="-1" type="submit"><i class="fa fa-upload"></i> Submit</button>
-    </div>
-  </form>
-  <br>
 </div>
 </body>
 </html>
