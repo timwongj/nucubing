@@ -50,34 +50,85 @@
       for (var i = 0; i < response[0].scrambles.length; i++)
       {
         $scope.solves[i] = {};
-        $scope.solves[i].result = '';
+        $scope.solves[i].time = '';
         $scope.solves[i].penalty = '';
         $scope.solves[i].scramble = response[0].scrambles[i];
       }
     });
 
+    var savedData = {times:[], penalties:[]};
+    $scope.changed = false;
+
     // get results if they exist
     $http.get('/contest/results/' + $scope.eventId).success(function(results) {
-      var data = JSON.parse(results.data);
+      savedData = JSON.parse(results.data);
       for (var i = 0; i < $scope.solves.length; i++) {
-        $scope.solves[i].result = data.times[i];
-        $scope.solves[i].penalty = data.penalties[i];
+        $scope.solves[i].time = savedData.times[i];
+        $scope.solves[i].penalty = savedData.penalties[i];
       }
     });
 
-    // submit results for the given event for the current week
-    $scope.submit = function() {
-      var result = {'event':$scope.eventId, 'data':{}};
+    $scope.$watch('solves', function() {
+      $scope.changed = false;
+      try {
+        for (var i = 0; i < $scope.solves.length; i++) {
+          $scope.changed = (($scope.solves[i].time != savedData.times[i]) || ($scope.solves[i].penalty != savedData.penalties[i])) ? true : $scope.changed;
+        }
+      } catch(e) {
+        for (var i = 0; i < $scope.solves.length; i++) {
+          $scope.changed = (($scope.solves[i].time != '') || ($scope.solves[i].penalty != '')) ? true : $scope.changed;
+        }
+      }
+    }, true);
+
+    $scope.back = function() {
+      if ($scope.changed) {
+        if (confirm('You have unsaved changes, are you sure you want to go back?')) {
+          window.location.replace('/contest');
+        }
+      } else {
+        window.location.replace('/contest');
+      }
+    };
+
+    $scope.info = function() {
+      alert('Info');
+    };
+
+    $scope.save = function() {
+      var result = {'event':$scope.eventId, 'status':'In Progress', 'data':{}};
       result.data.times = [];
       result.data.penalties = [];
       for (var i = 0; i < $scope.solves.length; i++) {
-        result.data.times[i] = $scope.solves[i].result;
-        result.data.penalties[i] = $scope.solves[i].penalty;
+        result.data.times[i] = $scope.solves[i].time || '';
+        result.data.penalties[i] = $scope.solves[i].penalty || '';
       }
       result.data = JSON.stringify(result.data);
       $http.post('/contest/submit', result).success(function(response) {
-        window.location.replace('/contest');
+        for (var i = 0; i < $scope.solves.length; i++) {
+          savedData.times[i] = $scope.solves[i].time || '';
+          savedData.penalties[i] = $scope.solves[i].penalty || '';
+          $scope.changed = false;
+        }
       });
+
+    };
+
+    // submit results for the given event for the current week
+    $scope.submit = function() {
+      if ($scope.contestForm.$valid) {
+        var result = {'event':$scope.eventId, 'status':'Completed', 'data':{}};
+        result.data.times = [];
+        result.data.penalties = [];
+        for (var i = 0; i < $scope.solves.length; i++) {
+          result.data.times[i] = $scope.solves[i].time;
+          result.data.penalties[i] = $scope.solves[i].penalty;
+        }
+        result.data = JSON.stringify(result.data);
+        $http.post('/contest/submit', result).success(function(response) {
+          window.location.replace('/contest');
+        });
+      }
     };
 
   }

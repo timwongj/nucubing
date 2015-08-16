@@ -54,32 +54,39 @@
     <h2 class="page-title">3x3 multi blind</h2>
   </div>
   <pre class="mbld-scramble" ng-repeat="scramble in scrambles" ng-bind="$index + 1 + '. ' + scramble" ng-show="$index < displayed"></pre>
-  <button class="btn btn-default btn-sm" ng-click="display('more')" ng-disabled="displayed==scrambles.length">More Scrambles</button>
   <button class="btn btn-default btn-sm" ng-click="display('less')" ng-disabled="displayed==7">Less Scrambles</button>
+  <button class="btn btn-default btn-sm" ng-click="display('more')" ng-disabled="displayed==scrambles.length">More Scrambles</button>
   <form name="mbldContestForm" class="form-horizontal">
     <div class="form-group">
       <div class="col-sm-5 result-row">
         <div class="input-group">
           <div class="input-group-addon">Solved</div>
-          <input type="text" class="form-control solve-input" maxlength="2" ng-model="mbldResult.solved" ng-change="update()" ng-pattern="/^[0-9]?[0-9]$/" required>
+          <input type="text" class="form-control solve-input" maxlength="2" ng-model="mbldResult.solved" ng-pattern="/^[0-9]?[0-9]$/" required>
           <div class="input-group-addon">Attempted</div>
-          <input type="text" class="form-control solve-input" maxlength="2" ng-model="mbldResult.attempted" ng-change="update()" ng-pattern="/^[0-9]?[0-9]$/" required>
+          <input type="text" class="form-control solve-input" maxlength="2" ng-model="mbldResult.attempted" ng-pattern="/^[0-9]?[0-9]$/" required>
         </div>
       </div>
       <div class="col-sm-3 result-row">
         <div class="input-group">
           <div class="input-group-addon">Time</div>
-          <input type="text" class="form-control solve-input" maxlength="5" ng-model="mbldResult.time" ng-change="update()" ng-pattern="/^([0-5]?[0-9]:[0-5][0-9])|([6][0]:[0][0])$/" required>
+          <input type="text" class="form-control solve-input" maxlength="5" ng-model="mbldResult.time" ng-pattern="/^([0-5]?[0-9]:[0-5][0-9])|([6][0]:[0][0])$/" required>
         </div>
       </div>
       <div class="col-sm-4 result-row">
         <pre class="result"><span ng-bind="mbldResult.solved + '/' + mbldResult.attempted + ' ' + mbldResult.time + ' ' + mbldResult.dnf" ng-show="valid"></span></pre>
       </div>
     </div>
-    <hr/>
   </form>
-  <a href="/contest" class="btn btn-warning pull-left" tabindex="-1" type="button"><i class="fa fa-ban"></i> Cancel</a>
-  <button class="btn btn-success pull-right" tabindex="-1" ng-click="submit()" ng-disabled="!valid"><i class="fa fa-upload"></i> Submit</button>
+  <div class="row">
+    <hr class="divider"/>
+    <div class="pull-right btn-right">
+      <button class="btn btn-warning" tabindex="-1" type="button" ng-click="back()"><i class="fa fa-backward"> Back</i></button>
+      <button class="btn btn-info" tabindex="-1" type="button" ng-click="info()"><i class="fa fa-info-circle"> Info</i></button>
+      <button class="btn btn-primary" tabindex="-1" type="button" ng-click="save()" ng-disabled="!changed"><i class="fa fa-save"> Save</i></button>
+      <button class="btn btn-success" tabindex="-1" type="submit" ng-click="submit()" ng-disabled="!valid"><i class="fa fa-upload"></i> Submit</button>
+    </div>
+  </div>
 </div>
+<br>
 </body>
 </html>

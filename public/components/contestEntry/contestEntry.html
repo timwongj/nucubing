@@ -53,7 +53,7 @@
   <div class="page-header">
     <h2 class="page-title" ng-bind="event"></h2>
   </div>
-  <form name="contestForm" class="form-horizontal" ng-submit="contestForm.$valid && submit()">
+  <form name="contestForm" class="form-horizontal">
     <div class="form-group" ng-repeat="solve in solves">
       <div class="col-sm-12">
         <pre class="scramble" ng-bind="solve.scramble"></pre>
@@ -61,7 +61,7 @@
       <div class="col-sm-4 result-row">
         <div class="input-group">
           <div class="input-group-addon solve-input-addon">Time</div>
-          <input type="text" class="form-control solve-input" maxlength="9" ng-model="solve.result" required ng-pattern="/^(([0-5]?[0-9]:)?[0-5])?[0-9].[0-9][0-9][0-9]?$/">
+          <input type="text" class="form-control solve-input" maxlength="9" ng-model="solve.time" required ng-pattern="/^(([0-5]?[0-9]:)?[0-5])?[0-9].[0-9][0-9][0-9]?$/">
         </div>
       </div>
       <div class="col-sm-4 col-xs-8 result-row">
@@ -74,15 +74,20 @@
         </div>
       </div>
       <div class="col-sm-4 col-xs-12 result-row">
-        <pre class="result" ng-bind="solve.result + ' ' + solve.penalty"></pre>
+        <pre class="result" ng-bind="solve.time + ' ' + solve.penalty"></pre>
       </div>
     </div>
     <div class="row">
       <hr class="divider"/>
-      <a href="/contest" class="btn btn-warning btn-left pull-left" tabindex="-1" type="button"><i class="fa fa-ban"></i> Cancel</a>
-      <button class="btn btn-success btn-right pull-right" tabindex="-1" type="submit"><i class="fa fa-upload"></i> Submit</button>
+      <div class="pull-right btn-right">
+        <button class="btn btn-warning" tabindex="-1" type="button" ng-click="back()"><i class="fa fa-backward"> Back</i></button>
+        <button class="btn btn-info" tabindex="-1" type="button" ng-click="info()"><i class="fa fa-info-circle"> Info</i></button>
+        <button class="btn btn-primary" tabindex="-1" type="button" ng-click="save()" ng-disabled="!changed"><i class="fa fa-save"> Save</i></button>
+        <button class="btn btn-success" tabindex="-1" type="submit" ng-click="submit()" ng-disabled="!contestForm.$valid"><i class="fa fa-upload"></i> Submit</button>
+      </div>
     </div>
   </form>
 </div>
+<br>
 </body>
 </html>

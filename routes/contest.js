@@ -88,6 +88,7 @@ module.exports = (function() {
     result.firstName = req.user.firstName;
     result.lastName = req.user.lastName;
     result.facebook_id = req.user.facebook_id;
+    result.status = req.body.status;
     result.data = req.body.data;
     Result.remove({'week':result.week, 'event':result.event, 'email':result.email}, function(err, result) {
       if (err) {

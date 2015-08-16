@@ -14,6 +14,7 @@ var ResultSchema = new mongoose.Schema({
   email:String,
   week:String,
   event:String,
+  status:String,
   data:String
 });
 

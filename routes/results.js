@@ -16,7 +16,7 @@ module.exports = (function() {
 
   // get all results given the week and event
   router.get('/results/current', function(req, res) {
-    Result.find({'week':getCurrentWeek()}, function(err, result) {
+    Result.find({'week':getCurrentWeek(), 'status':'Completed'}, function(err, result) {
       if (err) {
         throw err;
       } else {
