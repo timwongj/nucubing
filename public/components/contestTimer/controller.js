@@ -63,7 +63,7 @@
       $scope.scramble = $scope.solves[$scope.index].scramble;
     });
 
-    var savedData = {times:[], penalties:[]};
+    var savedData = {times:['','','','',''], penalties:['','','','','']};
     $scope.changed = false;
     $scope.valid = false;
 
@@ -81,14 +81,11 @@
     $scope.$watch('solves', function() {
       $scope.changed = false;
       $scope.valid = true;
-      console.log($scope.solves, savedData.times);
-      try {
-        for (var i = 0; i < $scope.solves.length; i++) {
+      for (var i = 0; i < $scope.solves.length; i++) {
+        try {
           $scope.changed = (($scope.solves[i].time != savedData.times[i]) || ($scope.solves[i].penalty != savedData.penalties[i])) ? true : $scope.changed;
           $scope.valid = ($scope.solves[i].time == '') ? false : $scope.valid;
-        }
-      } catch(e) {
-        for (var i = 0; i < $scope.solves.length; i++) {
+        } catch (e) {
           $scope.changed = (($scope.solves[i].time != '') || ($scope.solves[i].penalty != '')) ? true : $scope.changed;
           $scope.valid = ($scope.solves[i].time == '') ? false : $scope.valid;
         }
