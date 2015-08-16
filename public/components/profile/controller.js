@@ -82,7 +82,7 @@
           case 'mo3':
           case 'bo3':
             $scope.personalBestsMap[results[i].event].best = compareResults($scope.personalBestsMap[results[i].event].best, calculateSingle(data.times, data.penalties));
-            $scope.personalBestsMap[results[i].event].average = compareResults($scope.personalBestsMap[results[i].event].average, calculateMean(data.times, data.penalties));
+            $scope.personalBestsMap[results[i].event].average = ((results[i].event == '555bf') || (results[i].event == '444bf')) ? '' : compareResults($scope.personalBestsMap[results[i].event].average, calculateMean(data.times, data.penalties));
             break;
           case 'fmc':
             $scope.personalBestsMap[results[i].event].best = compareResults($scope.personalBestsMap[results[i].event].best, calculateFMCSingle(data.moves));
@@ -129,7 +129,7 @@
           case 'mo3':
           case 'bo3':
             result.best = calculateSingle(data.times, data.penalties);
-            result.average = calculateMean(data.times, data.penalties);
+            result.average = ((results[i].event == '555bf') || (results[i].event == '444bf')) ? '' : calculateMean(data.times, data.penalties);
             result.details = '';
             for (var j = 0; j < data.times.length; j++) {
               result.details += (j == data.times.length - 1) ? data.times[j] + data.penalties[j] : data.times[j] + data.penalties[j] + ', ';
