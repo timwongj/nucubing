@@ -45,6 +45,9 @@
       $scope.event = 'Invalid Event';
     }
 
+    var savedData = {times:['','','','',''], penalties:['','','','','']};
+    $scope.changed = false;
+
     // get scrambles
     $http.get('/contest/scrambles/' + $scope.eventId).success(function(response) {
       for (var i = 0; i < response[0].scrambles.length; i++)
@@ -54,18 +57,15 @@
         $scope.solves[i].penalty = '';
         $scope.solves[i].scramble = response[0].scrambles[i];
       }
-    });
 
-    var savedData = {times:['','','','',''], penalties:['','','','','']};
-    $scope.changed = false;
-
-    // get results if they exist
-    $http.get('/contest/results/' + $scope.eventId).success(function(results) {
-      savedData = JSON.parse(results.data);
-      for (var i = 0; i < savedData.times.length; i++) {
-        $scope.solves[i].time = savedData.times[i];
-        $scope.solves[i].penalty = savedData.penalties[i];
-      }
+      // get results if they exist
+      $http.get('/contest/results/' + $scope.eventId).success(function(results) {
+        savedData = JSON.parse(results.data);
+        for (var i = 0; i < savedData.times.length; i++) {
+          $scope.solves[i].time = savedData.times[i];
+          $scope.solves[i].penalty = savedData.penalties[i];
+        }
+      });
     });
 
     $scope.$watch('solves', function() {

@@ -19,22 +19,22 @@
     $scope.valid = false;
     $scope.dnf = '';
 
+    var savedData = {'solved':'', 'attempted':'', 'time':'', 'dnf':''};
+    $scope.changed = false;
+
     // get scrambles
     $http.get('/contest/scrambles/333mbf').success(function(response) {
       for (var i = 0; i < response[0].scrambles.length; i++) {
         $scope.scrambles[i] = response[0].scrambles[i];
       }
-    });
 
-    var savedData = {'solved':'', 'attempted':'', 'time':'', 'dnf':''};
-    $scope.changed = false;
-    
-    // get results if they exist
-    $http.get('/contest/results/333mbf').success(function(results) {
-      savedData = JSON.parse(results.data);
-      if (savedData) {
-        $scope.mbldResult = {'solved':savedData.solved, 'attempted':savedData.attempted, 'time':savedData.time};
-      }
+      // get results if they exist
+      $http.get('/contest/results/333mbf').success(function(results) {
+        savedData = JSON.parse(results.data);
+        if (savedData) {
+          $scope.mbldResult = {'solved':savedData.solved, 'attempted':savedData.attempted, 'time':savedData.time};
+        }
+      });
     });
 
     $scope.display = function(option) {

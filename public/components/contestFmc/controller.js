@@ -14,6 +14,9 @@
     });
 
     $scope.solves = [];
+    var savedData = {solutions:['','',''], moves:[]};
+    $scope.changed = false;
+    $scope.valid = false;
 
     // get scrambles
     $http.get('/contest/scrambles/333fm').success(function(response) {
@@ -26,22 +29,18 @@
         $scope.solves[i].valid = false;
         $scope.solves[i].dnf = '';
       }
-    });
 
-    var savedData = {solutions:['','',''], moves:[]};
-    $scope.changed = false;
-    $scope.valid = false;
-
-    // get results if they exist
-    $http.get('/contest/results/333fm').success(function(results) {
-      savedData = JSON.parse(results.data);
-      for (var i = 0; i < savedData.times.length; i++) {
-        $scope.solves[i].solution = savedData.solutions[i];
-        $scope.solves[i].moves = savedData.moves[i];
-        $scope.solves[i].valid = true;
-        $scope.solves[i].dnf = '';
-        $scope.update($scope.solves[i]);
-      }
+      // get results if they exist
+      $http.get('/contest/results/333fm').success(function(results) {
+        savedData = JSON.parse(results.data);
+        for (var i = 0; i < savedData.solutions.length; i++) {
+          $scope.solves[i].solution = savedData.solutions[i];
+          $scope.solves[i].moves = savedData.moves[i];
+          $scope.solves[i].valid = true;
+          $scope.solves[i].dnf = '';
+          $scope.update($scope.solves[i]);
+        }
+      });
     });
 
     $scope.update = function(solve) {
