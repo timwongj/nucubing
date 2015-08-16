@@ -104,8 +104,10 @@
           $scope.changed = (($scope.solves[i].time != savedData.times[i]) || ($scope.solves[i].penalty != savedData.penalties[i])) ? true : $scope.changed;
           $scope.valid = ($scope.solves[i].time == '') ? false : $scope.valid;
         } catch (e) {
-          $scope.changed = (($scope.solves[i].time != '') || ($scope.solves[i].penalty != '')) ? true : $scope.changed;
-          $scope.valid = ($scope.solves[i].time == '') ? false : $scope.valid;
+          if ($scope.solves[i]) {
+            $scope.changed = (($scope.solves[i].time != '') || ($scope.solves[i].penalty != '')) ? true : $scope.changed;
+            $scope.valid = ($scope.solves[i].time == '') ? false : $scope.valid;
+          }
         }
       }
     }, true);
@@ -237,7 +239,7 @@
 
     $scope.updateResultWithPenalty = function(solve, penalty) {
       solve.penalty = penalty;
-      solve.displayedResult = solve.result + ' ' + penalty;
+      solve.displayedResult = solve.time + ' ' + penalty;
     };
 
   }
