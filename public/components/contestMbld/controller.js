@@ -73,7 +73,6 @@
     };
 
     $scope.$watch('mbldResult', function() {
-      console.log($scope.mbldContestForm.$valid);
       $scope.mbldResult.solved =  ($scope.mbldResult.solved == undefined) ? '' : $scope.mbldResult.solved;
       $scope.mbldResult.attempted =  ($scope.mbldResult.attempted == undefined) ? '' : $scope.mbldResult.attempted;
       $scope.changed = (($scope.mbldResult.solved != savedData.solved) || ($scope.mbldResult.attempted != savedData.attempted) || ($scope.mbldResult.time != savedData.time));
@@ -87,10 +86,10 @@
     $scope.back = function() {
       if ($scope.changed) {
         if (confirm('You have unsaved changes, are you sure you want to go back?')) {
-          window.location.replace('/contest');
+          window.location = '/contest';
         }
       } else {
-        window.location.replace('/contest');
+        window.location = '/contest';
       }
     };
 
@@ -121,7 +120,7 @@
       result.data.dnf = $scope.mbldResult.dnf;
       result.data = JSON.stringify(result.data);
       $http.post('/contest/submit', result).success(function (response) {
-        window.location.replace('/contest');
+        window.location = '/contest';
       });
     };
 

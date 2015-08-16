@@ -88,10 +88,10 @@
     $scope.back = function() {
       if ($scope.changed) {
         if (confirm('You have unsaved changes, are you sure you want to go back?')) {
-          window.location.replace('/contest');
+          window.location = '/contest';
         }
       } else {
-        window.location.replace('/contest');
+        window.location = '/contest';
       }
     };
 
@@ -130,7 +130,7 @@
         }
         result.data = JSON.stringify(result.data);
         $http.post('/contest/submit', result).success(function(response) {
-          window.location.replace('/contest');
+          window.location = '/contest';
         });
       }
     };
