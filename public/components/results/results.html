@@ -51,14 +51,24 @@
 </div>
 <div class="container">
   <div class="page-header">
-    <h2 class="page-title" ng-bind="selectedEvent.name"></h2>
+    <h2 class="page-title">Results</h2>
   </div>
-  <select class="form-control" ng-model="selectedEvent" ng-options="event.name for event in eventMap"></select>
+  <form class="form-inline">
+    <div class="form-group">
+      <label>Event:</label>
+      <select ng-model="selectedEvent" class="btn btn-default" ng-options="event.name for event in eventMap"></select>
+    </div>
+    <div class="form-group">
+      <label>Week:</label>
+      <select ng-model="selectedWeek" class="btn btn-default" ng-options="displayWeek(week) for week in weeks"></select>
+    </div>
+  </form>
+  <br>
   <div class="table table-responsive table-results">
     <table class="table table-condensed">
       <thead>
       <tr>
-        <th></th>
+        <th>Rank</th>
         <th>Name</th>
         <th>Result</th>
         <th>Details</th>
@@ -66,10 +76,10 @@
       </thead>
       <tbody>
       <tr ng-repeat="result in selectedEvent.results | orderBy:'raw'">
-        <td ng-bind="$index + 1"></td>
-        <td><a href="users/{{result.facebook_id}}" ng-bind="result.name"></a></td>
-        <td ng-bind="result.result"></td>
-        <td ng-bind="result.details"></td>
+        <td class="results-table-rank" ng-bind="$index + 1"></td>
+        <td class="results-table-name"><a href="users/{{result.facebook_id}}" ng-bind="result.name"></a></td>
+        <td class="results-table-result" ng-bind="result.result"></td>
+        <td class="results-table-details" ng-bind="result.details"></td>
       </tr>
       </tbody>
     </table>
