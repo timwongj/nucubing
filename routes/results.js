@@ -2,6 +2,7 @@ var express = require('express');
 var mongoose = require('mongoose');
 var User = require('../models/user');
 var Result = require('../models/result');
+var Scramble = require('../models/scramble');
 
 module.exports = (function() {
 
@@ -14,9 +15,16 @@ module.exports = (function() {
     res.sendfile('./public/components/results/results.html');
   });
 
+  // get all weeks
+  router.get('/weeks', function(req, res) {
+    Scramble.find({'week':{$lte:getCurrentWeek()}}).distinct('week', function(err, result) {
+      res.json(result);
+    });
+  });
+
   // get all results given the week and event
-  router.get('/results/current', function(req, res) {
-    Result.find({'week':getCurrentWeek(), 'status':'Completed'}, function(err, result) {
+  router.get('/results/:week', function(req, res) {
+    Result.find({'week':req.params.week, 'status':'Completed'}, function(err, result) {
       if (err) {
         throw err;
       } else {

@@ -49,23 +49,23 @@
   border:0px;
 }
 
-.profile-results-table .profile-results-table-event {
+.profile-results-table-event {
   width:30%;
 }
 
-.profile-results-table .profile-results-table-week {
+.profile-results-table-week {
   width:30%;
 }
 
-.profile-results-table .profile-results-table-best {
+.profile-results-table-best {
   width:15%;
 }
 
-.profile-results-table .profile-results-table-average {
+.profile-results-table-average {
   width:15%;
 }
 
-.profile-results-table .profile-results-table-details {
+.profile-results-table-details {
   width:40%;
 }
 
@@ -134,12 +134,29 @@
   margin-right:15px;
 }
 
-.btn-left {
-  margin-left:15px;
-}
-
 .btn-right {
   margin-right:15px;
+}
+
+select {
+  margin-left:5px;
+  margin-right:5px;
+}
+
+.results-table-rank {
+  width:10%;
+}
+
+.results-table-name {
+  width:30%;
+}
+
+.results-table-result {
+  width:20%
+}
+
+.results-table-details {
+  width:40%
 }
 
 .my-drop-zone {
