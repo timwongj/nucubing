@@ -60,7 +60,7 @@
 
     for (var event in $scope.personalBestsMap) {
       if ($scope.personalBestsMap.hasOwnProperty(event)) {
-        $scope.personalBestsMap[event].best = '';
+        $scope.personalBestsMap[event].single = '';
         $scope.personalBestsMap[event].average = '';
       }
     }
@@ -76,30 +76,30 @@
         var data = JSON.parse(results[i].data);
         switch($scope.personalBestsMap[results[i].event].format) {
           case 'avg5':
-            $scope.personalBestsMap[results[i].event].best = compareResults($scope.personalBestsMap[results[i].event].best, calculateSingle(data.times, data.penalties));
+            $scope.personalBestsMap[results[i].event].single = compareResults($scope.personalBestsMap[results[i].event].single, calculateSingle(data.times, data.penalties));
             $scope.personalBestsMap[results[i].event].average = compareResults($scope.personalBestsMap[results[i].event].average, calculateAverage(data.times, data.penalties));
             break;
           case 'mo3':
           case 'bo3':
-            $scope.personalBestsMap[results[i].event].best = compareResults($scope.personalBestsMap[results[i].event].best, calculateSingle(data.times, data.penalties));
+            $scope.personalBestsMap[results[i].event].single = compareResults($scope.personalBestsMap[results[i].event].single, calculateSingle(data.times, data.penalties));
             $scope.personalBestsMap[results[i].event].average = ((results[i].event == '555bf') || (results[i].event == '444bf')) ? '' : compareResults($scope.personalBestsMap[results[i].event].average, calculateMean(data.times, data.penalties));
             break;
           case 'fmc':
-            $scope.personalBestsMap[results[i].event].best = compareResults($scope.personalBestsMap[results[i].event].best, calculateFMCSingle(data.moves));
+            $scope.personalBestsMap[results[i].event].single = compareResults($scope.personalBestsMap[results[i].event].single, calculateFMCSingle(data.moves));
             $scope.personalBestsMap[results[i].event].average = compareResults($scope.personalBestsMap[results[i].event].average, calculateFMCMean(data.moves));
             break;
           case 'mbld':
-            var mbldResult = compareMBLDResults($scope.personalBestsMap[results[i].event].best, data);
-            $scope.personalBestsMap[results[i].event].best = mbldResult.solved + '/' + mbldResult.attempted + ' in ' + mbldResult.time;
+            var mbldResult = compareMBLDResults($scope.personalBestsMap[results[i].event].single, data);
+            $scope.personalBestsMap[results[i].event].single = mbldResult.solved + '/' + mbldResult.attempted + ' in ' + mbldResult.time;
             break;
         }
       }
       for (var event in $scope.personalBestsMap) {
         if ($scope.personalBestsMap.hasOwnProperty(event)) {
-          if (($scope.personalBestsMap[event].best) || ($scope.personalBestsMap[event].average)) {
+          if (($scope.personalBestsMap[event].single) || ($scope.personalBestsMap[event].average)) {
             $scope.personalBests.push({
               name: $scope.personalBestsMap[event].name,
-              best: $scope.personalBestsMap[event].best,
+              single: $scope.personalBestsMap[event].single,
               average: $scope.personalBestsMap[event].average,
               index: $scope.personalBestsMap[event].index
             });

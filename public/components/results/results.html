@@ -65,21 +65,21 @@
   </form>
   <br>
   <div class="table table-responsive table-results">
-    <table class="table table-condensed">
+    <table class="table table-condensed table-striped">
       <thead>
       <tr>
-        <th>Rank</th>
-        <th>Name</th>
-        <th>Result</th>
-        <th>Details</th>
+        <th style="width:10%;padding-bottom:1px;">Rank</th>
+        <th style="width:30%;padding-bottom:1px;">Name</th>
+        <th style="width:20%;padding-bottom:1px;">Result</th>
+        <th style="width:40%;padding-bottom:1px;">Details</th>
       </tr>
       </thead>
       <tbody>
       <tr ng-repeat="result in selectedEvent.results | orderBy:'raw'">
-        <td class="results-table-rank" ng-bind="$index + 1"></td>
-        <td class="results-table-name"><a href="users/{{result.facebook_id}}" ng-bind="result.name"></a></td>
-        <td class="results-table-result" ng-bind="result.result"></td>
-        <td class="results-table-details" ng-bind="result.details"></td>
+        <td style="width:10%;" class="td-results" ng-bind="$index + 1"></td>
+        <td style="width:30%;padding-top:3px;padding-bottom:3px;"><a href="users/{{result.facebook_id}}" ng-bind="result.name"></a></td>
+        <td style="width:20%;" class="td-results" ng-bind="result.result"></td>
+        <td style="width:40%;" class="td-results" ng-bind="result.details"></td>
       </tr>
       </tbody>
     </table>
