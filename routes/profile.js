@@ -34,24 +34,6 @@ module.exports = (function() {
     });
   });
 
-  // get contest results for current week given user id
-  router.get('/results/current/:id', function(req, res) {
-    var facebook_id = (req.params.id == 'myProfile') ? req.user.facebook_id : req.params.id;
-    User.findOne({'facebook_id': facebook_id}, function(err, user) {
-      if (err) {
-        throw err;
-      } else if (user) {
-        Result.find({'week':getCurrentWeek(), 'email':user.email, 'status':'Completed'}, function(err, result) {
-          if (err) {
-            throw err;
-          } else {
-            res.json(result);
-          }
-        });
-      }
-    });
-  });
-
   // get contest results for all weeks given user id
   router.get('/results/all/:id', function(req, res) {
     var facebook_id = (req.params.id == 'myProfile') ? req.user.facebook_id : req.params.id;

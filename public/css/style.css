@@ -45,9 +45,24 @@
   margin-right:auto;
 }
 
-.table-results {
-  margin-top:10px;
-  margin-bottom:10px;
+.table-responsive {
+  border:0px;
+}
+
+.profile-results-table .profile-results-table-event {
+  width:30%;
+}
+
+.profile-results-table .profile-results-table-best {
+  width:15%;
+}
+
+.profile-results-table .profile-results-table-average {
+  width:15%;
+}
+
+.profile-results-table .profile-results-table-details {
+  width:40%;
 }
 
 .scramble {

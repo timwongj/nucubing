@@ -64,9 +64,9 @@
           <h1 class="panel-title" ng-bind="event.result"></h1>
         </div>
         <div class="panel-footer text-center">
-          <a class="btn btn-info" href="/contest/{{event.eventId}}/entry" ng-show="(event.eventId != '333fm') && (event.eventId != '333mbf')" ng-disabled="(event.result != 'Not Completed') && (event.result != 'In Progress')"><i class="fa fa-pencil"></i> Entry</a>
-          <a class="btn btn-warning" href="/contest/{{event.eventId}}/timer" ng-show="(event.eventId != '333fm') && (event.eventId != '333mbf')" ng-disabled="(event.result != 'Not Completed') && (event.result != 'In Progress')"><i class="fa fa-clock-o"></i> Timer</a>
-          <a class="btn btn-info" href="/contest/{{event.eventId}}" ng-show="(event.eventId == '333fm') || (event.eventId == '333mbf')" ng-disabled="(event.result != 'Not Completed') && (event.result != 'In Progress')"><i class="fa fa-pencil"></i> Entry</a>
+          <a class="btn btn-info" href="/contest/{{event.key}}/entry" ng-show="(event.key != '333fm') && (event.key != '333mbf')" ng-disabled="(event.result != 'Not Completed') && (event.result != 'In Progress')"><i class="fa fa-pencil"></i> Entry</a>
+          <a class="btn btn-warning" href="/contest/{{event.key}}/timer" ng-show="(event.key != '333fm') && (event.key != '333mbf')" ng-disabled="(event.result != 'Not Completed') && (event.result != 'In Progress')"><i class="fa fa-clock-o"></i> Timer</a>
+          <a class="btn btn-info" href="/contest/{{event.key}}" ng-show="(event.key == '333fm') || (event.key == '333mbf')" ng-disabled="(event.result != 'Not Completed') && (event.result != 'In Progress')"><i class="fa fa-pencil"></i> Entry</a>
         </div>
       </div>
     </div>
