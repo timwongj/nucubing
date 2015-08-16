@@ -87,7 +87,7 @@
 
   function OrderObjectByFilter() {
 
-    return function(items, field) {
+    return function(items, field, reverse) {
       var filtered = [];
       angular.forEach(items, function(item, key) {
         item.key = key;
@@ -96,6 +96,9 @@
       filtered.sort(function (a, b) {
         return (a[field] > b[field] ? 1 : -1);
       });
+      if(reverse) {
+        filtered.reverse();
+      }
       return filtered;
     };
 

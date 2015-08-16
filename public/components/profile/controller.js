@@ -65,7 +65,9 @@
       }
     }
 
+    $scope.displayFormat = 'Week';
     $scope.resultsByWeek = {};
+    $scope.resultsByEvent = {};
 
     // get personal results
     $http.get('/profile/results/all/' + profileId).success(function(results) {
@@ -105,13 +107,16 @@
         }
       }
 
-      // Results by Week
+      // Results by Week and Event
       for (var i = 0; i < results.length; i++) {
         if (!$scope.resultsByWeek[results[i].week]) {
           $scope.resultsByWeek[results[i].week] = [];
         }
+        if (!$scope.resultsByEvent[results[i].event]) {
+          $scope.resultsByEvent[results[i].event] = {'name':$scope.eventMap[results[i].event].name, 'index':$scope.eventMap[results[i].event].index, 'results':[]};
+        }
         var data = JSON.parse(results[i].data);
-        var result = {'event':$scope.eventMap[results[i].event].name, 'index':$scope.eventMap[results[i].event].index};
+        var result = {'event':$scope.eventMap[results[i].event].name, 'week':results[i].week, 'index':$scope.eventMap[results[i].event].index};
         switch($scope.eventMap[results[i].event].format) {
           case 'avg5' :
             result.best = calculateSingle(data.times, data.penalties);
@@ -141,16 +146,17 @@
             result.details = result.best;
             break;
         }
-
         $scope.resultsByWeek[results[i].week].push(result);
+        $scope.resultsByEvent[results[i].event].results.push(result);
       }
+
     });
 
   }
 
   function OrderObjectByFilter() {
 
-    return function(items, field) {
+    return function(items, field, reverse) {
       var filtered = [];
       angular.forEach(items, function(item, key) {
         item.key = key;
@@ -159,6 +165,9 @@
       filtered.sort(function (a, b) {
         return (a[field] > b[field] ? 1 : -1);
       });
+      if(reverse) {
+        filtered.reverse();
+      }
       return filtered;
     };
 

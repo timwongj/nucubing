@@ -55,7 +55,7 @@
     <h2 class="page-title" ng-show="!showHome" ng-bind="event"></h2>
   </div>
   <div class="row" ng-show="showHome">
-    <div class="col-md-3 col-sm-6" ng-repeat="event in eventMap | orderObjectBy:'index'">
+    <div class="col-md-3 col-sm-6" ng-repeat="event in eventMap | orderObjectBy:'index':false">
       <div class="panel panel-default">
         <div class="panel-heading text-center">
           <h1 class="panel-title" ng-bind="event.name"></h1>
