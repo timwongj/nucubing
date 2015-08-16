@@ -35,7 +35,7 @@
     // get results if they exist
     $http.get('/contest/results/333fm').success(function(results) {
       savedData = JSON.parse(results.data);
-      for (var i = 0; i < $scope.solves.length; i++) {
+      for (var i = 0; i < savedData.times.length; i++) {
         $scope.solves[i].solution = savedData.solutions[i];
         $scope.solves[i].moves = savedData.moves[i];
         $scope.solves[i].valid = true;
