@@ -56,7 +56,7 @@
   <form class="form-inline">
     <div class="form-group">
       <label>Event:</label>
-      <select ng-model="selectedEvent" class="btn btn-default" ng-options="event.name for event in eventMap"></select>
+      <select ng-model="selectedEvent" class="btn btn-default" ng-options="event.name for event in eventMap | orderObjectBy:'index'"></select>
     </div>
     <div class="form-group">
       <label>Week:</label>
