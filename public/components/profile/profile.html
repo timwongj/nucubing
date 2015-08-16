@@ -79,9 +79,14 @@
     </div>
   </div>
   <br>
-  <!-- Results by Week -->
   <div class="row">
-    <div class="col-xs-12" ng-repeat="(week, results) in resultsByWeek | orderObjectBy:'week'">
+    <ul class="nav nav-tabs">
+      <li role="presentation" ng-class="{active:(displayFormat=='Week')}"><a href="#" ng-click="displayFormat='Week'">Display by Week</a></li>
+      <li role="presentation" ng-class="{active:(displayFormat=='Event')}"><a href="#" ng-click="displayFormat='Event'">Display by Event</a></li>
+    </ul>
+    <br>
+    <!-- Results by Week -->
+    <div class="col-xs-12" ng-repeat="(week, results) in resultsByWeek | orderObjectBy:'week':true" ng-show="displayFormat=='Week'">
       <h4 ng-bind="results.key"></h4>
       <div class="table-responsive">
         <table class="table table-condensed profile-results-table">
@@ -96,6 +101,30 @@
           <tbody>
           <tr ng-repeat="result in results | orderBy:'index'">
             <td class="profile-results-table-event" ng-bind="result.event"></td>
+            <td class="profile-results-table-best" ng-bind="result.best"></td>
+            <td class="profile-results-table-average" ng-bind="result.average"></td>
+            <td class="profile-results-table-details" ng-bind="result.details"></td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- Results by Event -->
+    <div class="col-xs-12" ng-repeat="(event, results) in resultsByEvent | orderObjectBy:'index'" ng-show="displayFormat=='Event'">
+      <h4 ng-bind="results.name"></h4>
+      <div class="table-responsive">
+        <table class="table table-condensed profile-results-table">
+          <thead>
+          <tr>
+            <th>Week</th>
+            <th>Best</th>
+            <th>Average</th>
+            <th>Result Details</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr ng-repeat="result in results.results | orderBy:'-week'">
+            <td class="profile-results-table-week" ng-bind="result.week"></td>
             <td class="profile-results-table-best" ng-bind="result.best"></td>
             <td class="profile-results-table-average" ng-bind="result.average"></td>
             <td class="profile-results-table-details" ng-bind="result.details"></td>
