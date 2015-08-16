@@ -41,7 +41,7 @@ module.exports = (function() {
       if (err) {
         throw err;
       } else if (user) {
-        Result.find({'email':user.email, 'status':'Completed'}, function(err, result) {
+        Result.find({'email':user.email, 'status':'Completed'}).sort('-week').exec(function(err, result) {
           if (err) {
             throw err;
           } else {

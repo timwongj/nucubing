@@ -158,8 +158,7 @@
   }
 
   function OrderObjectByFilter() {
-
-    return function(items, field, reverse) {
+    return function(items, field) {
       var filtered = [];
       angular.forEach(items, function(item, key) {
         item.key = key;
@@ -168,12 +167,8 @@
       filtered.sort(function (a, b) {
         return (a[field] > b[field] ? 1 : -1);
       });
-      if(reverse) {
-        filtered.reverse();
-      }
       return filtered;
     };
-
   }
 
   angular.module('nuCubingApp', ['ui.bootstrap']);
