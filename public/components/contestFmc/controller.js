@@ -20,10 +20,11 @@
 
     // get scrambles
     $http.get('/contest/scrambles/333fm').success(function(response) {
-      for (var i = 0; i < response[0].scrambles.length; i++)
+      $scope.week = response.week;
+      for (var i = 0; i < response.data[0].scrambles.length; i++)
       {
         $scope.solves[i] = {};
-        $scope.solves[i].scramble = response[0].scrambles[i];
+        $scope.solves[i].scramble = response.data[0].scrambles[i];
         $scope.solves[i].solution = '';
         $scope.solves[i].moves = '';
         $scope.solves[i].valid = false;
@@ -75,7 +76,7 @@
 
     // submit results for the given event for the current week
     $scope.save = function() {
-      var result = {'event':'333fm', 'status':'In Progress', 'data':{}};
+      var result = {'event':'333fm', 'week':$scope.week, 'status':'In Progress', 'data':{}};
       result.data.solutions = [];
       result.data.moves = [];
       for (var i = 0; i < $scope.solves.length; i++) {
@@ -90,7 +91,7 @@
 
     // submit results for the given event for the current week
     $scope.submit = function() {
-      var result = {'event':'333fm', 'status':'Completed', 'data':{}};
+      var result = {'event':'333fm', 'week':$scope.week, 'status':'Completed', 'data':{}};
       result.data.solutions = [];
       result.data.moves = [];
       for (var i = 0; i < $scope.solves.length; i++) {

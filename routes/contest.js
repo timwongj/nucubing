@@ -59,11 +59,13 @@ module.exports = (function() {
 
   // get scrambles given the event
   router.get('/scrambles/:event', function(req, res) {
-    Scramble.find({week:getCurrentWeek(), event:req.params.event}, function(err, result) {
+    var scrambles = {'week':getCurrentWeek()};
+    Scramble.find({week:scrambles.week, event:req.params.event}, function(err, result) {
       if (err) {
         throw err;
       } else {
-        res.json(result);
+        scrambles.data = result;
+        res.json(scrambles);
       }
     });
   });
@@ -82,8 +84,8 @@ module.exports = (function() {
   // submit results for the given week and event
   router.post('/submit', function(req, res) {
     var result = new Result();
-    result.week = getCurrentWeek();
     result.event = req.body.event;
+    result.week = req.body.week;
     result.email = req.user.email;
     result.firstName = req.user.firstName;
     result.lastName = req.user.lastName;

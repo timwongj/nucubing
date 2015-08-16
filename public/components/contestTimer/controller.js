@@ -55,14 +55,15 @@
 
     // get scrambles
     $http.get('/contest/scrambles/' + $scope.eventId).success(function(response) {
-      for (var i = 0; i < response[0].scrambles.length; i++)
+      $scope.week = response.week;
+      for (var i = 0; i < response.data[0].scrambles.length; i++)
       {
         $scope.solves[i] = {};
         $scope.solves[i].time = '';
         $scope.solves[i].penalty = '';
         $scope.solves[i].displayedResult = '';
         $scope.solves[i].completed = false;
-        $scope.solves[i].scramble = response[0].scrambles[i];
+        $scope.solves[i].scramble = response.data[0].scrambles[i];
       }
       $scope.scramble = $scope.solves[$scope.index].scramble;
 
@@ -127,7 +128,7 @@
     };
 
     $scope.save = function() {
-      var result = {'event':$scope.eventId, 'status':'In Progress', 'data':{}};
+      var result = {'event':$scope.eventId, 'week':$scope.week, 'status':'In Progress', 'data':{}};
       result.data.times = [];
       result.data.penalties = [];
       for (var i = 0; i < $scope.solves.length; i++) {
@@ -148,7 +149,7 @@
     // submit results for the given event for the current week
     $scope.submit = function() {
       if ($scope.valid) {
-        var result = {'event':$scope.eventId, 'status':'Completed', 'data':{}};
+        var result = {'event':$scope.eventId, 'week':$scope.week, 'status':'Completed', 'data':{}};
         result.data.times = [];
         result.data.penalties = [];
         for (var i = 0; i < $scope.solves.length; i++) {
