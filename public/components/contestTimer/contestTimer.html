@@ -56,9 +56,8 @@
   <div class="row">
     <div class="col-md-7 text-center">
       <p class="timer-scramble" ng-bind="scramble" ng-hide="done"></p>
-      <p class="timer-display" ng-style="timerStyle" ng-bind="timer_display" ng-hide="done"></p>
-      <p class="timer-display" ng-bind="result" ng-show="done"></p>
-      <p class="timer-scramble" ng-bind="eventFormat" ng-show="done"></p>
+      <p class="timer-display" ng-style="timerStyle" ng-bind="timer_display"></p>
+      <h2 ng-bind="result + ' ' + eventFormat" ng-show="done"></h2>
     </div>
     <div class="col-md-5 text-center">
       <table class="table">
