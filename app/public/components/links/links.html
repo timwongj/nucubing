@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta charset="UTF-8">
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="/bower_components/components-font-awesome/css/font-awesome.min.css">
+  <!-- jQuery -->
+  <script src="/bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="/bower_components/jquery-ui/jquery-ui.min.js"></script>
+  <!-- Bootstrap JS -->
+  <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+  <!-- Angular -->
+  <script src="/bower_components/angular/angular.min.js"></script>
+  <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+  <!-- Local -->
+  <link rel="stylesheet" type="text/css" href="/app/public/css/style.css">
+  <script src="/app/public/components/links/controller.js"></script>
+  <!-- Title -->
+  <link rel="shortcut icon" type="image/x-icon" href="/app/public/img/cubeLogo.png"/>
+  <title>NU Cubing - Links</title>
+</head>
+<body ng-app="nuCubingApp" ng-controller="LinksController">
+<div class="navbar navbar-default" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-left">
+        <li><a href="/" tabindex="-1"><i class="fa fa-home"></i> Home</a></li>
+        <li><a href="/profile" tabindex="-1"><i class="fa fa-user"></i> Profile</a></li>
+        <li><a href="/users" tabindex="-1"><i class="fa fa-users"></i> Users</a></li>
+        <li><a href="/contest" tabindex="-1"><i class="fa fa-cube"></i> Contest</a></li>
+        <li><a href="/results" tabindex="-1"><i class="fa fa-trophy"></i> Results</a></li>
+        <li class="active"><a href="/links" tabindex="-1"><i class="fa fa-link"></i> Links</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li ng-show="authStatus == 'Logout'"><a href="/auth" tabindex="-1"><i class="fa fa-sign-out"></i> Logout</a></li>
+        <li ng-show="authStatus == 'Login'"><a href="/auth" tabindex="-1"><i class="fa fa-sign-in"></i> Login</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <div class="page-header">
+    <h2 class="page-title">Links</h2>
+  </div>
+  <div class="row">
+    <div class="col-sm-6">
+      <div class="panel panel-default">
+        <div class="panel-heading text-center">
+          <h1 class="panel-title">Information</h1>
+        </div>
+        <div class="panel-body text-center">
+          <p><a href="https://www.facebook.com/NUCubingAssociation?fref=ts" role="link" target="blank">NU Cubing Facebook Page</a></p>
+          <p><a href="https://www.worldcubeassociation.org/" role="link" target="blank">World Cube Association (WCA)</a></p>
+          <p><a href="https://www.speedsolving.com/forum/forum.php" role="link" target="blank">Speed-Solving Forum</a></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="panel panel-default">
+        <div class="panel-heading text-center">
+          <h1 class="panel-title">Tutorials</h1>
+        </div>
+        <div class="panel-body text-center">
+          <p><a href="https://www.speedsolving.com/wiki/index.php/Main_Page" role="link" target="blank">Speed-Solving Wiki</a></p>
+          <p><a href="http://badmephisto.com/" role="link" target="blank">Badmephisto</a></p>
+          <p><a href="http://wong-tim.com/#/" role="link" target="blank">3x3 Blindfolded Solving</a></p>
+          <p><a href="http://www.cubewhiz.com/" role="link" target="blank">Bob Burton's Website</a></p>
+          <p><a href="http://rowe.cubing.net/" role="link" target="blank">Rowe's Website</a></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="panel panel-default">
+        <div class="panel-heading text-center">
+          <h1 class="panel-title">Timers</h1>
+        </div>
+        <div class="panel-body text-center">
+          <p><a href="http://gjtimer.com/#" role="link" target="blank">gjTimer</a></p>
+          <p><a href="http://www.qqtimer.net/" role="link" target="blank">qqTimer</a></p>
+          <p><a href="http://cstimer.net/timer.php" role="link" target="blank">csTimer</a></p>
+          <p><a href="http://www.cubemania.org/" role="link" target="blank">cubemania</a></p>
+          <p><a href="http://www.cubetimer.com/" role="link" target="blank">cube timer</a></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="panel panel-default">
+        <div class="panel-heading text-center">
+          <h1 class="panel-title">YouTube Channels</h1>
+        </div>
+        <div class="panel-body text-center">
+          <p><a href="https://www.youtube.com/user/CubingWorld" role="link" target="blank">CubingWorld (Tutorials)</a></p>
+          <p><a href="https://www.youtube.com/user/fazrulz1" role="link" target="blank">Feliks Zemdegs</a></p>
+          <p><a href="https://www.youtube.com/user/mvcuber12" role="link" target="blank">Mats Valk</a></p>
+          <p><a href="https://www.youtube.com/user/Cubastian1" role="link" target="blank">Sebastian Weyer (4x4)</a></p>
+          <p><a href="https://www.youtube.com/user/26HTK" role="link" target="blank">Kevin Hays (Big Cubes)</a></p>
+          <p><a href="https://www.youtube.com/user/rowehess" role="link" target="blank">Rowe Hessler</a></p>
+          <p><a href="https://www.youtube.com/user/NoahCubes" role="link" target="blank">Noah Arthurs (Blindfolded Solving)</a></p>
+          <p><a href="https://www.youtube.com/user/ZaneChannel" role="link" target="blank">Zane Carney (Blindfolded Solving)</a></p>
+          <p><a href="https://www.youtube.com/user/TimothyWong24" role="link" target="blank">Tim Wong</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
