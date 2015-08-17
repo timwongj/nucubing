@@ -9,23 +9,18 @@ module.exports = (function() {
 
   var router = express.Router();
 
-  router.use(function(req, res, next) {
+  // render profile page
+  router.get('/', function(req, res) {
     if (req.user) {
-      next();
+      res.sendfile('./public/components/profile/profile.html');
     } else {
       res.redirect('/auth');
     }
   });
 
-  // render profile page
-  router.get('/', function(req, res) {
-    res.sendfile('./public/components/profile/profile.html');
-  });
-
   // send user info such as name, email, and facebook id
-  router.get('/userInfo/:id', function(req, res) {
-    var facebook_id = (req.params.id == 'myProfile') ? req.user.facebook_id : req.params.id;
-    User.findOne({'facebook_id': facebook_id}).exec(function(err, user) {
+  router.get('/userInfo', function(req, res) {
+    User.findOne({'facebook_id': req.user.facebook_id}).exec(function(err, user) {
       if (err) {
         throw err;
       } else {
@@ -34,10 +29,37 @@ module.exports = (function() {
     });
   });
 
-  // get contest results for all weeks given user id
-  router.get('/results/all/:id', function(req, res) {
-    var facebook_id = (req.params.id == 'myProfile') ? req.user.facebook_id : req.params.id;
-    User.findOne({'facebook_id': facebook_id}).exec(function(err, user) {
+  // send user info such as name, email, and facebook id given facebook_id
+  router.get('/userInfo/:facebook_id', function(req, res) {
+    User.findOne({'facebook_id': req.params.facebook_id}).exec(function(err, user) {
+      if (err) {
+        throw err;
+      } else {
+        res.json(user);
+      }
+    });
+  });
+
+  // get contest results for all weeks for current user
+  router.get('/results/all', function(req, res) {
+    User.findOne({'facebook_id': req.user.facebook_id}).exec(function(err, user) {
+      if (err) {
+        throw err;
+      } else if (user) {
+        Result.find({'email':user.email, 'status':'Completed'}).sort('-week').exec(function(err, result) {
+          if (err) {
+            throw err;
+          } else {
+            res.json(result);
+          }
+        });
+      }
+    });
+  });
+
+  // get contest results for all weeks given facebook_id
+  router.get('/results/all/:facebook_id', function(req, res) {
+    User.findOne({'facebook_id': req.params.facebook_id}).exec(function(err, user) {
       if (err) {
         throw err;
       } else if (user) {

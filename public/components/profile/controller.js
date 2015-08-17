@@ -13,25 +13,27 @@
         $scope.authStatus = 'Login';
     });
 
-    var url = $location.$$absUrl.split('/');
-    var profileId;
-    if (url.indexOf('users') < 1) {
-      profileId = 'myProfile';
-      $scope.profileClass = 'active';
-      $scope.usersClass = '';
-    } else {
-      profileId = url[url.indexOf('users') + 1];
-      $scope.profileClass = '';
-      $scope.usersClass = 'active';
-    }
-
     // get user information
     $scope.user = {};
-    $http.get('/profile/userInfo/' + profileId).success(function(response) {
-      $scope.user.firstName = response.firstName;
-      $scope.user.lastName = response.lastName;
-      $scope.user.facebook_id = response.facebook_id;
-    });
+    var url = $location.$$absUrl.split('/');
+    if (url.indexOf('users') < 0) {
+      $scope.profileClass = 'active';
+      $scope.usersClass = '';
+      $http.get('/profile/userInfo').success(function(response) {
+        $scope.user.firstName = response.firstName;
+        $scope.user.lastName = response.lastName;
+        $scope.user.facebook_id = response.facebook_id;
+      });
+    } else {
+      var facebook_id = url[url.indexOf('users') + 1];
+      $scope.profileClass = '';
+      $scope.usersClass = 'active';
+      $http.get('/profile/userInfo/' + facebook_id).success(function(response) {
+        $scope.user.firstName = response.firstName;
+        $scope.user.lastName = response.lastName;
+        $scope.user.facebook_id = response.facebook_id;
+      });
+    }
 
     // events list
     $scope.eventMap = {
@@ -70,7 +72,8 @@
     $scope.resultsByEvent = {};
 
     // get personal results
-    $http.get('/profile/results/all/' + profileId).success(function(results) {
+    var api_route = (url.indexOf('users') < 0) ? '/profile/results/all' : '/profile/results/all/' + url[url.indexOf('users') + 1];
+    $http.get(api_route).success(function(results) {
       // Personal Bests
       for (var i = 0; i < results.length; i++) {
         var data = JSON.parse(results[i].data);
