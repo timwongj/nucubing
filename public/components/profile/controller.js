@@ -122,8 +122,9 @@
             result.best = calculateSingle(data.times, data.penalties);
             result.average = calculateAverage(data.times, data.penalties);
             result.details = '';
+            var formattedTimes = formatTimes(data.times, data.penalties);
             for (var j = 0; j < data.times.length; j++) {
-              result.details += (j == data.times.length - 1) ? data.times[j] + data.penalties[j] : data.times[j] + data.penalties[j] + ', ';
+              result.details += (j == data.times.length - 1) ? reformatTime(formattedTimes[j]) : reformatTime(formattedTimes[j]) + ', ';
             }
             break;
           case 'mo3':
@@ -131,8 +132,9 @@
             result.best = calculateSingle(data.times, data.penalties);
             result.average = ((results[i].event == '555bf') || (results[i].event == '444bf')) ? '' : calculateMean(data.times, data.penalties);
             result.details = '';
+            var formattedTimes = formatTimes(data.times, data.penalties);
             for (var j = 0; j < data.times.length; j++) {
-              result.details += (j == data.times.length - 1) ? data.times[j] + data.penalties[j] : data.times[j] + data.penalties[j] + ', ';
+              result.details += (j == data.times.length - 1) ? reformatTime(formattedTimes[j]) : reformatTime(formattedTimes[j]) + ', ';
             }
             break;
           case 'fmc':
