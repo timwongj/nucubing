@@ -80,8 +80,8 @@
   </div>
   <div class="row">
     <ul class="nav nav-tabs">
-      <li role="presentation" ng-class="{active:(displayFormat=='Week')}"><a href="#" ng-click="displayFormat='Week'">All Results by Week</a></li>
-      <li role="presentation" ng-class="{active:(displayFormat=='Event')}"><a href="#" ng-click="displayFormat='Event'">All Results by Event</a></li>
+      <li role="presentation" ng-class="{active:(displayFormat=='Week')}"><a href="#" ng-click="displayFormat='Week'">Results by Week</a></li>
+      <li role="presentation" ng-class="{active:(displayFormat=='Event')}"><a href="#" ng-click="displayFormat='Event'">Results by Event</a></li>
     </ul>
     <!-- Results by Week -->
     <div class="col-xs-12" ng-repeat="(week, results) in resultsByWeek" ng-show="displayFormat=='Week'">
@@ -109,7 +109,7 @@
     </div>
     <!-- Results by Event -->
     <div class="col-xs-12" ng-repeat="(event, results) in resultsByEvent | orderObjectBy:'index'" ng-show="displayFormat=='Event'">
-      <h4><span class="label label-primary" ng-bind="results.name"></span></h4>
+      <h4><span class="label label-warning" ng-bind="results.name"></span></h4>
       <div class="table-responsive">
         <table class="table table-condensed table-striped">
           <thead>

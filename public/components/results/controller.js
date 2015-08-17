@@ -35,74 +35,180 @@
       '333mbf' : {name: '3x3 multi blind', format: 'mbld', results : [], index: 17}
     };
 
-    // default selected event
-    $scope.selectedEvent = $scope.eventMap['333'];
-
     $http.get('/results/weeks').success(function(weeks) {
       $scope.weeks = weeks.sort().reverse();
-      $scope.selectedWeek = ($scope.weeks[0]) ? $scope.weeks[0] : '';
+      $scope.weeks.unshift('All Weeks');
+      $scope.selectedWeek = ($scope.weeks[1]) ? $scope.weeks[1] : $scope.weeks[0];
+      $scope.events = ['All Events','333', '444', '555', '222', '333bf', '333oh', '333fm', '333ft', 'minx', 'pyram', 'sq1', 'clock', 'skewb', '666', '777', '444bf', '555bf', '333mbf'];
+      $scope.selectedEvent = $scope.events[0];
     });
 
     $scope.$watch('selectedWeek', function() {
-      getResultsByWeek($scope.selectedWeek);
+      getResults($scope.selectedWeek, $scope.selectedEvent);
     });
 
-    function getResultsByWeek(week) {
-      // clear existing results
-      for (var event in $scope.eventMap) {
-        if ($scope.eventMap.hasOwnProperty(event)) {
-          $scope.eventMap[event].results = [];
-        }
-      }
+    $scope.$watch('selectedEvent', function() {
+      getResults($scope.selectedWeek, $scope.selectedEvent);
+    });
 
-      // get all contest results for all events for the current week
-      $http.get('/results/results/' + week).success(function(results) {
-        for (var i = 0; i < results.length; i++) {
-          var result = {'name': results[i].firstName + ' ' + results[i].lastName, 'facebook_id': results[i].facebook_id};
-          var data = JSON.parse(results[i].data);
-          switch($scope.eventMap[results[i].event].format) {
-            case 'avg5' : result.result = calculateAverage(data.times, data.penalties); break;
-            case 'mo3' : result.result = calculateMean(data.times, data.penalties); break;
-            case 'bo3' : result.result = calculateSingle(data.times, data.penalties); break;
-            case 'fmc' : result.result = calculateFMCMean(data.moves); break;
-            case 'mbld' : result.result = data.solved + '/' + data.attempted + ' in ' + data.time; break;
-          }
-          var details = '';
-          if (results[i].event != '333mbf') {
-            if (results[i].event != '333fm') {
-              for (var j = 0; j < data.times.length; j++) {
-                details += data.times[j] + data.penalties[j];
-                if (j != data.times.length - 1) {
-                  details += ', ';
+    function getResults(week, event) {
+      $scope.displayedResults = [];
+      if (week == 'All Weeks') {
+        if (event == 'All Events') {
+          // get all results
+          $http.get('/results/all').success(function(results) {
+            var convertedResults = convertResults(results);
+            var sections = [];
+            for (var i = 0; i < convertedResults.length; i++) {
+              var exists = false;
+              for (var j = 0; j < sections.length; j++) {
+                if ((results[i].week == sections[j].week) && (results[i].event == sections[j].event)) {
+                  exists = true;
+                  sections[j].results.push(convertedResults[i]);
                 }
               }
-              if (result.result == 'DNF') {
-                result.raw = 'DNF';
-              } else {
-                var res = result.result.split(':');
-                if (res.length > 1) {
-                  result.raw = (parseFloat(res[0]) * 60) + parseFloat(res[1]);
-                } else {
-                  result.raw = parseFloat(res[0]);
-                }
+              if (exists == false) {
+                sections.push({
+                  'week':results[i].week,
+                  'event':results[i].event,
+                  'results':[convertedResults[i]],
+                  'index':$scope.eventMap[convertedResults[i].event].index
+                });
               }
-            } else {
-              details = data.moves[0] + ', ' + data.moves[1] + ', ' + data.moves[2];
-              result.raw = result.result;
             }
-          } else {
+            $scope.displayedResults = sections;
+          });
+        } else {
+          // get results by event
+          $http.get('/results/event/' + event).success(function(results) {
+            var convertedResults = convertResults(results);
+            var sections = [];
+            for (var i = 0; i < convertedResults.length; i++) {
+              var exists = false;
+              for (var j = 0; j < sections.length; j++) {
+                if (results[i].week == sections[j].week) {
+                  exists = true;
+                  sections[j].results.push(convertedResults[i]);
+                }
+              }
+              if (exists == false) {
+                sections.push({
+                  'week':results[i].week,
+                  'event':event,
+                  'results':[convertedResults[i]],
+                  'index': 0
+                });
+              }
+            }
+            $scope.displayedResults = sections;
+          });
+        }
+      } else if (event == 'All Events') {
+        // get results by week
+        $http.get('/results/week/' + week).success(function(results) {
+          var convertedResults = convertResults(results);
+          var sections = [];
+          for (var i = 0; i < convertedResults.length; i++) {
+            var exists = false;
+            for (var j = 0; j < sections.length; j++) {
+              if (results[i].event == sections[j].event) {
+                exists = true;
+                sections[j].results.push(convertedResults[i]);
+              }
+            }
+            if (exists == false) {
+              sections.push({
+                'week':week,
+                'event':results[i].event,
+                'results':[convertedResults[i]],
+                'index':$scope.eventMap[convertedResults[i].event].index
+              });
+            }
+          }
+          $scope.displayedResults = sections;
+        });
+      } else {
+        // get results by week and event
+        $http.get('/results/week/' + week + '/event/' + event).success(function(results) {
+          var convertedResults = convertResults(results);
+          var section = {
+            'week':week,
+            'event':event,
+            'results':convertedResults,
+            'index':($scope.eventMap[event]) ? $scope.eventMap[event].index : 0
+          };
+          $scope.displayedResults = [section]
+        });
+      }
+    }
+
+    function convertResults(results) {
+      var convertedResults = [];
+      for (var i = 0; i < results.length; i++) {
+        var data = JSON.parse(results[i].data);
+        var result = {
+          'name': results[i].firstName + ' ' + results[i].lastName,
+          'facebook_id': results[i].facebook_id,
+          'week': results[i].week,
+          'event': results[i].event,
+          'index': $scope.eventMap[results[i].event].index
+        };
+        switch($scope.eventMap[results[i].event].format) {
+          case 'avg5':
+            result.best = calculateSingle(data.times, data.penalties);
+            result.average = calculateAverage(data.times, data.penalties);
+            result.details = '';
+            for (var j = 0; j < data.times.length; j++) {
+              result.details += (j == data.times.length - 1) ? data.times[j] + data.penalties[j] : data.times[j] + data.penalties[j] + ', ';
+            }
+            var res = result.average.split(':');
+            result.raw = (result.average == 'DNF') ? 'DNF' : ((res.length > 1) ? (parseFloat(res[0]) * 60) + parseFloat(res[1]) : parseFloat(res[0]));
+            break;
+          case 'mo3':
+            result.best = calculateSingle(data.times, data.penalties);
+            result.average = ((results[i].event == '555bf') || (results[i].event == '444bf')) ? '' : calculateMean(data.times, data.penalties);
+            result.details = '';
+            for (var j = 0; j < data.times.length; j++) {
+              result.details += (j == data.times.length - 1) ? data.times[j] + data.penalties[j] : data.times[j] + data.penalties[j] + ', ';
+            }
+            var res = result.average.split(':');
+            result.raw = (result.average == 'DNF') ? 'DNF' : ((res.length > 1) ? (parseFloat(res[0]) * 60) + parseFloat(res[1]) : parseFloat(res[0]));
+            break;
+          case 'bo3':
+            result.best = calculateSingle(data.times, data.penalties);
+            result.average = ((results[i].event == '555bf') || (results[i].event == '444bf')) ? '' : calculateMean(data.times, data.penalties);
+            result.details = '';
+            for (var j = 0; j < data.times.length; j++) {
+              result.details += (j == data.times.length - 1) ? data.times[j] + data.penalties[j] : data.times[j] + data.penalties[j] + ', ';
+            }
+            var res = result.best.split(':');
+            result.raw = (result.best == 'DNF') ? 'DNF' : ((res.length > 1) ? (parseFloat(res[0]) * 60) + parseFloat(res[1]) : parseFloat(res[0]));
+            break;
+          case 'fmc':
+            result.best = calculateFMCSingle(data.moves);
+            result.average = calculateFMCMean(data.moves);
+            result.details = data.moves[0] + ', ' + data.moves[1] + ', ' + data.moves[2];
+            result.raw = result.result;
+            break;
+          case 'mbld':
+            result.best = data.solved + '/' + data.attempted + ' in ' + data.time;
+            result.details = result.best;
             var rawScore = parseFloat(data.solved) - (parseFloat(data.attempted) - parseFloat(data.solved));
             var rawTime = (parseFloat(data.time.split(':')[0]) * 60) + parseFloat(data.time.split(':')[1]);
             result.raw = rawScore.toString() + rawTime.toString();
-          }
-          result.details = details;
-          $scope.eventMap[results[i].event].results.push(result);
+            break;
         }
-      });
+        convertedResults.push(result);
+      }
+      return convertedResults;
     }
 
+    $scope.displayEvent = function(event) {
+      return ((event == 'All Events') || (event == undefined)) ? event : $scope.eventMap[event].name;
+    };
+
     $scope.displayWeek = function(week) {
-      return week.substr(0, 2) + '-' + week.substr(2, 2) + '-20' + week.substr(4, 2);
+      return ((week == 'All Weeks') || (week == undefined)) ? week : week.substr(0, 2) + '-' + week.substr(2, 2) + '-20' + week.substr(4, 2);
     };
 
   }
@@ -147,6 +253,20 @@ function findBest(results) {
       best = unsplitTimes[i];
   }
   return reformatTime(best);
+}
+
+// calculate the best fmc single
+function calculateFMCSingle(moves) {
+  var single = 'DNF';
+  for (var i = 0; i < moves.length; i++) {
+    if (moves[i] != 'DNF') {
+      if (single == 'DNF')
+        single = moves[i];
+      if (parseFloat(moves[i]) < single)
+        single = moves[i];
+    }
+  }
+  return single;
 }
 
 // calculate the best single time from a single week

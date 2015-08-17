@@ -23,8 +23,41 @@ module.exports = (function() {
   });
 
   // get all results given the week and event
-  router.get('/results/:week', function(req, res) {
-    Result.find({'week':req.params.week, 'status':'Completed'}, function(err, result) {
+  router.get('/week/:week/event/:event', function(req, res) {
+    Result.find({'week':req.params.week, 'event':req.params.event, 'status':'Completed'}).exec(function(err, result) {
+      if (err) {
+        throw err;
+      } else {
+        res.json(result);
+      }
+    });
+  });
+
+  // get all results given the week
+  router.get('/week/:week', function(req, res) {
+    Result.find({'week':req.params.week, 'status':'Completed'}).exec(function(err, result) {
+      if (err) {
+        throw err;
+      } else {
+        res.json(result);
+      }
+    });
+  });
+
+  // get all results given the event
+  router.get('/event/:event', function(req, res) {
+    Result.find({'event':req.params.event, 'status':'Completed'}).exec(function(err, result) {
+      if (err) {
+        throw err;
+      } else {
+        res.json(result);
+      }
+    });
+  });
+
+  // get all results
+  router.get('/all', function(req, res) {
+    Result.find({'status':'Completed'}).sort('-week').exec(function(err, result) {
       if (err) {
         throw err;
       } else {
