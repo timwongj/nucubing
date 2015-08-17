@@ -42,11 +42,11 @@ module.exports = (function() {
 
   // get user's contest results for current week
   router.get('/results/current', function(req, res) {
-    User.findOne({'facebook_id':req.user.facebook_id}, function(err, user) {
+    User.findOne({'facebook_id':req.user.facebook_id}).exec(function(err, user) {
       if (err) {
         throw err;
       } else if (user) {
-        Result.find({'week':getCurrentWeek(), 'email':user.email}, function(err, result) {
+        Result.find({'week':getCurrentWeek(), 'email':user.email}).exec(function(err, result) {
           if (err) {
             throw err;
           } else {
@@ -60,7 +60,7 @@ module.exports = (function() {
   // get scrambles given the event
   router.get('/scrambles/:event', function(req, res) {
     var scrambles = {'week':getCurrentWeek()};
-    Scramble.find({week:scrambles.week, event:req.params.event}, function(err, result) {
+    Scramble.find({week:scrambles.week, event:req.params.event}).exec(function(err, result) {
       if (err) {
         throw err;
       } else {
@@ -72,7 +72,7 @@ module.exports = (function() {
 
   // get results for the event for the current week if they exist
   router.get('/results/:event', function(req, res) {
-    Result.findOne({'week':getCurrentWeek(), 'event':req.params.event, 'email':req.user.email}, function(err, result) {
+    Result.findOne({'week':getCurrentWeek(), 'event':req.params.event, 'email':req.user.email}).exec(function(err, result) {
       if (err) {
         throw err;
       } else if (result) {
@@ -92,7 +92,7 @@ module.exports = (function() {
     result.facebook_id = req.user.facebook_id;
     result.status = req.body.status;
     result.data = req.body.data;
-    Result.remove({'week':result.week, 'event':result.event, 'email':result.email}, function(err, result) {
+    Result.remove({'week':result.week, 'event':result.event, 'email':result.email}).exec(function(err, result) {
       if (err) {
         throw err;
       }

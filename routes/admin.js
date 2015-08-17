@@ -22,7 +22,7 @@ module.exports = (function() {
   });
 
   router.get('/scrambles', function(req, res) {
-    Scramble.find({}, function(err, result) {
+    Scramble.find({}).exec(function(err, result) {
       if (err) {
         throw err;
       } else {
@@ -42,7 +42,7 @@ module.exports = (function() {
         scramble.week = week;
         scramble.scrambles = scrambles.sheets[i].scrambles;
         scramble.extraScrambles = scrambles.sheets[i].extraScrambles;
-        Scramble.remove({'week':week}, function(err, result) {
+        Scramble.remove({'week':week}).exec(function(err, result) {
           if (err) {
             throw err;
           }
