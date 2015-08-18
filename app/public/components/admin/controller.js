@@ -5,12 +5,8 @@
   function AdminController($scope, $http, FileUploader) {
 
     // get authorization status
-    $scope.authStatus = '';
     $http.get('/auth/status').success(function(response) {
-      if (response.status == 'connected')
-        $scope.authStatus = 'Logout';
-      else
-        $scope.authStatus = 'Login';
+      $scope.authStatus = (response.status == 'connected') ? 'Logout' : 'Login';
     });
 
     $scope.weeks = getAllScrambles($http);
@@ -21,7 +17,7 @@
 
     $scope.uploader.onSuccessItem = function() {
       $scope.weeks = getAllScrambles($http);
-    }
+    };
 
   }
 

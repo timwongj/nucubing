@@ -1,23 +1,26 @@
-'use strict';
-
 var mongoose = require('mongoose');
 
-var Schema = mongoose.Schema;
+module.exports = (function() {
 
-var ObjectId = Schema.ObjectId;
+  'use strict';
 
-var ResultSchema = new mongoose.Schema({
-  id:ObjectId,
-  facebook_id:String,
-  firstName: String,
-  lastName: String,
-  email:String,
-  week:String,
-  event:String,
-  status:String,
-  data:String
-});
+  var Schema = mongoose.Schema;
+  var ObjectId = Schema.ObjectId;
 
-var Result = mongoose.model('Result', ResultSchema);
+  var ResultSchema = new mongoose.Schema({
+    id:ObjectId,
+    facebook_id:String,
+    firstName: String,
+    lastName: String,
+    email:String,
+    week:String,
+    event:String,
+    status:String,
+    data:String
+  });
 
-module.exports = Result;
+  var Result = mongoose.model('Result', ResultSchema);
+
+  return Result;
+
+})();
