@@ -1,16 +1,19 @@
 {
-  "name": "NU Cubing",
+  "name": "OpenShift-Sample-App",
   "version": "1.0.0",
-  "description": "Weekly Cubing Contest",
+  "description": "OpenShift Sample Application",
   "keywords": [
-    "NU Cubing"
+    "OpenShift",
+    "Node.js",
+    "application",
+    "openshift"
   ],
   "author": {
-    "name": "Tim Wong",
-    "email": "timothywong8@gmail.com",
-    "url": "http://www.nucubing.com"
+    "name": "OpenShift",
+    "email": "ramr@example.org",
+    "url": "http://www.openshift.com/"
   },
-  "homepage": "http://www.nucubing.com",
+  "homepage": "http://www.openshift.com/",
   "repository": {
     "type": "git",
     "url": "https://github.com/openshift/origin-server"
