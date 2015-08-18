@@ -5,12 +5,8 @@
   function ResultsController($scope, $http) {
 
     // get authorization status
-    $scope.authStatus = '';
     $http.get('/auth/status').success(function(response) {
-      if (response.status == 'connected')
-        $scope.authStatus = 'Logout';
-      else
-        $scope.authStatus = 'Login';
+      $scope.authStatus = (response.status == 'connected') ? 'Logout' : 'Login';
     });
 
     // events list
@@ -53,21 +49,22 @@
 
     function getResults(week, event) {
       $scope.displayedResults = [];
+      var i, j;
       if (week == 'All Weeks') {
         if (event == 'All Events') {
           // get all results
           $http.get('/results/all').success(function(results) {
             var convertedResults = convertResults(results);
             var sections = [];
-            for (var i = 0; i < convertedResults.length; i++) {
+            for (i = 0; i < convertedResults.length; i++) {
               var exists = false;
-              for (var j = 0; j < sections.length; j++) {
+              for (j = 0; j < sections.length; j++) {
                 if ((results[i].week == sections[j].week) && (results[i].event == sections[j].event)) {
                   exists = true;
                   sections[j].results.push(convertedResults[i]);
                 }
               }
-              if (exists == false) {
+              if (!exists) {
                 sections.push({
                   'week':results[i].week,
                   'event':results[i].event,
@@ -83,15 +80,15 @@
           $http.get('/results/event/' + event).success(function(results) {
             var convertedResults = convertResults(results);
             var sections = [];
-            for (var i = 0; i < convertedResults.length; i++) {
+            for (i = 0; i < convertedResults.length; i++) {
               var exists = false;
-              for (var j = 0; j < sections.length; j++) {
+              for (j = 0; j < sections.length; j++) {
                 if (results[i].week == sections[j].week) {
                   exists = true;
                   sections[j].results.push(convertedResults[i]);
                 }
               }
-              if (exists == false) {
+              if (!exists) {
                 sections.push({
                   'week':results[i].week,
                   'event':event,
@@ -108,15 +105,15 @@
         $http.get('/results/week/' + week).success(function(results) {
           var convertedResults = convertResults(results);
           var sections = [];
-          for (var i = 0; i < convertedResults.length; i++) {
+          for (i = 0; i < convertedResults.length; i++) {
             var exists = false;
-            for (var j = 0; j < sections.length; j++) {
+            for (j = 0; j < sections.length; j++) {
               if (results[i].event == sections[j].event) {
                 exists = true;
                 sections[j].results.push(convertedResults[i]);
               }
             }
-            if (exists == false) {
+            if (!exists) {
               sections.push({
                 'week':week,
                 'event':results[i].event,
@@ -137,14 +134,14 @@
             'results':convertedResults,
             'index':($scope.eventMap[event]) ? $scope.eventMap[event].index : 0
           };
-          $scope.displayedResults = [section]
+          $scope.displayedResults = [section];
         });
       }
     }
 
     function convertResults(results) {
-      var convertedResults = [];
-      for (var i = 0; i < results.length; i++) {
+      var i, j, res, formattedTimes, convertedResults = [];
+      for (i = 0; i < results.length; i++) {
         var data = JSON.parse(results[i].data);
         var result = {
           'name': results[i].firstName + ' ' + results[i].lastName,
@@ -158,33 +155,33 @@
             result.best = calculateSingle(data.times, data.penalties);
             result.average = calculateAverage(data.times, data.penalties);
             result.details = '';
-            var formattedTimes = formatTimes(data.times, data.penalties);
-            for (var j = 0; j < data.times.length; j++) {
+            formattedTimes = formatTimes(data.times, data.penalties);
+            for (j = 0; j < data.times.length; j++) {
               result.details += (j == data.times.length - 1) ? reformatTime(formattedTimes[j]) : reformatTime(formattedTimes[j]) + ', ';
             }
-            var res = result.average.split(':');
+            res = result.average.split(':');
             result.raw = (result.average == 'DNF') ? 'DNF' : ((res.length > 1) ? (parseFloat(res[0]) * 60) + parseFloat(res[1]) : parseFloat(res[0]));
             break;
           case 'mo3':
             result.best = calculateSingle(data.times, data.penalties);
             result.average = ((results[i].event == '555bf') || (results[i].event == '444bf')) ? '' : calculateMean(data.times, data.penalties);
             result.details = '';
-            var formattedTimes = formatTimes(data.times, data.penalties);
-            for (var j = 0; j < data.times.length; j++) {
+            formattedTimes = formatTimes(data.times, data.penalties);
+            for (j = 0; j < data.times.length; j++) {
               result.details += (j == data.times.length - 1) ? reformatTime(formattedTimes[j]) : reformatTime(formattedTimes[j]) + ', ';
             }
-            var res = result.average.split(':');
+            res = result.average.split(':');
             result.raw = (result.average == 'DNF') ? 'DNF' : ((res.length > 1) ? (parseFloat(res[0]) * 60) + parseFloat(res[1]) : parseFloat(res[0]));
             break;
           case 'bo3':
             result.best = calculateSingle(data.times, data.penalties);
             result.average = ((results[i].event == '555bf') || (results[i].event == '444bf')) ? '' : calculateMean(data.times, data.penalties);
             result.details = '';
-            var formattedTimes = formatTimes(data.times, data.penalties);
-            for (var j = 0; j < data.times.length; j++) {
+            formattedTimes = formatTimes(data.times, data.penalties);
+            for (j = 0; j < data.times.length; j++) {
               result.details += (j == data.times.length - 1) ? reformatTime(formattedTimes[j]) : reformatTime(formattedTimes[j]) + ', ';
             }
-            var res = result.best.split(':');
+            res = result.best.split(':');
             result.raw = (result.best == 'DNF') ? 'DNF' : ((res.length > 1) ? (parseFloat(res[0]) * 60) + parseFloat(res[1]) : parseFloat(res[0]));
             break;
           case 'fmc':
@@ -207,11 +204,11 @@
     }
 
     $scope.displayEvent = function(event) {
-      return ((event == 'All Events') || (event == undefined)) ? event : $scope.eventMap[event].name;
+      return ((event === 'All Events') || (event === undefined)) ? event : $scope.eventMap[event].name;
     };
 
     $scope.displayWeek = function(week) {
-      return ((week == 'All Weeks') || (week == undefined)) ? week : week.substr(0, 2) + '-' + week.substr(2, 2) + '-20' + week.substr(4, 2);
+      return ((week === 'All Weeks') || (week === undefined)) ? week : week.substr(0, 2) + '-' + week.substr(2, 2) + '-20' + week.substr(4, 2);
     };
 
   }
@@ -240,16 +237,15 @@
 
 // calculate best result from a list of results
 function findBest(results) {
-  var best = 'DNF';
-  var unsplitTimes = [];
-  for (var i = 0; i < results.length; i++) {
+  var i, best = 'DNF', unsplitTimes = [];
+  for (i = 0; i < results.length; i++) {
     var res = results[i].split(':');
     if (res.length > 1)
       unsplitTimes[i] = (parseFloat(res[0]) * 60) + parseFloat(res[1]);
     else
       unsplitTimes[i] = parseFloat(res[0]);
   }
-  for (var i = 0; i < results.length; i++) {
+  for (i = 0; i < results.length; i++) {
     if ((best == 'DNF') && (unsplitTimes[i] != 'DNF'))
       best = unsplitTimes[i];
     if (parseFloat(unsplitTimes[i]) < best)
@@ -293,8 +289,8 @@ function calculateSingle(times, penalties) {
 // calculate the trimmed average of 5 given the array of times and penalties
 function calculateAverage(times, penalties) {
   var formattedTimes = formatTimes(times, penalties);
-  var DNFCount = 0, minIndex, maxIndex, minValue, maxValue;
-  for (var i = 0; i < formattedTimes.length; i++) {
+  var i, DNFCount = 0, minIndex, maxIndex, minValue, maxValue;
+  for (i = 0; i < formattedTimes.length; i++) {
     if (formattedTimes[i] == 'DNF') {
       DNFCount++;
     }
@@ -313,7 +309,7 @@ function calculateAverage(times, penalties) {
     minValue = parseFloat(formattedTimes[1]);
     maxValue = parseFloat(formattedTimes[1]);
   }
-  for (var i = 0; i < formattedTimes.length; i++) {
+  for (i = 0; i < formattedTimes.length; i++) {
     if (formattedTimes[i] == 'DNF') {
       maxValue = formattedTimes[i];
       maxIndex = i;
@@ -324,17 +320,17 @@ function calculateAverage(times, penalties) {
       maxIndex = i;
     }
   }
-  for (var i = 0; i < formattedTimes.length; i++) {
+  for (i = 0; i < formattedTimes.length; i++) {
     if ((i != maxIndex) && (parseFloat(formattedTimes[i]) < minValue)) {
       minValue = parseFloat(formattedTimes[i]);
       minIndex = i;
     }
   }
-  if ((minIndex == 0) && (maxIndex == 0)) {
+  if ((minIndex === 0) && (maxIndex === 0)) {
     maxIndex = 1;
   }
   var sum = 0;
-  for (var i = 0; i < formattedTimes.length; i++) {
+  for (i = 0; i < formattedTimes.length; i++) {
     if ((i != minIndex) && (i != maxIndex)) {
       sum += parseFloat(formattedTimes[i]);
     }
@@ -351,8 +347,8 @@ function calculateFMCMean(moves) {
 // calculate the mean of 3 given the array of times and penalties
 function calculateMean(times, penalties) {
   var formattedTimes = formatTimes(times, penalties);
-  var DNFCount = 0;
-  for (var i = 0; i < formattedTimes.length; i++) {
+  var i, DNFCount = 0;
+  for (i = 0; i < formattedTimes.length; i++) {
     if (formattedTimes[i] == 'DNF') {
       DNFCount++;
     }
@@ -361,7 +357,7 @@ function calculateMean(times, penalties) {
     return 'DNF';
   }
   var sum = 0;
-  for (var i = 0; i < formattedTimes.length; i++) {
+  for (i = 0; i < formattedTimes.length; i++) {
     sum += parseFloat(formattedTimes[i]);
   }
   var mean = sum / formattedTimes.length;
@@ -371,8 +367,8 @@ function calculateMean(times, penalties) {
 // return an array of results in milliseconds taking penalties into account
 function formatTimes(times, penalties) {
   var formattedTimes = [];
-  var unsplitTimes = [];
-  for (var i = 0; i < times.length; i++) {
+  var i, unsplitTimes = [];
+  for (i = 0; i < times.length; i++) {
     var res = times[i].split(':');
     if (res.length > 1) {
       unsplitTimes[i] = (parseFloat(res[0]) * 60) + parseFloat(res[1]);

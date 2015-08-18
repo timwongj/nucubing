@@ -1,6 +1,5 @@
 var express = require('express');
 var fs = require('fs');
-var mongoose = require('mongoose');
 var User = require('../models/user');
 var Result = require('../models/result');
 var Scramble = require('../models/scramble');

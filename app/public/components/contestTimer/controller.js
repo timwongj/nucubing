@@ -5,12 +5,8 @@
   function ContestTimerController($scope, $http, $location, $interval) {
 
     // get authorization status
-    $scope.authStatus = '';
     $http.get('/auth/status').success(function(response) {
-      if (response.status == 'connected')
-        $scope.authStatus = 'Logout';
-      else
-        $scope.authStatus = 'Login';
+      $scope.authStatus = (response.status == 'connected') ? 'Logout' : 'Login';
     });
 
     $scope.eventMap = {
@@ -74,7 +70,7 @@
           $scope.solves[i].time = savedData.times[i];
           $scope.solves[i].penalty = savedData.penalties[i];
           $scope.solves[i].displayedResult = $scope.solves[i].time + ' ' + $scope.solves[i].penalty;
-          $scope.solves[i].completed = ($scope.solves[i].time != '');
+          $scope.solves[i].completed = ($scope.solves[i].time !== '');
           if ($scope.solves[i].completed && ($scope.index == i)) {
             if ($scope.index < $scope.solves.length - 1) {
               $scope.index++;
@@ -82,9 +78,9 @@
             } else {
               $scope.done = true;
               var times = [], penalties = [];
-              for (var i = 0; i < $scope.solves.length; i++) {
-                times[i] = $scope.solves[i].time;
-                penalties[i] = $scope.solves[i].penalty;
+              for (var j = 0; j < $scope.solves.length; j++) {
+                times[j] = $scope.solves[j].time;
+                penalties[j] = $scope.solves[j].penalty;
               }
               switch($scope.eventMap[$scope.eventId].format) {
                 case 'avg5': $scope.result = calculateAverage(times, penalties); $scope.eventFormat = 'Average of 5'; break;
@@ -103,11 +99,11 @@
       for (var i = 0; i < savedData.times.length; i++) {
         try {
           $scope.changed = (($scope.solves[i].time != savedData.times[i]) || ($scope.solves[i].penalty != savedData.penalties[i])) ? true : $scope.changed;
-          $scope.valid = ($scope.solves[i].time == '') ? false : $scope.valid;
+          $scope.valid = ($scope.solves[i].time === '') ? false : $scope.valid;
         } catch (e) {
           if ($scope.solves[i]) {
-            $scope.changed = (($scope.solves[i].time != '') || ($scope.solves[i].penalty != '')) ? true : $scope.changed;
-            $scope.valid = ($scope.solves[i].time == '') ? false : $scope.valid;
+            $scope.changed = (($scope.solves[i].time !== '') || ($scope.solves[i].penalty !== '')) ? true : $scope.changed;
+            $scope.valid = ($scope.solves[i].time === '') ? false : $scope.valid;
           }
         }
       }
@@ -185,7 +181,7 @@
           $scope.solves[$scope.index].displayedResult = $scope.solves[$scope.index].time;
           $scope.solves[$scope.index].completed = true;
           if ($scope.index < $scope.solves.length - 1) {
-            while (($scope.solves[$scope.index].completed == true) && ($scope.index < $scope.solves.length - 1)) {
+            while (($scope.solves[$scope.index].completed === true) && ($scope.index < $scope.solves.length - 1)) {
               $scope.index++;
               $scope.scramble = $scope.solves[$scope.index].scramble;
             }
@@ -251,26 +247,6 @@
 
 })();
 
-// calculate best result from a list of results
-function findBest(results) {
-  var best = 'DNF';
-  var unsplitTimes = [];
-  for (var i = 0; i < results.length; i++) {
-    var res = results[i].split(':');
-    if (res.length > 1)
-      unsplitTimes[i] = (parseFloat(res[0]) * 60) + parseFloat(res[1]);
-    else
-      unsplitTimes[i] = parseFloat(res[0]);
-  }
-  for (var i = 0; i < results.length; i++) {
-    if ((best == 'DNF') && (unsplitTimes[i] != 'DNF'))
-      best = unsplitTimes[i];
-    if (parseFloat(unsplitTimes[i]) < best)
-      best = unsplitTimes[i];
-  }
-  return reformatTime(best);
-}
-
 // calculate the best single time from a single week
 function calculateSingle(times, penalties) {
   var single = 'DNF', formattedTimes = formatTimes(times, penalties);
@@ -292,8 +268,8 @@ function calculateSingle(times, penalties) {
 // calculate the trimmed average of 5 given the array of times and penalties
 function calculateAverage(times, penalties) {
   var formattedTimes = formatTimes(times, penalties);
-  var DNFCount = 0, minIndex, maxIndex, minValue, maxValue;
-  for (var i = 0; i < formattedTimes.length; i++) {
+  var i, DNFCount = 0, minIndex, maxIndex, minValue, maxValue;
+  for (i = 0; i < formattedTimes.length; i++) {
     if (formattedTimes[i] == 'DNF') {
       DNFCount++;
     }
@@ -312,7 +288,7 @@ function calculateAverage(times, penalties) {
     minValue = parseFloat(formattedTimes[1]);
     maxValue = parseFloat(formattedTimes[1]);
   }
-  for (var i = 0; i < formattedTimes.length; i++) {
+  for (i = 0; i < formattedTimes.length; i++) {
     if (formattedTimes[i] == 'DNF') {
       maxValue = formattedTimes[i];
       maxIndex = i;
@@ -323,17 +299,17 @@ function calculateAverage(times, penalties) {
       maxIndex = i;
     }
   }
-  for (var i = 0; i < formattedTimes.length; i++) {
+  for (i = 0; i < formattedTimes.length; i++) {
     if ((i != maxIndex) && (parseFloat(formattedTimes[i]) < minValue)) {
       minValue = parseFloat(formattedTimes[i]);
       minIndex = i;
     }
   }
-  if ((minIndex == 0) && (maxIndex == 0)) {
+  if ((minIndex === 0) && (maxIndex === 0)) {
     maxIndex = 1;
   }
   var sum = 0;
-  for (var i = 0; i < formattedTimes.length; i++) {
+  for (i = 0; i < formattedTimes.length; i++) {
     if ((i != minIndex) && (i != maxIndex)) {
       sum += parseFloat(formattedTimes[i]);
     }
@@ -342,16 +318,11 @@ function calculateAverage(times, penalties) {
   return reformatTime(average);
 }
 
-// calculate FMC mean of 3
-function calculateFMCMean(moves) {
-  return ((moves[0] + moves[1] + moves[2]) / 3).toFixed(2);
-}
-
 // calculate the mean of 3 given the array of times and penalties
 function calculateMean(times, penalties) {
   var formattedTimes = formatTimes(times, penalties);
-  var DNFCount = 0;
-  for (var i = 0; i < formattedTimes.length; i++) {
+  var i, DNFCount = 0;
+  for (i = 0; i < formattedTimes.length; i++) {
     if (formattedTimes[i] == 'DNF') {
       DNFCount++;
     }
@@ -360,7 +331,7 @@ function calculateMean(times, penalties) {
     return 'DNF';
   }
   var sum = 0;
-  for (var i = 0; i < formattedTimes.length; i++) {
+  for (i = 0; i < formattedTimes.length; i++) {
     sum += parseFloat(formattedTimes[i]);
   }
   var mean = sum / formattedTimes.length;
@@ -370,8 +341,8 @@ function calculateMean(times, penalties) {
 // return an array of results in milliseconds taking penalties into account
 function formatTimes(times, penalties) {
   var formattedTimes = [];
-  var unsplitTimes = [];
-  for (var i = 0; i < times.length; i++) {
+  var i, unsplitTimes = [];
+  for (i = 0; i < times.length; i++) {
     var res = times[i].split(':');
     if (res.length > 1) {
       unsplitTimes[i] = (parseFloat(res[0]) * 60) + parseFloat(res[1]);
@@ -405,12 +376,3 @@ function reformatTime(time) {
     }
   }
 }
-
-// prevent default behavior of enter key
-function stopRKey(evt) {
-  var evt = (evt) ? evt : ((event) ? event : null);
-  var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
-  if ((evt.keyCode == 13) && (node.type=="text"))  {return false;}
-}
-
-document.onkeypress = stopRKey;
