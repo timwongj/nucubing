@@ -1,21 +1,24 @@
-'use strict';
-
 var mongoose = require('mongoose');
 
-var Schema = mongoose.Schema;
+module.exports = (function() {
 
-var ObjectId = Schema.ObjectId;
+  'use strict';
 
-var UserSchema = new mongoose.Schema({
-  id:ObjectId,
-  facebook_id:String,
-  firstName: String,
-  lastName: String,
-  email:String,
-  wcaID:String,
-  provider:String
-});
+  var Schema = mongoose.Schema;
+  var ObjectId = Schema.ObjectId;
 
-var User = mongoose.model('User', UserSchema);
+  var UserSchema = new mongoose.Schema({
+    id:ObjectId,
+    facebook_id:String,
+    firstName: String,
+    lastName: String,
+    email:String,
+    wcaID:String,
+    provider:String
+  });
 
-module.exports = User;
+  var User = mongoose.model('User', UserSchema);
+
+  return User;
+
+})();

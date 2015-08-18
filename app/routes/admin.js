@@ -1,5 +1,4 @@
 var express = require('express');
-var mongoose = require('mongoose');
 var fs = require('fs');
 var Scramble = require('../models/scramble');
 
@@ -42,7 +41,7 @@ module.exports = (function() {
         scramble.week = week;
         scramble.scrambles = scrambles.sheets[i].scrambles;
         scramble.extraScrambles = scrambles.sheets[i].extraScrambles;
-        Scramble.remove({'week':week}).exec(function(err, result) {
+        Scramble.remove({'week':week}, function(err) {
           if (err) {
             throw err;
           }

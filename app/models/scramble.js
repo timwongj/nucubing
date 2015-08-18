@@ -1,19 +1,22 @@
-'use strict';
-
 var mongoose = require('mongoose');
 
-var Schema = mongoose.Schema;
+module.exports = (function() {
 
-var ObjectId = Schema.ObjectId;
+  'use strict';
 
-var ScrambleSchema = new mongoose.Schema({
-  id:ObjectId,
-  event:String,
-  week:String,
-  scrambles:[String],
-  extraScrambles:[String]
-});
+  var Schema = mongoose.Schema;
+  var ObjectId = Schema.ObjectId;
 
-var Result = mongoose.model('Scramble', ScrambleSchema);
+  var ScrambleSchema = new mongoose.Schema({
+    id:ObjectId,
+    event:String,
+    week:String,
+    scrambles:[String],
+    extraScrambles:[String]
+  });
 
-module.exports = Result;
+  var Scramble = mongoose.model('Scramble', ScrambleSchema);
+
+  return Scramble;
+
+})();

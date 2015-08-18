@@ -1,5 +1,4 @@
 var express = require('express');
-var mongoose = require('mongoose');
 var User = require('../models/user');
 
 module.exports = (function() {
@@ -24,7 +23,7 @@ module.exports = (function() {
       } else {
         res.json(result);
       }
-    })
+    });
   });
 
   return router;
