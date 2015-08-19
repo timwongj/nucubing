@@ -39,15 +39,16 @@ function getAllScrambles($http) {
         }
       }
       if (index < 0) {
-        weeks.push({week: response[i].week, events: []});
+        weeks.push({week: response[i].week, dateUploaded: (new Date(response[i].dateUploaded)), events: []});
         index = weeks.length - 1;
       }
       weeks[index].events.push({
         event: response[i].event,
         scrambles: response[i].scrambles,
-        extraScrambles: response[i].extraScrambles
+        extraScrambles: response[i].extraScrambles,
       });
     }
   });
+
   return weeks;
 }

@@ -128,12 +128,14 @@
         <tr>
           <th>Week</th>
           <th>Events</th>
+          <th>Date Uploaded</th>
         </tr>
         </thead>
         <tbody>
         <tr ng-repeat="week in weeks | orderBy:'-week'">
           <td ng-bind="week.week"></td>
           <td ng-bind="week.events.length"></td>
+          <td ng-bind="week.dateUploaded"></td>
         </tr>
         </tbody>
       </table>
