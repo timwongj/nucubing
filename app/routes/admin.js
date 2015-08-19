@@ -8,8 +8,10 @@ module.exports = (function() {
 
   var router = express.Router();
 
+  var admins = ['timothywong8@gmail.com'];
+
   router.use(function(req, res, next) {
-    if (!(req.user && (req.user.email == 'timothywong8@gmail.com'))) {
+    if (!(req.user && (admins.indexOf(req.user.email) >= 0))) {
       res.status(401).send('You are not authorized to view this page.');
     } else {
       next();

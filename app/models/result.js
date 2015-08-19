@@ -8,15 +8,19 @@ module.exports = (function() {
   var ObjectId = Schema.ObjectId;
 
   var ResultSchema = new mongoose.Schema({
-    id:ObjectId,
-    facebook_id:String,
+    id: ObjectId,
+    facebook_id: String,
     firstName: String,
     lastName: String,
-    email:String,
-    week:String,
-    event:String,
-    status:String,
-    data:String
+    email: String,
+    week: String,
+    event: String,
+    status: String,
+    data: String,
+    date: {
+      type: Date,
+      default: Date.now
+    }
   });
 
   var Result = mongoose.model('Result', ResultSchema);
