@@ -2,7 +2,7 @@
 
   'use strict';
 
-  function ContestEntryController($scope, $resource, $q, $http, $location) {
+  function ContestEntryController($scope, $resource, $q, $location) {
 
     $scope.events = {
       '333' : {name: 'Rubik\'s Cube', format: 'avg5', displayedFormat: 'avg of 5', result : '', index: 0},
@@ -27,7 +27,7 @@
 
     $scope.solves = [];
     $scope.changed = false;
-    var savedData = {times:['','','','',''], penalties:['','','','','']};
+    var dataLoaded = false, savedData = {times:['','','','',''], penalties:['','','','','']};
 
     var url = $location.$$absUrl.split('/');
     try {
@@ -73,22 +73,18 @@
               solve.penalty = savedData.penalties[index];
             });
           }
+          dataLoaded = true;
         });
       });
 
     $scope.$watch('solves', function() {
-      $scope.changed = false;
-      $scope.valid = true;
-      for (var i = 0; i < savedData.times.length; i++) {
-        try {
-          $scope.changed = (($scope.solves[i].time != savedData.times[i]) || ($scope.solves[i].penalty != savedData.penalties[i])) ? true : $scope.changed;
-          $scope.valid = ($scope.solves[i].time === '') ? false : $scope.valid;
-        } catch (e) {
-          if ($scope.solves[i]) {
-            $scope.changed = (($scope.solves[i].time !== '') || ($scope.solves[i].penalty !== '')) ? true : $scope.changed;
-            $scope.valid = ($scope.solves[i].time === '') ? false : $scope.valid;
-          }
-        }
+      if (dataLoaded) {
+        $scope.changed = false;
+        $scope.valid = true;
+        angular.forEach($scope.solves, function(solve, index) {
+          $scope.valid = (solve.time === '') ? false : $scope.valid;
+          $scope.changed = ((solve.time != savedData.times[index]) || (solve.penalty != savedData.penalties[index])) ? true : $scope.changed;
+        });
       }
     }, true);
 
@@ -131,7 +127,7 @@
     };
 
     $scope.submit = function() {
-      if ($scope.contestForm.$valid) {
+      if (($scope.valid) && $scope.contestForm.$valid) {
         var data = {
           times:[],
           penalties:[]

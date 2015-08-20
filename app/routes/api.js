@@ -27,7 +27,7 @@ module.exports = (function() {
         if (err) {
           res.status(500).json({'message':'cannot get weeks'});
         } else {
-          weeks.sort(function(a, b){return b-a});
+          weeks.sort(function(a, b){return b-a;});
           res.json(weeks);
         }
       });
@@ -117,7 +117,7 @@ module.exports = (function() {
         } else {
           res.json(scrambles);
         }
-      })
+      });
     })
     .post(function(req, res) {
       // submit scrambles (admin)
