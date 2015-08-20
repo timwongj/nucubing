@@ -15,8 +15,10 @@
   <!-- Angular -->
   <script src="/bower_components/angular/angular.min.js"></script>
   <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+  <script src="/bower_components/angular-resource/angular-resource.min.js"></script>
   <!-- Local -->
   <link rel="stylesheet" type="text/css" href="/app/public/css/style.css">
+  <script src="/app/public/shared/services/Calculator.js"></script>
   <script src="/app/public/components/contest/controller.js"></script>
   <!-- Title -->
   <link rel="shortcut icon" type="image/x-icon" href="/app/public/img/cubeLogo.png"/>
@@ -43,19 +45,18 @@
         <li><a href="/links" tabindex="-1"><i class="fa fa-link"></i> Links</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li ng-show="authStatus == 'Logout'"><a href="/auth" tabindex="-1"><i class="fa fa-sign-out"></i> Logout</a></li>
-        <li ng-show="authStatus == 'Login'"><a href="/auth" tabindex="-1"><i class="fa fa-sign-in"></i> Login</a></li>
+        <li ng-show="user.facebook_id != null"><a href="/auth" tabindex="-1"><i class="fa fa-sign-out"></i> Logout</a></li>
+        <li ng-show="user.facebook_id == null"><a href="/auth" tabindex="-1"><i class="fa fa-sign-in"></i> Login</a></li>
       </ul>
     </div>
   </div>
 </div>
 <div class="container">
   <div class="page-header">
-    <h2 class="page-title" ng-show="showHome">Contest</h2>
-    <h2 class="page-title" ng-show="!showHome" ng-bind="event"></h2>
+    <h2 class="page-title">Contest</h2>
   </div>
-  <div class="row" ng-show="showHome">
-    <div class="col-md-3 col-sm-6" ng-repeat="event in eventMap | orderObjectBy:'index'">
+  <div class="row">
+    <div class="col-md-3 col-sm-6" ng-repeat="event in events | orderObjectBy:'index'">
       <div class="panel panel-default">
         <div class="panel-heading text-center">
           <h1 class="panel-title" ng-bind="event.name"></h1>
