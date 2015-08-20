@@ -1,4 +1,4 @@
-module.exports = (function() {
+(function() {
 
   'use strict';
 
@@ -252,6 +252,8 @@ module.exports = (function() {
 
   };
 
-  return Calculator;
+  angular.module('nuCubingApp.services', []);
+
+  angular.module('nuCubingApp.services').factory('Calculator', Calculator);
 
 })();
