@@ -66,7 +66,7 @@
             }
           });
           angular.forEach($scope.events, function(event) {
-            if (event.result == '') {
+            if (event.result === '') {
               event.result = 'Not Completed';
             }
           });
