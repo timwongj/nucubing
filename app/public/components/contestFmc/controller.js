@@ -4,11 +4,6 @@
 
   function ContestFmcController($scope, $resource, $q) {
 
-    $scope.solves = [];
-    $scope.changed = false;
-    $scope.valid = false;
-    var dataLoaded = false, savedData = {solutions:['','',''], moves:[]};
-
     var User = $resource('/user');
     var Weeks = $resource('/weeks');
     var Results = $resource('/results');
@@ -16,6 +11,11 @@
 
     $scope.user = User.get();
     var weeks = Weeks.query();
+
+    $scope.solves = [];
+    $scope.changed = false;
+    $scope.valid = false;
+    var dataLoaded = false, savedData = {solutions:['','',''], moves:[]};
 
     var scrambles = weeks.$promise
       .then(function() {

@@ -2,9 +2,84 @@
 
   'use strict';
 
-  function Calculator() {
+  function Calculator(Events) {
 
     return {
+
+      /**
+       * Converts raw results to displayable results
+       * @param results
+       * @returns {Array}
+       */
+      convertResults: function(results) {
+        var res, formattedTimes, convertedResults = [];
+        var calculator = this;
+        angular.forEach(results, function(result) {
+          var data = JSON.parse(result.data);
+          var convertedResult = {
+            'name': result.firstName + ' ' + result.lastName,
+            'facebook_id': result.facebook_id,
+            'week': result.week,
+            'event': result.event,
+            'index': Events[result.event].index
+          };
+          switch(Events[result.event].format) {
+            case 'avg5':
+              convertedResult.best = calculator.calculateSingle(data.times, data.penalties);
+              convertedResult.average = calculator.calculateAverage(data.times, data.penalties);
+              convertedResult.details = '';
+              formattedTimes = calculator.formatTimes(data.times, data.penalties);
+              angular.forEach(formattedTimes, function(formattedTime, index) {
+                convertedResult.details += (index == data.times.length - 1) ? calculator.reformatTime(formattedTime) : calculator.reformatTime(formattedTime) + ', ';
+              });
+              res = convertedResult.average.split(':');
+              convertedResult.raw = (convertedResult.average == 'DNF') ? 'DNF' : ((res.length > 1) ? (parseFloat(res[0]) * 60) + parseFloat(res[1]) : parseFloat(res[0]));
+              break;
+            case 'mo3':
+              convertedResult.best = calculator.calculateSingle(data.times, data.penalties);
+              convertedResult.average = ((result.event == '555bf') || (result.event == '444bf')) ? '' : calculator.calculateMean(data.times, data.penalties);
+              convertedResult.details = '';
+              formattedTimes = calculator.formatTimes(data.times, data.penalties);
+              angular.forEach(formattedTimes, function(formattedTime, index) {
+                convertedResult.details += (index == data.times.length - 1) ? calculator.reformatTime(formattedTime) : calculator.reformatTime(formattedTime) + ', ';
+              });
+              res = convertedResult.average.split(':');
+              convertedResult.raw = (convertedResult.average == 'DNF') ? 'DNF' : ((res.length > 1) ? (parseFloat(res[0]) * 60) + parseFloat(res[1]) : parseFloat(res[0]));
+              break;
+            case 'bo3':
+              convertedResult.best = calculator.calculateSingle(data.times, data.penalties);
+              convertedResult.average = ((result.event == '555bf') || (result.event == '444bf')) ? '' : calculator.calculateMean(data.times, data.penalties);
+              convertedResult.details = '';
+              formattedTimes = calculator.formatTimes(data.times, data.penalties);
+              angular.forEach(formattedTimes, function(formattedTime, index) {
+                convertedResult.details += (index == data.times.length - 1) ? calculator.reformatTime(formattedTime) : calculator.reformatTime(formattedTime) + ', ';
+              });
+              res = convertedResult.best.split(':');
+              convertedResult.raw = (convertedResult.best == 'DNF') ? 'DNF' : ((res.length > 1) ? (parseFloat(res[0]) * 60) + parseFloat(res[1]) : parseFloat(res[0]));
+              break;
+            case 'fmc':
+              convertedResult.best = calculator.calculateFMCSingle(data.moves);
+              convertedResult.average = calculator.calculateFMCMean(data.moves);
+              convertedResult.details = data.moves[0] + ', ' + data.moves[1] + ', ' + data.moves[2];
+              convertedResult.raw = convertedResult.average;
+              break;
+            case 'mbld':
+              if (data.dnf == '(DNF)') {
+                convertedResult.best = 'DNF';
+                convertedResult.details = 'DNF';
+              } else {
+                convertedResult.best = data.solved + '/' + data.attempted + ' in ' + data.time;
+                convertedResult.details = convertedResult.best;
+              }
+              var rawScore = parseFloat(data.solved) - (parseFloat(data.attempted) - parseFloat(data.solved));
+              var rawTime = (parseFloat(data.time.split(':')[0]) * 60) + parseFloat(data.time.split(':')[1]);
+              convertedResult.raw = rawScore.toString() + rawTime.toString();
+              break;
+          }
+          convertedResults.push(convertedResult);
+        });
+        return convertedResults;
+      },
 
       /**
        * Compares two results

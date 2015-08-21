@@ -4,14 +4,6 @@
 
   function ContestMbldController($scope, $resource, $q) {
 
-    $scope.scrambles = [];
-    $scope.displayed = 7;
-    $scope.mbldResult = {'solved':'', 'attempted':'', 'time':'', 'dnf':''};
-    $scope.valid = false;
-
-    var dataLoaded = false, savedData = {'solved':'', 'attempted':'', 'time':'', 'dnf':''};
-    $scope.changed = false;
-
     var User = $resource('/user');
     var Weeks = $resource('/weeks');
     var Results = $resource('/results');
@@ -19,6 +11,14 @@
 
     $scope.user = User.get();
     var weeks = Weeks.query();
+
+    $scope.scrambles = [];
+    $scope.displayed = 7;
+    $scope.mbldResult = {'solved':'', 'attempted':'', 'time':'', 'dnf':''};
+    $scope.valid = false;
+
+    var dataLoaded = false, savedData = {'solved':'', 'attempted':'', 'time':'', 'dnf':''};
+    $scope.changed = false;
 
     var scrambles = weeks.$promise
       .then(function() {
