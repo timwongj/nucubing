@@ -1,5 +1,4 @@
 var express = require('express');
-var User = require('../models/user');
 
 module.exports = (function() {
 
@@ -7,7 +6,6 @@ module.exports = (function() {
 
   var router = express.Router();
 
-  // render results page
   router.get('/', function(req, res) {
     res.sendfile('./app/public/components/users/users.html');
   });

@@ -78,15 +78,12 @@ module.exports = (function() {
         if (err) {
           res.status(500).json({'message':'cannot get results'});
         } else {
-          console.log(req.query);
-          console.log(req.results);
           res.json(results);
         }
       });
     })
     .post(function(req, res) {
       // submit a result (logged in)
-      console.log(req.body);
       var result = new Result();
       result.event = req.body.event;
       result.week = req.body.week;

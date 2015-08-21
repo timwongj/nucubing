@@ -1,6 +1,4 @@
 var express = require('express');
-var fs = require('fs');
-var Scramble = require('../models/scramble');
 
 module.exports = (function() {
 
