@@ -39,9 +39,9 @@
       }
     }
 
-    var User = $resource('/api/user');
-    var Users = $resource('/api/users/:facebook_id');
-    var Results = $resource('/api/results');
+    var User = $resource('/user');
+    var Users = $resource('/users/:facebook_id');
+    var Results = $resource('/results');
 
     $scope.user = User.get();
 

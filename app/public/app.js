@@ -57,7 +57,7 @@
 
   function Run($rootScope, $resource) {
 
-    var User = $resource('/api/user');
+    var User = $resource('/user');
     $rootScope.user = User.get();
 
   }

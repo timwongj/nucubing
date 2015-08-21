@@ -37,10 +37,10 @@
       $scope.event = 'Invalid Event';
     }
 
-    var User = $resource('/api/user');
-    var Weeks = $resource('/api/weeks');
-    var Results = $resource('/api/results');
-    var Scrambles = $resource('/api/scrambles');
+    var User = $resource('/user');
+    var Weeks = $resource('/weeks');
+    var Results = $resource('/results');
+    var Scrambles = $resource('/scrambles');
 
     $scope.user = User.get();
     var weeks = Weeks.query();

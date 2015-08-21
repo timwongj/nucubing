@@ -16,8 +16,13 @@
   var config = require('config');
 
   var fbAuth = require('./app/middleware/authentication');
-  var api = require('./app/routes/api');
-  var auth = require('./app/routes/auth');
+
+  var authRouter = require('./app/routes/auth');
+  var resultsRouter = require('./app/routes/results');
+  var scramblesRouter = require('./app/routes/scrambles');
+  var userRouter = require('./app/routes/user');
+  var usersRouter = require('./app/routes/users');
+  var weeksRouter = require('./app/routes/weeks');
 
   var app = express();
 
@@ -46,8 +51,12 @@
   // render client side dependencies
   app.use('/bower_components',  express.static(__dirname + '/bower_components'));
 
-  app.use('/api', api);
-  app.use('/auth', auth);
+  app.use('/auth', authRouter);
+  app.use('/results', resultsRouter);
+  app.use('/scrambles', scramblesRouter);
+  app.use('/user', userRouter);
+  app.use('/users', usersRouter);
+  app.use('/weeks', weeksRouter);
 
   // passport
   passport.serializeUser(function(user, done) {

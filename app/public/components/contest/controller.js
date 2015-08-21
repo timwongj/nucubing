@@ -25,9 +25,9 @@
       '333mbf' : {name: '3x3 multi blind', format: 'mbld', displayedFormat: '',result : '', index: 17}
     };
 
-    var User = $resource('/api/user');
-    var Weeks = $resource('/api/weeks');
-    var Results = $resource('/api/results');
+    var User = $resource('/user');
+    var Weeks = $resource('/weeks');
+    var Results = $resource('/results');
 
     $scope.user = User.get();
     var weeks = Weeks.query();

@@ -25,8 +25,8 @@
       '333mbf' : {name: '3x3 multi blind', format: 'mbld', displayedFormat: '',result : '', index: 17}
     };
 
-    var User = $resource('/api/user');
-    var Scrambles = $resource('/api/scrambles');
+    var User = $resource('/user');
+    var Scrambles = $resource('/scrambles');
 
     $scope.user = User.get();
     $scope.scrambles = Scrambles.query(function() {
@@ -36,7 +36,7 @@
     });
 
     $scope.uploader = new FileUploader({
-      url:'/api/scrambles'
+      url:'/scrambles'
     });
 
     $scope.uploader.onSuccessItem = function(item, response) {

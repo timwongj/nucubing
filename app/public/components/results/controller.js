@@ -29,9 +29,9 @@
     $scope.selectedEvent = $scope.eventsList[0];
     var dataLoaded = false;
 
-    var User = $resource('/api/user');
-    var Weeks = $resource('/api/weeks');
-    var Results = $resource('/api/results');
+    var User = $resource('/user');
+    var Weeks = $resource('/weeks');
+    var Results = $resource('/results');
 
     $scope.user = User.get();
     $scope.weeksList = Weeks.query(function() {
