@@ -15,6 +15,7 @@
   <!-- Angular -->
   <script src="/bower_components/angular/angular.min.js"></script>
   <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+  <script src="/bower_components/angular-resource/angular-resource.min.js"></script>
   <!-- Angular File Upload -->
   <script src="/bower_components/angular-file-upload/dist/angular-file-upload.min.js"></script>
   <!-- Local -->
@@ -45,8 +46,8 @@
         <li><a href="/links" tabindex="-1"><i class="fa fa-link"></i> Links</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li ng-show="authStatus == 'Logout'"><a href="/auth" tabindex="-1"><i class="fa fa-sign-out"></i> Logout</a></li>
-        <li ng-show="authStatus == 'Login'"><a href="/auth" tabindex="-1"><i class="fa fa-sign-in"></i> Login</a></li>
+        <li ng-show="user.facebook_id != null"><a href="/auth" tabindex="-1"><i class="fa fa-sign-out"></i> Logout</a></li>
+        <li ng-show="user.facebook_id == null"><a href="/auth" tabindex="-1"><i class="fa fa-sign-in"></i> Login</a></li>
       </ul>
     </div>
   </div>
@@ -123,19 +124,19 @@
       </div>
     </div>
     <div class="col-xs-12">
-      <table class="table">
+      <table class="table table-condensed">
         <thead>
         <tr>
           <th>Week</th>
-          <th>Events</th>
+          <th>Event</th>
           <th>Date Uploaded</th>
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="week in weeks | orderBy:'-week'">
-          <td ng-bind="week.week"></td>
-          <td ng-bind="week.events.length"></td>
-          <td ng-bind="week.dateUploaded"></td>
+        <tr ng-repeat="scramble in scrambles | orderBy:['-week', 'index']">
+          <td ng-bind="displayWeek(scramble.week)"></td>
+          <td ng-bind="displayEvent(scramble.event)"></td>
+          <td ng-bind="scramble.dateUploaded"></td>
         </tr>
         </tbody>
       </table>

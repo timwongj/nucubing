@@ -122,7 +122,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr ng-repeat="result in results.results | orderBy:'-week'">
+          <tr ng-repeat="result in results.results | orderObjectBy:'-week'">
             <td style="width:30%;font-weight:bold;" class="td-profile" ng-bind="displayWeek(result.week)"></td>
             <td style="width:15%;" class="td-profile" ng-bind="result.best"></td>
             <td style="width:15%;" class="td-profile" ng-bind="result.average"></td>

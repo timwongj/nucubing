@@ -2,16 +2,14 @@
 
   'use strict';
 
-  function LinksController($scope, $http) {
+  function LinksController($scope, $resource) {
 
-    // get authorization status
-    $http.get('/auth/status').success(function(response) {
-      $scope.authStatus = (response.status == 'connected') ? 'Logout' : 'Login';
-    });
+    var User = $resource('/api/user');
+    $scope.user = User.get();
 
   }
 
-  angular.module('nuCubingApp', []);
+  angular.module('nuCubingApp', ['ngResource']);
 
   angular.module('nuCubingApp').controller('LinksController', LinksController);
 
