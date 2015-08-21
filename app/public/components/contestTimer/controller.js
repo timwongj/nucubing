@@ -76,6 +76,26 @@
             angular.forEach($scope.solves, function(solve, index) {
               solve.time = savedData.times[index];
               solve.penalty = savedData.penalties[index];
+              solve.displayedResult = solve.time + ' ' + solve.penalty;
+              solve.completed = (solve.time !== '');
+              if (solve.completed && ($scope.index == index)) {
+                if ($scope.index < $scope.solves.length - 1) {
+                  $scope.index++;
+                  $scope.scramble = $scope.solves[$scope.index].scramble;
+                } else {
+                  $scope.done = true;
+                  var times = [], penalties = [];
+                  for (var j = 0; j < $scope.solves.length; j++) {
+                    times[j] = $scope.solves[j].time;
+                    penalties[j] = $scope.solves[j].penalty;
+                  }
+                  switch($scope.events[$scope.eventId].format) {
+                    case 'avg5': $scope.result = Calculator.calculateAverage(times, penalties); $scope.eventFormat = 'Average of 5'; break;
+                    case 'mo3' : $scope.result = Calculator.calculateMean(times, penalties); $scope.eventFormat = 'Mean of 3'; break;
+                    case 'bo3' : $scope.result = Calculator.calculateSingle(times, penalties); $scope.eventFormat = 'Best of 3'; break;
+                  }
+                }
+              }
             });
           }
           dataLoaded = true;

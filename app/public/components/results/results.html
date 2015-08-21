@@ -57,11 +57,11 @@
   <form class="form-inline">
     <div class="form-group">
       <label>Event:</label>
-      <select ng-model="selectedEvent" class="btn btn-default" ng-options="displayEvent(event) for event in events"></select>
+      <select ng-model="selectedEvent" class="form-control" ng-options="displayEvent(event) for event in eventsList"></select>
     </div>
     <div class="form-group">
       <label>Week:</label>
-      <select ng-model="selectedWeek" class="btn btn-default" ng-options="displayWeek(week) for week in weeks"></select>
+      <select ng-model="selectedWeek" class="form-control" ng-options="displayWeek(week) for week in weeksList"></select>
     </div>
   </form>
   <br>
