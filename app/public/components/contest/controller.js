@@ -55,7 +55,7 @@
                   $scope.events[result.event].result = Calculator.calculateFMCMean(data.moves);
                   break;
                 case 'mbld' :
-                  $scope.events[result.event].result = data.solved + '/' + data.attempted + ' in ' + data.time;
+                  $scope.events[result.event].result = (data.dnf == '(DNF)') ? 'DNF' : data.solved + '/' + data.attempted + ' in ' + data.time;
                   break;
               }
               if ($scope.events[result.event].result != 'DNF') {
