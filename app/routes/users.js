@@ -16,16 +16,6 @@ module.exports = (function() {
     res.sendfile('./app/public/components/profile/profile.html');
   });
 
-  router.get('/users/all', function(req, res) {
-    User.find({}, function(err, result) {
-      if (err) {
-        throw err;
-      } else {
-        res.json(result);
-      }
-    });
-  });
-
   return router;
 
 })();

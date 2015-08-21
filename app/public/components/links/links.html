@@ -15,6 +15,7 @@
   <!-- Angular -->
   <script src="/bower_components/angular/angular.min.js"></script>
   <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+  <script src="/bower_components/angular-resource/angular-resource.min.js"></script>
   <!-- Local -->
   <link rel="stylesheet" type="text/css" href="/app/public/css/style.css">
   <script src="/app/public/components/links/controller.js"></script>
@@ -43,8 +44,8 @@
         <li class="active"><a href="/links" tabindex="-1"><i class="fa fa-link"></i> Links</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li ng-show="authStatus == 'Logout'"><a href="/auth" tabindex="-1"><i class="fa fa-sign-out"></i> Logout</a></li>
-        <li ng-show="authStatus == 'Login'"><a href="/auth" tabindex="-1"><i class="fa fa-sign-in"></i> Login</a></li>
+        <li ng-show="user.facebook_id != null"><a href="/auth" tabindex="-1"><i class="fa fa-sign-out"></i> Logout</a></li>
+        <li ng-show="user.facebook_id == null"><a href="/auth" tabindex="-1"><i class="fa fa-sign-in"></i> Login</a></li>
       </ul>
     </div>
   </div>

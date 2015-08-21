@@ -2,12 +2,12 @@
 
   'use strict';
 
-  function ResultsController($scope, $http) {
+  function ResultsController($scope, $resource, $http) {
 
-    // get authorization status
-    $http.get('/auth/status').success(function(response) {
-      $scope.authStatus = (response.status == 'connected') ? 'Logout' : 'Login';
-    });
+    var User = $resource('/api/user');
+    var Results = $resource('/api/results');
+
+    $scope.user = User.get();
 
     // events list
     $scope.eventMap = {
@@ -232,7 +232,7 @@
     };
   }
 
-  angular.module('nuCubingApp', ['ui.bootstrap']);
+  angular.module('nuCubingApp', ['ui.bootstrap', 'ngResource']);
 
   angular.module('nuCubingApp').filter('orderObjectBy', OrderObjectByFilter);
 
