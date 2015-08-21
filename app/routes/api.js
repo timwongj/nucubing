@@ -60,7 +60,7 @@ module.exports = (function() {
   router.route('/users/:facebook_id')
     .get(function(req, res) {
       // get user given facebook_id
-      User.find({facebook_id:req.params.facebook_id}, function(err, user) {
+      User.findOne({facebook_id:req.params.facebook_id}, function(err, user) {
         if (err) {
           res.status(500).json({'message':'cannot get user for facebook_id: ' + req.params.facebook_id});
         } else {

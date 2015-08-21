@@ -15,6 +15,7 @@
   <!-- Angular -->
   <script src="/bower_components/angular/angular.min.js"></script>
   <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+  <script src="/bower_components/angular-resource/angular-resource.min.js"></script>
   <!-- Local -->
   <link rel="stylesheet" type="text/css" href="/app/public/css/style.css">
   <script src="/app/public/components/users/controller.js"></script>
@@ -43,8 +44,8 @@
         <li><a href="/links" tabindex="-1"><i class="fa fa-link"></i> Links</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li ng-show="authStatus == 'Logout'"><a href="/auth" tabindex="-1"><i class="fa fa-sign-out"></i> Logout</a></li>
-        <li ng-show="authStatus == 'Login'"><a href="/auth" tabindex="-1"><i class="fa fa-sign-in"></i> Login</a></li>
+        <li ng-show="user.facebook_id != null"><a href="/auth" tabindex="-1"><i class="fa fa-sign-out"></i> Logout</a></li>
+        <li ng-show="user.facebook_id == null"><a href="/auth" tabindex="-1"><i class="fa fa-sign-in"></i> Login</a></li>
       </ul>
     </div>
   </div>
@@ -54,10 +55,10 @@
     <h2 class="page-title">Users</h2>
   </div>
   <div class="row">
-    <div class="col-md-3 col-sm-6 user" ng-repeat="user in users | orderBy:'name'">
+    <div class="col-md-3 col-sm-6 user" ng-repeat="user in users | orderBy:'displayName'">
       <a href="users/{{user.facebook_id}}">
         <img ng-src="http://graph.facebook.com/{{user.facebook_id}}/picture?width=50&height=50" class="img-responsive">
-        <h4 ng-bind="user.name"></h4>
+        <h4 ng-bind="user.displayName"></h4>
       </a>
     </div>
   </div>

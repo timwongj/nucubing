@@ -191,8 +191,13 @@
             result.raw = result.result;
             break;
           case 'mbld':
-            result.best = data.solved + '/' + data.attempted + ' in ' + data.time;
-            result.details = result.best;
+            if (data.dnf == '(DNF)') {
+              result.best = 'DNF';
+              result.details = 'DNF';
+            } else {
+              result.best = data.solved + '/' + data.attempted + ' in ' + data.time;
+              result.details = result.best;
+            }
             var rawScore = parseFloat(data.solved) - (parseFloat(data.attempted) - parseFloat(data.solved));
             var rawTime = (parseFloat(data.time.split(':')[0]) * 60) + parseFloat(data.time.split(':')[1]);
             result.raw = rawScore.toString() + rawTime.toString();
