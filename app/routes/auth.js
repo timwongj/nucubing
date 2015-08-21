@@ -17,14 +17,6 @@ module.exports = (function() {
       res.sendfile('./app/public/components/login/login.html');
   });
 
-  // get authorization status
-  router.get('/status', function(req, res) {
-    if (req.user)
-      res.json({status:'connected'});
-    else
-      res.json({status:'not_authorized'});
-  });
-
   // facebook authentication route
   router.get('/facebook', passport.authenticate('facebook', { scope: ['email', 'public_profile'] }));
 

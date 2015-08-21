@@ -2,57 +2,70 @@
 
   'use strict';
 
-  function ContestFmcController($scope, $http) {
-
-    // get authorization status
-    $http.get('/auth/status').success(function(response) {
-      $scope.authStatus = (response.status == 'connected') ? 'Logout' : 'Login';
-    });
+  function ContestFmcController($scope, $resource, $q) {
 
     $scope.solves = [];
-    var savedData = {solutions:['','',''], moves:[]};
     $scope.changed = false;
     $scope.valid = false;
+    var dataLoaded = false, savedData = {solutions:['','',''], moves:[]};
 
-    // get scrambles
-    $http.get('/contest/scrambles/333fm').success(function(response) {
-      $scope.week = response.week;
-      for (var i = 0; i < response.data[0].scrambles.length; i++)
-      {
-        $scope.solves[i] = {};
-        $scope.solves[i].scramble = response.data[0].scrambles[i];
-        $scope.solves[i].solution = '';
-        $scope.solves[i].moves = '';
-        $scope.solves[i].valid = false;
-        $scope.solves[i].dnf = '';
-      }
+    var User = $resource('/api/user');
+    var Weeks = $resource('/api/weeks');
+    var Results = $resource('/api/results');
+    var Scrambles = $resource('/api/scrambles');
 
-      // get results if they exist
-      $http.get('/contest/results/333fm').success(function(results) {
-        savedData = JSON.parse(results.data);
-        for (var i = 0; i < savedData.solutions.length; i++) {
-          $scope.solves[i].solution = savedData.solutions[i];
-          $scope.solves[i].moves = savedData.moves[i];
-          $scope.solves[i].valid = true;
-          $scope.solves[i].dnf = '';
-          $scope.update($scope.solves[i]);
-        }
+    $scope.user = User.get();
+    var weeks = Weeks.query();
+
+    var scrambles = weeks.$promise
+      .then(function() {
+        scrambles = Scrambles.query({
+          'week':weeks[0],
+          'event':'333fm'
+        }, function() {
+          angular.forEach(scrambles[0].scrambles, function(scramble, index) {
+            $scope.solves[index] = {
+              scramble: scramble
+            };
+          });
+        });
       });
-    });
+
+    $q.all([$scope.user.$promise, weeks.$promise, scrambles.$promise])
+      .then(function() {
+        var results = Results.query({
+          'week':weeks[0],
+          'event':'333fm',
+          'facebook_id':$scope.user.facebook_id
+        }, function() {
+          if (results[0]) {
+            savedData = JSON.parse(results[0].data);
+            angular.forEach($scope.solves, function(solve, index) {
+              solve.solution = savedData.solutions[index];
+              solve.moves = savedData.moves[index];
+            });
+          }
+          dataLoaded = true;
+        });
+      });
 
     $scope.update = function(solve) {
       solve.valid = solve.solution.length !== 0;
       solve.moves = solve.solution.split(' ').length;
       $scope.valid = true;
-      for (var i = 0; i < $scope.solves.length; i++) {
-        $scope.valid = ($scope.solves[i].valid) ? $scope.solves[i].valid : false;
-      }
+      angular.forEach($scope.solves, function(solve, index) {
+        $scope.valid = (solve.valid) ? $scope.valid : false;
+      });
     };
 
     $scope.$watch('solves', function() {
-      $scope.changed = false;
-      for (var i = 0; i < $scope.solves.length; i++) {
-        $scope.changed = ($scope.solves[i].solution != savedData.solutions[i]) ? true : $scope.changed;
+      if (dataLoaded) {
+        $scope.changed = false;
+        $scope.valid = true;
+        angular.forEach($scope.solves, function(solve, index) {
+          $scope.valid = (solve.solution === '') ? false : $scope.valid;
+          $scope.changed = (solve.solution != savedData.solutions[index]) ? true : $scope.changed;
+        });
       }
     }, true);
 
@@ -70,39 +83,47 @@
       alert('Info');
     };
 
-    // submit results for the given event for the current week
     $scope.save = function() {
-      var result = {'event':'333fm', 'week':$scope.week, 'status':'In Progress', 'data':{}};
-      result.data.solutions = [];
-      result.data.moves = [];
-      for (var i = 0; i < $scope.solves.length; i++) {
-        result.data.solutions[i] = $scope.solves[i].solution;
-        result.data.moves[i] = $scope.solves[i].moves;
-      }
-      result.data = JSON.stringify(result.data);
-      $http.post('/contest/submit', result).success(function (response) {
+      var data = {solutions:[], moves:[]};
+      angular.forEach($scope.solves, function(solve, index) {
+        data.solutions[index] = solve.solution;
+        data.moves[index] = solve.moves;
+      });
+      var result = new Results({
+        'event':'333fm',
+        'week':weeks[0],
+        'status':'In Progress',
+        'data':JSON.stringify(data)
+      });
+      result.$save(function() {
+        angular.forEach($scope.solves, function(solve, index) {
+          savedData.solutions[index] = solve.solution;
+          savedData.moves[index] = solve.moves;
+        });
         $scope.changed = false;
       });
     };
 
-    // submit results for the given event for the current week
     $scope.submit = function() {
-      var result = {'event':'333fm', 'week':$scope.week, 'status':'Completed', 'data':{}};
-      result.data.solutions = [];
-      result.data.moves = [];
-      for (var i = 0; i < $scope.solves.length; i++) {
-        result.data.solutions[i] = $scope.solves[i].solution;
-        result.data.moves[i] = $scope.solves[i].moves;
-      }
-      result.data = JSON.stringify(result.data);
-      $http.post('/contest/submit', result).success(function (response) {
+      var data = {solutions:[], moves:[]};
+      angular.forEach($scope.solves, function(solve, index) {
+        data.solutions[index] = solve.solution;
+        data.moves[index] = solve.moves;
+      });
+      var result = new Results({
+        'event':'333fm',
+        'week':weeks[0],
+        'status':'Completed',
+        'data':JSON.stringify(data)
+      });
+      result.$save(function() {
         window.location = '/contest';
       });
     };
 
   }
 
-  angular.module('nuCubingApp', ['ui.bootstrap']);
+  angular.module('nuCubingApp', ['ui.bootstrap', 'ngResource']);
 
   angular.module('nuCubingApp').controller('ContestFmcController', ContestFmcController);
 

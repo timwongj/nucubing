@@ -16,6 +16,7 @@
   var config = require('config');
 
   var fbAuth = require('./app/middleware/authentication');
+  var api = require('./app/routes/api');
   var profile = require('./app/routes/profile');
   var users = require('./app/routes/users');
   var contest = require('./app/routes/contest');
@@ -50,6 +51,7 @@
   // render client side dependencies
   app.use('/bower_components',  express.static(__dirname + '/bower_components'));
 
+  app.use('/api', api);
   app.use('/profile', profile);
   app.use('/users', users);
   app.use('/contest', contest);

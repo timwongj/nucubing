@@ -2,58 +2,34 @@
 
   'use strict';
 
-  function ProfileController($scope, $http, $location, Calculator) {
+  function ProfileController($scope, $resource, $location, Calculator) {
 
-    // get authorization status
-    $http.get('/auth/status').success(function(response) {
-      $scope.authStatus = (response.status == 'connected') ? 'Logout' : 'Login';
-    });
-
-    // get user information
-    $scope.user = {};
-    var url = $location.$$absUrl.split('/');
-    if (url.indexOf('users') < 0) {
-      $scope.profileClass = 'active';
-      $scope.usersClass = '';
-      $http.get('/profile/userInfo').success(function(response) {
-        $scope.user.firstName = response.firstName;
-        $scope.user.lastName = response.lastName;
-        $scope.user.facebook_id = response.facebook_id;
-      });
-    } else {
-      var facebook_id = url[url.indexOf('users') + 1];
-      $scope.profileClass = '';
-      $scope.usersClass = 'active';
-      $http.get('/profile/userInfo/' + facebook_id).success(function(response) {
-        $scope.user.firstName = response.firstName;
-        $scope.user.lastName = response.lastName;
-        $scope.user.facebook_id = response.facebook_id;
-      });
-    }
-
-    // events list
-    $scope.eventMap = {
-      '333' : {name : 'Rubik\'s Cube', format: 'avg5', index: 0},
-      '444' : {name: '4x4 Cube', format: 'avg5', index: 1},
-      '555' : {name: '5x5 Cube', format: 'avg5', index: 2},
-      '222' : {name: '2x2 Cube', format: 'avg5', index: 3},
-      '333bf' : {name: '3x3 blindfolded', format: 'bo3', index: 4},
-      '333oh' : {name: '3x3 one-handed', format: 'avg5', index: 5},
-      '333fm' : {name: '3x3 fewest moves', format: 'fmc', index: 6},
-      '333ft' : {name: '3x3 with feet', format: 'mo3', index: 7},
-      'minx' : {name: 'Megaminx', format: 'avg5', index: 8},
-      'pyram' : {name: 'Pyraminx', format: 'avg5', index: 9},
-      'sq1' : {name: 'Square-1', format: 'avg5', index: 10},
-      'clock' : {name: 'Rubik\'s Clock', format: 'avg5', index: 11},
-      'skewb' : {name: 'Skewb', format: 'avg5', index: 12},
-      '666' : {name: '6x6 Cube', format: 'mo3', index: 13},
-      '777' : {name: '7x7 Cube', format: 'mo3', index: 14},
-      '444bf' : {name: '4x4 blindfolded', format: 'bo3', index: 15},
-      '555bf' : {name: '5x5 blindfolded', format: 'bo3', index: 16},
-      '333mbf' : {name: '3x3 multi blind', format: 'mbld', index: 17}
+    $scope.events = {
+      '333' : {name: 'Rubik\'s Cube', format: 'avg5', displayedFormat: 'avg of 5', result : '', index: 0},
+      '444' : {name: '4x4 Cube', format: 'avg5', displayedFormat: 'avg of 5', result : '', index: 1},
+      '555' : {name: '5x5 Cube', format: 'avg5', displayedFormat: 'avg of 5', result : '', index: 2},
+      '222' : {name: '2x2 Cube', format: 'avg5', displayedFormat: 'avg of 5', result : '', index: 3},
+      '333bf' : {name: '3x3 blindfolded', format: 'bo3', displayedFormat: 'best of 3', result : '', index: 4},
+      '333oh' : {name: '3x3 one-handed', format: 'avg5', displayedFormat: 'avg of 5', result : '', index: 5},
+      '333fm' : {name: '3x3 fewest moves', format: 'fmc', displayedFormat: 'mean of 3', result : '', index: 6},
+      '333ft' : {name: '3x3 with feet', format: 'mo3', displayedFormat: 'mean of 3', result : '', index: 7},
+      'minx' : {name: 'Megaminx', format: 'avg5', displayedFormat: 'avg of 5', result : '', index: 8},
+      'pyram' : {name: 'Pyraminx', format: 'avg5', displayedFormat: 'avg of 5', result : '', index: 9},
+      'sq1' : {name: 'Square-1', format: 'avg5', displayedFormat: 'avg of 5', result : '', index: 10},
+      'clock' : {name: 'Rubik\'s Clock', format: 'avg5', displayedFormat: 'avg of 5', result : '', index: 11},
+      'skewb' : {name: 'Skewb', format: 'avg5', displayedFormat: 'avg of 5', result : '', index: 12},
+      '666' : {name: '6x6 Cube', format: 'mo3', displayedFormat: 'mean of 3', result : '', index: 13},
+      '777' : {name: '7x7 Cube', format: 'mo3', displayedFormat: 'mean of 3', result : '', index: 14},
+      '444bf' : {name: '4x4 blindfolded', format: 'bo3', displayedFormat: 'best of 3', result : '', index: 15},
+      '555bf' : {name: '5x5 blindfolded', format: 'bo3', displayedFormat: 'best of 3', result : '', index: 16},
+      '333mbf' : {name: '3x3 multi blind', format: 'mbld', displayedFormat: '',result : '', index: 17}
     };
 
-    $scope.personalBestsMap = $scope.eventMap;
+    $scope.displayFormat = 'Week';
+    $scope.resultsByWeek = {};
+    $scope.resultsByEvent = {};
+
+    $scope.personalBestsMap = $scope.events;
     $scope.personalBests = [];
 
     for (var event in $scope.personalBestsMap) {
@@ -63,96 +39,116 @@
       }
     }
 
-    $scope.displayFormat = 'Week';
-    $scope.resultsByWeek = {};
-    $scope.resultsByEvent = {};
+    var User = $resource('/api/user');
+    var Users = $resource('/api/users/:facebook_id');
+    var Results = $resource('/api/results');
 
-    var i, j, data, formattedTimes;
+    $scope.user = User.get();
 
-    // get personal results
-    var api_route = (url.indexOf('users') < 0) ? '/profile/results/all' : '/profile/results/all/' + url[url.indexOf('users') + 1];
-    $http.get(api_route).success(function(results) {
-      // Personal Bests
-      for (i = 0; i < results.length; i++) {
-        data = JSON.parse(results[i].data);
-        switch($scope.personalBestsMap[results[i].event].format) {
-          case 'avg5':
-            $scope.personalBestsMap[results[i].event].single = Calculator.compareResults($scope.personalBestsMap[results[i].event].single, Calculator.calculateSingle(data.times, data.penalties));
-            $scope.personalBestsMap[results[i].event].average = Calculator.compareResults($scope.personalBestsMap[results[i].event].average, Calculator.calculateAverage(data.times, data.penalties));
-            break;
-          case 'mo3':
-          case 'bo3':
-            $scope.personalBestsMap[results[i].event].single = Calculator.compareResults($scope.personalBestsMap[results[i].event].single, Calculator.calculateSingle(data.times, data.penalties));
-            $scope.personalBestsMap[results[i].event].average = ((results[i].event == '555bf') || (results[i].event == '444bf')) ? '' : Calculator.compareResults($scope.personalBestsMap[results[i].event].average, Calculator.calculateMean(data.times, data.penalties));
-            break;
-          case 'fmc':
-            $scope.personalBestsMap[results[i].event].single = Calculator.compareResults($scope.personalBestsMap[results[i].event].single, Calculator.calculateFMCSingle(data.moves));
-            $scope.personalBestsMap[results[i].event].average = Calculator.compareResults($scope.personalBestsMap[results[i].event].average, Calculator.calculateFMCMean(data.moves));
-            break;
-          case 'mbld':
-            var mbldResult = Calculator.compareMBLDResults($scope.personalBestsMap[results[i].event].single, data);
-            $scope.personalBestsMap[results[i].event].single = mbldResult.solved + '/' + mbldResult.attempted + ' in ' + mbldResult.time;
-            break;
-        }
-      }
-      for (var event in $scope.personalBestsMap) {
-        if ($scope.personalBestsMap.hasOwnProperty(event)) {
-          if (($scope.personalBestsMap[event].single) || ($scope.personalBestsMap[event].average)) {
-            $scope.personalBests.push({
-              name: $scope.personalBestsMap[event].name,
-              single: $scope.personalBestsMap[event].single,
-              average: ($scope.personalBestsMap[event].average == 'DNF') ? '' : $scope.personalBestsMap[event].average,
-              index: $scope.personalBestsMap[event].index
-            });
-          }
-        }
-      }
+    var url = $location.$$absUrl.split('/');
+    if (url.indexOf('users') < 0) {
+      $scope.profileClass = 'active';
+      $scope.usersClass = '';
+      $scope.userProfile = $scope.user;
+    } else {
+      $scope.profileClass = '';
+      $scope.usersClass = 'active';
+      $scope.userProfile = Users.get({
+        facebook_id:url[url.indexOf('users') + 1]
+      });
+    }
 
-      // Results by Week and Event
-      for (i = 0; i < results.length; i++) {
-        if (!$scope.resultsByWeek[results[i].week]) {
-          $scope.resultsByWeek[results[i].week] = [];
-        }
-        if (!$scope.resultsByEvent[results[i].event]) {
-          $scope.resultsByEvent[results[i].event] = {'name':$scope.eventMap[results[i].event].name, 'index':$scope.eventMap[results[i].event].index, 'results':[]};
-        }
-        data = JSON.parse(results[i].data);
-        var result = {'event':$scope.eventMap[results[i].event].name, 'week':results[i].week, 'index':$scope.eventMap[results[i].event].index};
-        switch($scope.eventMap[results[i].event].format) {
-          case 'avg5':
-            result.best = Calculator.calculateSingle(data.times, data.penalties);
-            result.average = Calculator.calculateAverage(data.times, data.penalties);
-            result.details = '';
-            formattedTimes = Calculator.formatTimes(data.times, data.penalties);
-            for (j = 0; j < data.times.length; j++) {
-              result.details += (j == data.times.length - 1) ? Calculator.reformatTime(formattedTimes[j]) : Calculator.reformatTime(formattedTimes[j]) + ', ';
+    $scope.userProfile.$promise
+      .then(function() {
+        var results = Results.query({
+          'facebook_id':$scope.userProfile.facebook_id,
+          'status':'Completed'
+        }, function() {
+          angular.forEach(results, function(result) {
+            var data = JSON.parse(result.data);
+            switch($scope.personalBestsMap[result.event].format) {
+              case 'avg5':
+                $scope.personalBestsMap[result.event].single = Calculator.compareResults($scope.personalBestsMap[result.event].single, Calculator.calculateSingle(data.times, data.penalties));
+                $scope.personalBestsMap[result.event].average = Calculator.compareResults($scope.personalBestsMap[result.event].average, Calculator.calculateAverage(data.times, data.penalties));
+                break;
+              case 'mo3':
+              case 'bo3':
+                $scope.personalBestsMap[result.event].single = Calculator.compareResults($scope.personalBestsMap[result.event].single, Calculator.calculateSingle(data.times, data.penalties));
+                $scope.personalBestsMap[result.event].average = ((result.event == '555bf') || (result.event == '444bf')) ? '' : Calculator.compareResults($scope.personalBestsMap[result.event].average, Calculator.calculateMean(data.times, data.penalties));
+                break;
+              case 'fmc':
+                $scope.personalBestsMap[result.event].single = Calculator.compareResults($scope.personalBestsMap[result.event].single, Calculator.calculateFMCSingle(data.moves));
+                $scope.personalBestsMap[result.event].average = Calculator.compareResults($scope.personalBestsMap[result.event].average, Calculator.calculateFMCMean(data.moves));
+                break;
+              case 'mbld':
+                if (data.dnf != '(DNF)') {
+                  var mbldResult = Calculator.compareMBLDResults($scope.personalBestsMap[result.event].single, data);
+                  $scope.personalBestsMap[result.event].single = mbldResult.solved + '/' + mbldResult.attempted + ' in ' + mbldResult.time;
+                }
+                break;
             }
-            break;
-          case 'mo3':
-          case 'bo3':
-            result.best = Calculator.calculateSingle(data.times, data.penalties);
-            result.average = ((results[i].event == '555bf') || (results[i].event == '444bf')) ? '' : Calculator.calculateMean(data.times, data.penalties);
-            result.details = '';
-            formattedTimes = Calculator.formatTimes(data.times, data.penalties);
-            for (j = 0; j < data.times.length; j++) {
-              result.details += (j == data.times.length - 1) ? Calculator.reformatTime(formattedTimes[j]) : Calculator.reformatTime(formattedTimes[j]) + ', ';
+            if (!$scope.resultsByWeek[result.week]) {
+              $scope.resultsByWeek[result.week] = [];
             }
-            break;
-          case 'fmc':
-            result.best = Calculator.calculateFMCSingle(data.moves);
-            result.average = Calculator.calculateFMCMean(data.moves);
-            result.details = data.moves[0] + ', ' + data.moves[1] + ', ' + data.moves[2];
-            break;
-          case 'mbld':
-            result.best = data.solved + '/' + data.attempted + ' in ' + data.time;
-            result.details = result.best;
-            break;
-        }
-        $scope.resultsByWeek[results[i].week].push(result);
-        $scope.resultsByEvent[results[i].event].results.push(result);
-      }
-
-    });
+            if (!$scope.resultsByEvent[result.event]) {
+              $scope.resultsByEvent[result.event] = {'name':$scope.events[result.event].name, 'index':$scope.events[result.event].index, 'results':[]};
+            }
+            var res = {
+              'event':$scope.events[result.event].name,
+              'week':result.week,
+              'index':$scope.events[result.event].index
+            };
+            var formattedTimes;
+            switch($scope.events[result.event].format) {
+              case 'avg5':
+                res.best = Calculator.calculateSingle(data.times, data.penalties);
+                res.average = Calculator.calculateAverage(data.times, data.penalties);
+                res.details = '';
+                formattedTimes = Calculator.formatTimes(data.times, data.penalties);
+                angular.forEach(data.times, function(time, index) {
+                  res.details += (index == data.times.length - 1) ? Calculator.reformatTime(formattedTimes[index]) : Calculator.reformatTime(formattedTimes[index]) + ', ';
+                });
+                break;
+              case 'mo3':
+              case 'bo3':
+                res.best = Calculator.calculateSingle(data.times, data.penalties);
+                res.average = ((result.event == '555bf') || (result.event == '444bf')) ? '' : Calculator.calculateMean(data.times, data.penalties);
+                res.details = '';
+                formattedTimes = Calculator.formatTimes(data.times, data.penalties);
+                angular.forEach(data.times, function(time, index) {
+                  res.details += (index == data.times.length - 1) ? Calculator.reformatTime(formattedTimes[index]) : Calculator.reformatTime(formattedTimes[index]) + ', ';
+                });
+                break;
+              case 'fmc':
+                res.best = Calculator.calculateFMCSingle(data.moves);
+                res.average = Calculator.calculateFMCMean(data.moves);
+                res.details = data.moves[0] + ', ' + data.moves[1] + ', ' + data.moves[2];
+                break;
+              case 'mbld':
+                if (data.dnf == '(DNF)') {
+                  res.best = 'DNF';
+                  res.details = 'DNF';
+                } else {
+                  res.best = data.solved + '/' + data.attempted + ' in ' + data.time;
+                  res.details = res.best;
+                }
+                break;
+            }
+            $scope.resultsByWeek[result.week].push(res);
+            $scope.resultsByEvent[result.event].results.push(res);
+          });
+          angular.forEach($scope.personalBestsMap, function(event) {
+            if (event.single || event.average) {
+              $scope.personalBests.push({
+                name: event.name,
+                single: event.single,
+                average: (event.average == 'DNF') ? '' : event.average,
+                index: event.index
+              });
+            }
+          });
+        });
+      });
 
     $scope.displayWeek = function(week) {
       return week.substr(0, 2) + '-' + week.substr(2, 2) + '-20' + week.substr(4, 2);
@@ -419,7 +415,7 @@
 
   }
 
-  angular.module('nuCubingApp', ['ui.bootstrap']);
+  angular.module('nuCubingApp', ['ui.bootstrap', 'ngResource']);
 
   angular.module('nuCubingApp').filter('orderObjectBy', orderObjectBy);
 

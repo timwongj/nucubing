@@ -15,6 +15,7 @@
   <!-- Angular -->
   <script src="/bower_components/angular/angular.min.js"></script>
   <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+  <script src="/bower_components/angular-resource/angular-resource.min.js"></script>
   <!-- Local -->
   <link rel="stylesheet" type="text/css" href="/app/public/css/style.css">
   <script src="/app/public/components/profile/controller.js"></script>
@@ -43,8 +44,8 @@
         <li><a href="/links" tabindex="-1"><i class="fa fa-link"></i> Links</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li ng-show="authStatus == 'Logout'"><a href="/auth" tabindex="-1"><i class="fa fa-sign-out"></i> Logout</a></li>
-        <li ng-show="authStatus == 'Login'"><a href="/auth" tabindex="-1"><i class="fa fa-sign-in"></i> Login</a></li>
+        <li ng-show="user.facebook_id != null"><a href="/auth" tabindex="-1"><i class="fa fa-sign-out"></i> Logout</a></li>
+        <li ng-show="user.facebook_id == null"><a href="/auth" tabindex="-1"><i class="fa fa-sign-in"></i> Login</a></li>
       </ul>
     </div>
   </div>
@@ -52,8 +53,8 @@
 <div class="container">
   <div class="row">
     <div class="col-md-4 col-sm-6 text-center">
-      <h4 ng-bind="user.firstName + ' ' + user.lastName"></h4>
-      <img ng-src="http://graph.facebook.com/{{user.facebook_id}}/picture?width=250&height=250" class=" profilePic">
+      <h4 ng-bind="userProfile.firstName + ' ' + userProfile.lastName"></h4>
+      <img ng-src="http://graph.facebook.com/{{userProfile.facebook_id}}/picture?width=250&height=250" class=" profilePic">
     </div>
     <!-- Personal Bests -->
     <div class="col-md-8 col-sm-6">
@@ -121,7 +122,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr ng-repeat="result in results.results | orderBy:'-week'">
+          <tr ng-repeat="result in results.results | orderObjectBy:'-week'">
             <td style="width:30%;font-weight:bold;" class="td-profile" ng-bind="displayWeek(result.week)"></td>
             <td style="width:15%;" class="td-profile" ng-bind="result.best"></td>
             <td style="width:15%;" class="td-profile" ng-bind="result.average"></td>
