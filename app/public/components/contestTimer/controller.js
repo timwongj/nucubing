@@ -108,10 +108,7 @@
     };
 
     $scope.save = function() {
-      var data = {
-        times:[],
-        penalties:[]
-      };
+      var data = {times:[], penalties:[]};
       angular.forEach($scope.solves, function(solve, index) {
         data.times[index] = solve.time || '';
         data.penalties[index] = solve.penalty || '';
@@ -123,20 +120,17 @@
         'data':JSON.stringify(data)
       });
       result.$save(function() {
-        for (var i = 0; i < $scope.solves.length; i++) {
-          savedData.times[i] = $scope.solves[i].time || '';
-          savedData.penalties[i] = $scope.solves[i].penalty || '';
-          $scope.changed = false;
-        }
+        angular.forEach($scope.solves, function(solve, index) {
+          savedData.times[index] = solve.time || '';
+          savedData.penalties[index] = solve.penalty || '';
+        });
+        $scope.changed = false;
       });
     };
 
     $scope.submit = function() {
       if ($scope.valid) {
-        var data = {
-          times:[],
-          penalties:[]
-        };
+        var data = {times:[], penalties:[]};
         angular.forEach($scope.solves, function(solve, index) {
           data.times[index] = solve.time || '';
           data.penalties[index] = solve.penalty || '';
