@@ -2,24 +2,17 @@
 
   'use strict';
 
-  function UsersController($scope, $http) {
+  function UsersController($scope, $resource) {
 
-    // get authorization status
-    $http.get('/auth/status').success(function(response) {
-      $scope.authStatus = (response.status == 'connected') ? 'Logout' : 'Login';
-    });
+    var User = $resource('/api/user');
+    var Users = $resource('/api/users/:facebook_id');
 
-    $scope.users = [];
-
-    $http.get('/users/users/all').success(function(response) {
-      for (var i = 0; i < response.length; i++) {
-        $scope.users.push({name: response[i].firstName + ' ' + response[i].lastName, facebook_id: response[i].facebook_id});
-      }
-    });
+    $scope.user = User.get();
+    $scope.users = Users.query();
 
   }
 
-  angular.module('nuCubingApp', []);
+  angular.module('nuCubingApp', ['ngResource']);
 
   angular.module('nuCubingApp').controller('UsersController', UsersController);
 
