@@ -98,10 +98,10 @@
     $scope.back = function() {
       if ($scope.changed) {
         if (confirm('You have unsaved changes, are you sure you want to go back?')) {
-          window.location = '/contest';
+          window.location = '#/contest';
         }
       } else {
-        window.location = '/contest';
+        window.location = '#/contest';
       }
     };
 
@@ -144,13 +144,11 @@
       result.data.dnf = $scope.mbldResult.dnf;
       result.data = JSON.stringify(result.data);
       result.$save(function() {
-        window.location = '/contest';
+        window.location = '#/contest';
       });
     };
 
   }
-
-  angular.module('nuCubingApp', ['ui.bootstrap', 'ngResource']);
 
   angular.module('nuCubingApp').controller('ContestMbldController', ContestMbldController);
 

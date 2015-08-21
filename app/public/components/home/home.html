@@ -1,62 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-  <meta charset="UTF-8">
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="/bower_components/components-font-awesome/css/font-awesome.min.css">
-  <!-- jQuery -->
-  <script src="/bower_components/jquery/dist/jquery.min.js"></script>
-  <script src="/bower_components/jquery-ui/jquery-ui.min.js"></script>
-  <!-- Bootstrap JS -->
-  <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-  <!-- Angular -->
-  <script src="/bower_components/angular/angular.min.js"></script>
-  <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
-  <script src="/bower_components/angular-resource/angular-resource.min.js"></script>
-  <!-- Local -->
-  <link rel="stylesheet" type="text/css" href="/app/public/css/style.css">
-  <script src="/app/public/components/home/controller.js"></script>
-  <!-- Title -->
-  <link rel="shortcut icon" type="image/x-icon" href="/app/public/img/cubeLogo.png"/>
-  <title>NU Cubing - Home</title>
-</head>
-<body ng-app="nuCubingApp" ng-controller="HomeController">
-<div class="navbar navbar-default" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-    </div>
-    <div class="navbar-collapse collapse">
-      <ul class="nav navbar-nav navbar-left">
-        <li class="active"><a href="/" tabindex="-1"><i class="fa fa-home"></i> Home</a></li>
-        <li><a href="/profile" tabindex="-1"><i class="fa fa-user"></i> Profile</a></li>
-        <li><a href="/users" tabindex="-1"><i class="fa fa-users"></i> Users</a></li>
-        <li><a href="/contest" tabindex="-1"><i class="fa fa-cube"></i> Contest</a></li>
-        <li><a href="/results" tabindex="-1"><i class="fa fa-trophy"></i> Results</a></li>
-        <li><a href="/links" tabindex="-1"><i class="fa fa-link"></i> Links</a></li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <li ng-show="user.facebook_id != null"><a href="/auth" tabindex="-1"><i class="fa fa-sign-out"></i> Logout</a></li>
-        <li ng-show="user.facebook_id == null"><a href="/auth" tabindex="-1"><i class="fa fa-sign-in"></i> Login</a></li>
-      </ul>
-    </div>
-  </div>
+<div class="jumbotron">
+  <h1>Welcome to NU Cubing!</h1>
+  <p>Weekly meetings are Tuesday from 6pm - 7pm at Snell 033</p>
+  <p>Contact: NUCubers@gmail.com</p>
+  <p>Login to participate in the weekly contest</p>
 </div>
-<div class="container">
-  <div class="jumbotron">
-    <h1>Welcome to NU Cubing!</h1>
-    <p>Weekly meetings are Tuesday from 6pm - 7pm at Snell 033</p>
-    <p>Contact: NUCubers@gmail.com</p>
-    <p>Login to participate in the weekly contest</p>
-  </div>
-</div>
-</body>
-</html>

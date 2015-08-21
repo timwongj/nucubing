@@ -57,8 +57,6 @@
 
   }
 
-  angular.module('nuCubingApp', ['angularFileUpload', 'ngResource']);
-
   angular.module('nuCubingApp').controller('AdminController', AdminController);
 
 })();

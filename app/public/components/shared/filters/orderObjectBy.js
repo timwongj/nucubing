@@ -1,17 +1,21 @@
-module.exports = (function() {
+(function() {
 
-  return function(items, field) {
+  function OrderObjectByFilter() {
 
-    var filtered = [];
-    angular.forEach(items, function(item, key) {
-      item.key = key;
-      filtered.push(item);
-    });
-    filtered.sort(function (a, b) {
-      return (a[field] > b[field] ? 1 : -1);
-    });
-    return filtered;
+    return function(items, field) {
+      var filtered = [];
+      angular.forEach(items, function(item, key) {
+        item.key = key;
+        filtered.push(item);
+      });
+      filtered.sort(function (a, b) {
+        return (a[field] > b[field] ? 1 : -1);
+      });
+      return filtered;
+    };
 
-  };
+  }
+
+  angular.module('nuCubingApp').filter('orderObjectBy', OrderObjectByFilter);
 
 })();
