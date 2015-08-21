@@ -14,14 +14,14 @@ module.exports = (function() {
       res.redirect('/');
     }
     else
-      res.sendfile('./app/public/components/login/login.html');
+      res.redirect('/auth/facebook');
   });
 
   // facebook authentication route
   router.get('/facebook', passport.authenticate('facebook', { scope: ['email', 'public_profile'] }));
 
   // facebook callback route
-  router.get('/facebook/callback', passport.authenticate('facebook', { successRedirect: '/profile', failureRedirect: '/auth' }));
+  router.get('/facebook/callback', passport.authenticate('facebook', { successRedirect: '/#/profile', failureRedirect: '/auth' }));
 
   return router;
 

@@ -12,8 +12,6 @@
 
   }
 
-  angular.module('nuCubingApp', ['ngResource']);
-
   angular.module('nuCubingApp').controller('UsersController', UsersController);
 
 })();

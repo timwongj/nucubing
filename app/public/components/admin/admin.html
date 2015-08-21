@@ -1,147 +1,89 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-  <meta charset="UTF-8">
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="/bower_components/components-font-awesome/css/font-awesome.min.css">
-  <!-- jQuery -->
-  <script src="/bower_components/jquery/dist/jquery.min.js"></script>
-  <script src="/bower_components/jquery-ui/jquery-ui.min.js"></script>
-  <!-- Bootstrap JS -->
-  <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-  <!-- Angular -->
-  <script src="/bower_components/angular/angular.min.js"></script>
-  <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
-  <script src="/bower_components/angular-resource/angular-resource.min.js"></script>
-  <!-- Angular File Upload -->
-  <script src="/bower_components/angular-file-upload/dist/angular-file-upload.min.js"></script>
-  <!-- Local -->
-  <link rel="stylesheet" type="text/css" href="/app/public/css/style.css">
-  <script src="/app/public/components/admin/controller.js"></script>
-  <!-- Title -->
-  <link rel="shortcut icon" type="image/x-icon" href="/app/public/img/cubeLogo.png"/>
-  <title>NU Cubing - Home</title>
-</head>
-<body ng-app="nuCubingApp" ng-controller="AdminController">
-<div class="navbar navbar-default" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-    </div>
-    <div class="navbar-collapse collapse">
-      <ul class="nav navbar-nav navbar-left">
-        <li><a href="/" tabindex="-1"><i class="fa fa-home"></i> Home</a></li>
-        <li><a href="/profile" tabindex="-1"><i class="fa fa-user"></i> Profile</a></li>
-        <li><a href="/users" tabindex="-1"><i class="fa fa-users"></i> Users</a></li>
-        <li><a href="/contest" tabindex="-1"><i class="fa fa-cube"></i> Contest</a></li>
-        <li><a href="/results" tabindex="-1"><i class="fa fa-trophy"></i> Results</a></li>
-        <li><a href="/links" tabindex="-1"><i class="fa fa-link"></i> Links</a></li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <li ng-show="user.facebook_id != null"><a href="/auth" tabindex="-1"><i class="fa fa-sign-out"></i> Logout</a></li>
-        <li ng-show="user.facebook_id == null"><a href="/auth" tabindex="-1"><i class="fa fa-sign-in"></i> Login</a></li>
-      </ul>
-    </div>
-  </div>
-</div>
-<div class="container">
-  <div class="row">
-    <div class="col-md-3">
-      <h3>Upload Scrambles</h3>
-      <p>Format: NU_CUBING_MM-DD-YYYY.json</p>
+<div class="row">
+  <div class="col-md-3">
+    <h3>Upload Scrambles</h3>
+    <p>Format: NU_CUBING_MM-DD-YYYY.json</p>
       <div ng-show="uploader.isHTML5">
         <div class="well my-drop-zone" nv-file-over accept=".json" uploader="uploader">
           drag and drop files
         </div>
       </div>
       <input type="file" nv-file-select accept=".json" uploader="uploader" multiple>
-    </div>
-    <div class="col-md-9" style="margin-bottom: 40px">
-      <h3>Upload queue</h3>
-      <p>Queue length: {{ uploader.queue.length }}</p>
-      <table class="table">
-        <thead>
-        <tr>
-          <th width="50%">Name</th>
-          <th ng-show="uploader.isHTML5">Size</th>
-          <th ng-show="uploader.isHTML5">Progress</th>
-          <th>Status</th>
-          <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr ng-repeat="item in uploader.queue">
-          <td><strong>{{ item.file.name }}</strong></td>
-          <td ng-show="uploader.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
-          <td ng-show="uploader.isHTML5">
-            <div class="progress" style="margin-bottom: 0;">
-              <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
-            </div>
-          </td>
-          <td class="text-center">
-            <span ng-show="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span>
-            <span ng-show="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
-            <span ng-show="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
-          </td>
-          <td nowrap>
-            <button type="button" class="btn btn-success btn-xs" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
-              <span class="glyphicon glyphicon-upload"></span> Upload
-            </button>
-            <button type="button" class="btn btn-warning btn-xs" ng-click="item.cancel()" ng-disabled="!item.isUploading">
-              <span class="glyphicon glyphicon-ban-circle"></span> Cancel
-            </button>
-            <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
-              <span class="glyphicon glyphicon-trash"></span> Remove
-            </button>
-          </td>
-        </tr>
-        </tbody>
-      </table>
-      <div>
-        <div>
-          Queue progress:
-          <div class="progress" style="">
-            <div class="progress-bar" role="progressbar" ng-style="{ 'width': uploader.progress + '%' }"></div>
+  </div>
+  <div class="col-md-9" style="margin-bottom: 40px">
+    <h3>Upload queue</h3>
+    <p>Queue length: {{ uploader.queue.length }}</p>
+    <table class="table">
+      <thead>
+      <tr>
+        <th width="50%">Name</th>
+        <th ng-show="uploader.isHTML5">Size</th>
+        <th ng-show="uploader.isHTML5">Progress</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="item in uploader.queue">
+        <td><strong>{{ item.file.name }}</strong></td>
+        <td ng-show="uploader.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
+        <td ng-show="uploader.isHTML5">
+          <div class="progress" style="margin-bottom: 0;">
+            <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
           </div>
+        </td>
+        <td class="text-center">
+          <span ng-show="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span>
+          <span ng-show="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
+          <span ng-show="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
+        </td>
+        <td nowrap>
+          <button type="button" class="btn btn-success btn-xs" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
+            <span class="glyphicon glyphicon-upload"></span> Upload
+          </button>
+          <button type="button" class="btn btn-warning btn-xs" ng-click="item.cancel()" ng-disabled="!item.isUploading">
+            <span class="glyphicon glyphicon-ban-circle"></span> Cancel
+          </button>
+          <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
+            <span class="glyphicon glyphicon-trash"></span> Remove
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <div>
+      <div>
+        Queue progress:
+        <div class="progress" style="">
+          <div class="progress-bar" role="progressbar" ng-style="{ 'width': uploader.progress + '%' }"></div>
         </div>
-        <button type="button" class="btn btn-success btn-s" ng-click="uploader.uploadAll()" ng-disabled="!uploader.getNotUploadedItems().length">
-          <span class="glyphicon glyphicon-upload"></span> Upload all
-        </button>
-        <button type="button" class="btn btn-warning btn-s" ng-click="uploader.cancelAll()" ng-disabled="!uploader.isUploading">
-          <span class="glyphicon glyphicon-ban-circle"></span> Cancel all
-        </button>
-        <button type="button" class="btn btn-danger btn-s" ng-click="uploader.clearQueue()" ng-disabled="!uploader.queue.length">
-          <span class="glyphicon glyphicon-trash"></span> Remove all
-        </button>
       </div>
-    </div>
-    <div class="col-xs-12">
-      <table class="table table-condensed">
-        <thead>
-        <tr>
-          <th>Week</th>
-          <th>Event</th>
-          <th>Date Uploaded</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr ng-repeat="scramble in scrambles | orderBy:['-week', 'index']">
-          <td ng-bind="displayWeek(scramble.week)"></td>
-          <td ng-bind="displayEvent(scramble.event)"></td>
-          <td ng-bind="scramble.dateUploaded"></td>
-        </tr>
-        </tbody>
-      </table>
+      <button type="button" class="btn btn-success btn-s" ng-click="uploader.uploadAll()" ng-disabled="!uploader.getNotUploadedItems().length">
+        <span class="glyphicon glyphicon-upload"></span> Upload all
+      </button>
+      <button type="button" class="btn btn-warning btn-s" ng-click="uploader.cancelAll()" ng-disabled="!uploader.isUploading">
+        <span class="glyphicon glyphicon-ban-circle"></span> Cancel all
+      </button>
+      <button type="button" class="btn btn-danger btn-s" ng-click="uploader.clearQueue()" ng-disabled="!uploader.queue.length">
+        <span class="glyphicon glyphicon-trash"></span> Remove all
+      </button>
     </div>
   </div>
+  <div class="col-xs-12">
+    <table class="table table-condensed">
+      <thead>
+      <tr>
+        <th>Week</th>
+        <th>Event</th>
+        <th>Date Uploaded</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="scramble in scrambles | orderBy:['-week', 'index']">
+        <td ng-bind="displayWeek(scramble.week)"></td>
+        <td ng-bind="displayEvent(scramble.event)"></td>
+        <td ng-bind="scramble.dateUploaded"></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
-</body>
-</html>
