@@ -26,7 +26,6 @@
 
   var app = express();
 
-  // configuration
   app.use(morgan('dev'));
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({extended: true}));
@@ -45,11 +44,7 @@
   app.use(passport.initialize());
   app.use(passport.session());
 
-  // render static files
-  app.use('/public', express.static(__dirname + '/app/public'));
-
-  // render client side dependencies
-  app.use('/bower_components',  express.static(__dirname + '/bower_components'));
+  app.use('/dist', express.static(__dirname + '/dist'));
 
   app.use('/auth', authRouter);
   app.use('/results', resultsRouter);
@@ -58,7 +53,6 @@
   app.use('/users', usersRouter);
   app.use('/weeks', weeksRouter);
 
-  // passport
   passport.serializeUser(function(user, done) {
     done(null, user);
   });
@@ -67,15 +61,12 @@
     done(null, user);
   });
 
-  // connect to mongoDB
   mongoose.connect(config.get('mongo.connectionString'));
 
-  // render home page
   app.get('/', function(req, res) {
-    res.sendfile('./app/public/nucubing.html');
+    res.sendfile('./dist/nuCubing.html');
   });
 
-  //app.listen(port, ip);
   app.listen(config.get('node.port'), config.get('node.ip'));
 
 })();

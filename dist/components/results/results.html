@@ -1,0 +1,44 @@
+<div class="page-header">
+  <h2 class="page-title">Results</h2>
+</div>
+<form class="form-inline">
+  <div class="form-group">
+    <label>Event:</label>
+    <select ng-model="selectedEvent" class="form-control" ng-options="displayEvent(event) for event in eventsList"></select>
+  </div>
+  <div class="form-group">
+    <label>Week:</label>
+    <select ng-model="selectedWeek" class="form-control" ng-options="displayWeek(week) for week in weeksList"></select>
+  </div>
+</form>
+<br>
+<div class="row">
+  <div class="col-xs-12" ng-repeat="section in displayedResults | orderBy:['-week', 'index']">
+    <h4>
+      <span class="label label-primary" ng-bind="displayWeek(section.week)" ng-show="selectedWeek == 'All Weeks'"></span>
+      <span class="label label-warning" ng-bind="displayEvent(section.event)" ng-show="selectedEvent == 'All Events'"></span>
+    </h4>
+    <div class="table table-responsive table-results">
+      <table class="table table-condensed table-striped">
+        <thead>
+        <tr>
+          <th style="width:5%;padding-bottom:1px;">Rank</th>
+          <th style="width:25%;padding-bottom:1px;">Name</th>
+          <th style="width:15%;padding-bottom:1px;">Best</th>
+          <th style="width:15%;padding-bottom:1px;">Average</th>
+          <th style="width:40%;padding-bottom:1px;">Details</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="result in section.results | orderBy:'raw'">
+          <td style="width:5%;" class="td-results" ng-bind="$index + 1"></td>
+          <td style="width:25%;padding-top:3px;padding-bottom:3px;"><a href="users/{{result.facebook_id}}" ng-bind="result.name"></a></td>
+          <td style="width:15%;" class="td-results" ng-bind="result.best"></td>
+          <td style="width:15%;" class="td-results" ng-bind="result.average"></td>
+          <td style="width:40%;" class="td-results" ng-bind="result.details"></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

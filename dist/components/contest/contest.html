@@ -1,0 +1,19 @@
+<div class="page-header">
+  <h2 class="page-title">Contest</h2>
+</div>
+<div class="row">
+  <div class="col-md-3 col-sm-6" ng-repeat="event in events | orderObjectBy:'index'">
+    <div class="panel panel-default">
+      <div class="panel-heading text-center">
+        <h1 class="panel-title" ng-bind="event.name"></h1>
+      </div>
+      <div class="panel-body text-center">
+        <h1 class="panel-title" ng-bind="event.result"></h1>
+      </div>
+      <div class="panel-footer text-center">
+        <button class="btn btn-info btn-sm" ng-click="entry(event.key)" ng-disabled="(event.result != 'Not Completed') && (event.result != 'In Progress')"><i class="fa fa-pencil"> Entry</i></button>
+        <button class="btn btn-warning btn-sm" ng-click="timer(event.key)" ng-disabled="(event.result != 'Not Completed') && (event.result != 'In Progress')" ng-show="(event.key != '333fm') && (event.key != '333mbf')"><i class="fa fa-clock-o"> Timer</i></button>
+      </div>
+    </div>
+  </div>
+</div>

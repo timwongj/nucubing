@@ -2,14 +2,43 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
 
-    jshint: {
-      files: ['Gruntfile.js', 'server.js', 'app/**/*.js', '!app/public/dist/**/*.js']
-    },
     watch: {
       files: ['<%= jshint.files %>'],
       tasks: ['jshint', 'copy', 'concat', 'uglify']
     },
+    jshint: {
+      files: ['Gruntfile.js', 'server.js', 'app/**/*.js', '!app/public/dist/**/*.js']
+    },
+    clean: {
+      dist: ['dist']
+    },
     copy: {
+      components: {
+        files: [
+          {
+            expand: true,
+            cwd: 'app/public',
+            src: ['nuCubing.html'],
+            dest: 'dist/'
+          },
+          {
+            expand: true,
+            cwd: 'app/public/components',
+            src: ['**/*.html'],
+            dest: 'dist/components/'
+          }
+        ]
+      },
+      images: {
+        files: [
+          {
+            expand: true,
+            cwd: 'app/public/img',
+            src: ['**/*'],
+            dest: 'dist/img/'
+          }
+        ]
+      },
       libraries: {
         files: [
           {
@@ -17,13 +46,13 @@ module.exports = function(grunt) {
             dot: true,
             cwd: 'bower_components/bootstrap/dist',
             src: ['fonts/*.*'],
-            dest: 'app/public/dist/'
+            dest: 'dist/'
           },
           {
             expand: true,
             cwd: 'bower_components/components-font-awesome/fonts/',
             src: ['**/*'],
-            dest: 'app/public/dist/fonts/'
+            dest: 'dist/fonts/'
           }
         ]
       }
@@ -46,7 +75,7 @@ module.exports = function(grunt) {
           'app/public/components/results/controller.js',
           'app/public/components/admin/controller.js'
         ],
-        dest: 'app/public/dist/js/nuCubing.js'
+        dest: 'dist/js/nuCubing.js'
       },
       libJs: {
         src: [
@@ -59,13 +88,13 @@ module.exports = function(grunt) {
           'bower_components/angular-resource/angular-resource.min.js',
           'bower_components/angular-file-upload/dist/angular-file-upload.min.js'
         ],
-        dest: 'app/public/dist/js/lib.min.js'
+        dest: 'dist/js/lib.min.js'
       },
       nuCubingCss: {
         src: [
           'app/public/css/style.css'
         ],
-        dest: 'app/public/dist/css/nuCubing.css'
+        dest: 'dist/css/nuCubing.css'
 
       },
       libCss: {
@@ -74,29 +103,46 @@ module.exports = function(grunt) {
           'bower_components/bootstrap/dist/css/bootstrap-theme.min.css',
           'bower_components/components-font-awesome/css/font-awesome.min.css'
         ],
-        dest: 'app/public/dist/css/lib.css'
+        dest: 'dist/css/lib.css'
       }
     },
     uglify: {
       my_target: {
         files: {
-          'app/public/dist/js/nuCubing.min.js': ['app/public/dist/js/nuCubing.js']
+          'dist/js/nuCubing.min.js': ['dist/js/nuCubing.js']
+        }
+      }
+    },
+    karma: {
+      unit: {
+        options: {
+          frameworks: ['jasmine'],
+          singleRun: true,
+          browsers: ['PhantomJS'],
+          files: [
+            'bower_components/angular/angular.js',
+            'bower_components/angular-mocks/angular-mocks.js',
+            'app/public/**/*.js'
+          ]
         }
       }
     }
 
   });
 
-  grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
 
-  grunt.registerTask('default', ['jshint', 'copy', 'concat', 'uglify', 'watch']);
+  grunt.loadNpmTasks('grunt-karma');
 
-  grunt.registerTask('dev', ['jshint', 'copy', 'concat', 'uglify', 'watch']);
-  grunt.registerTask('prod', ['copy', 'concat', 'uglify']);
+  grunt.registerTask('default', ['jshint', 'clean', 'copy', 'concat', 'uglify', 'watch']);
+
+  grunt.registerTask('dev', ['jshint', 'clean', 'copy', 'concat', 'uglify', 'watch']);
+  grunt.registerTask('prod', ['clean', 'copy', 'concat', 'uglify']);
 
 
 };

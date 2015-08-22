@@ -1,0 +1,11 @@
+<div class="page-header">
+  <h2 class="page-title">Users</h2>
+</div>
+<div class="row">
+  <div class="col-md-3 col-sm-6 user" ng-repeat="user in users | orderBy:'displayName'">
+    <a href="#/users/{{user.facebook_id}}">
+      <img ng-src="http://graph.facebook.com/{{user.facebook_id}}/picture?width=50&height=50" class="img-responsive">
+      <h4 ng-bind="user.displayName"></h4>
+    </a>
+  </div>
+</div>
