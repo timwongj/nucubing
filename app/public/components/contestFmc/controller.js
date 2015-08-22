@@ -123,6 +123,6 @@
 
   }
 
-  angular.module('nuCubingApp').controller('ContestFmcController', ContestFmcController);
+  angular.module('nuCubingApp').controller('ContestFmcController', ['$scope', '$resource', '$q', ContestFmcController]);
 
 })();

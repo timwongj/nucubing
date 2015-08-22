@@ -38,6 +38,6 @@
 
   }
 
-  angular.module('nuCubingApp').controller('AdminController', AdminController);
+  angular.module('nuCubingApp').controller('AdminController', ['$scope', '$resource', 'Events', 'FileUploader', AdminController]);
 
 })();

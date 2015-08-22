@@ -150,6 +150,6 @@
 
   }
 
-  angular.module('nuCubingApp').controller('ContestMbldController', ContestMbldController);
+  angular.module('nuCubingApp').controller('ContestMbldController', ['$scope', '$resource', '$q', ContestMbldController]);
 
 })();

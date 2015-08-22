@@ -131,6 +131,6 @@
 
   }
 
-  angular.module('nuCubingApp').controller('ProfileController', ProfileController);
+  angular.module('nuCubingApp').controller('ProfileController', ['$scope', '$resource', '$routeParams', 'Events', 'Calculator', ProfileController]);
 
 })();

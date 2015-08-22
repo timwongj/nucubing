@@ -134,6 +134,6 @@
 
   }
 
-  angular.module('nuCubingApp').controller('ResultsController', ResultsController);
+  angular.module('nuCubingApp').controller('ResultsController', ['$scope', '$resource', 'Calculator', 'Events', ResultsController]);
 
 })();

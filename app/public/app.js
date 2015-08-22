@@ -64,6 +64,6 @@
 
   angular.module('nuCubingApp', ['ui.bootstrap', 'ngRoute', 'ngResource', 'angularFileUpload']);
 
-  angular.module('nuCubingApp').config(Config).run(Run);
+  angular.module('nuCubingApp').config(['$routeProvider', Config]).run(['$rootScope','$resource', Run]);
 
 })();

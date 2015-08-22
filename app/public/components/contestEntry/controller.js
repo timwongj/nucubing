@@ -123,6 +123,6 @@
 
   }
 
-  angular.module('nuCubingApp').controller('ContestEntryController', ContestEntryController);
+  angular.module('nuCubingApp').controller('ContestEntryController', ['$scope', '$resource', '$q', '$routeParams', 'Events', ContestEntryController]);
 
 })();

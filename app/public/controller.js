@@ -16,6 +16,6 @@
 
   }
 
-  angular.module('nuCubingApp').controller('NuCubingController', NuCubingController);
+  angular.module('nuCubingApp').controller('NuCubingController', ['$scope', '$rootScope', NuCubingController]);
 
 })();

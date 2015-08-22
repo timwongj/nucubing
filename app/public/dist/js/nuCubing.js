@@ -64,7 +64,7 @@
 
   angular.module('nuCubingApp', ['ui.bootstrap', 'ngRoute', 'ngResource', 'angularFileUpload']);
 
-  angular.module('nuCubingApp').config(Config).run(Run);
+  angular.module('nuCubingApp').config(['$routeProvider', Config]).run(['$rootScope','$resource', Run]);
 
 })();
 (function() {
@@ -440,7 +440,7 @@
 
   }
 
-  angular.module('nuCubingApp').factory('Calculator', Calculator);
+  angular.module('nuCubingApp').factory('Calculator', ['Events', Calculator]);
 
 })();
 
@@ -462,7 +462,7 @@
 
   }
 
-  angular.module('nuCubingApp').controller('NuCubingController', NuCubingController);
+  angular.module('nuCubingApp').controller('NuCubingController', ['$scope', '$rootScope', NuCubingController]);
 
 })();
 (function() {
@@ -598,7 +598,7 @@
 
   }
 
-  angular.module('nuCubingApp').controller('ProfileController', ProfileController);
+  angular.module('nuCubingApp').controller('ProfileController', ['$scope', '$resource', '$routeParams', 'Events', 'Calculator', ProfileController]);
 
 })();
 
@@ -616,7 +616,7 @@
 
   }
 
-  angular.module('nuCubingApp').controller('UsersController', UsersController);
+  angular.module('nuCubingApp').controller('UsersController', ['$scope', '$resource', UsersController]);
 
 })();
 
@@ -688,7 +688,7 @@
     };
   }
 
-  angular.module('nuCubingApp').controller('ContestController', ContestController);
+  angular.module('nuCubingApp').controller('ContestController', ['$scope', '$resource', '$q', 'Events', 'Calculator', ContestController]);
 
 })();
 
@@ -817,7 +817,7 @@
 
   }
 
-  angular.module('nuCubingApp').controller('ContestEntryController', ContestEntryController);
+  angular.module('nuCubingApp').controller('ContestEntryController', ['$scope', '$resource', '$q', '$routeParams', 'Events', ContestEntryController]);
 
 })();
 
@@ -1053,7 +1053,7 @@
 
   }
 
-  angular.module('nuCubingApp').controller('ContestTimerController', ContestTimerController);
+  angular.module('nuCubingApp').controller('ContestTimerController', ['$scope', '$resource', '$q', '$routeParams', '$interval', 'Events', 'Calculator', ContestTimerController]);
 
 })();
 
@@ -1183,7 +1183,7 @@
 
   }
 
-  angular.module('nuCubingApp').controller('ContestFmcController', ContestFmcController);
+  angular.module('nuCubingApp').controller('ContestFmcController', ['$scope', '$resource', '$q', ContestFmcController]);
 
 })();
 
@@ -1339,7 +1339,7 @@
 
   }
 
-  angular.module('nuCubingApp').controller('ContestMbldController', ContestMbldController);
+  angular.module('nuCubingApp').controller('ContestMbldController', ['$scope', '$resource', '$q', ContestMbldController]);
 
 })();
 
@@ -1479,7 +1479,7 @@
 
   }
 
-  angular.module('nuCubingApp').controller('ResultsController', ResultsController);
+  angular.module('nuCubingApp').controller('ResultsController', ['$scope', '$resource', 'Calculator', 'Events', ResultsController]);
 
 })();
 
@@ -1523,6 +1523,6 @@
 
   }
 
-  angular.module('nuCubingApp').controller('AdminController', AdminController);
+  angular.module('nuCubingApp').controller('AdminController', ['$scope', '$resource', 'Events', 'FileUploader', AdminController]);
 
 })();

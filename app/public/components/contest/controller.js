@@ -66,6 +66,6 @@
     };
   }
 
-  angular.module('nuCubingApp').controller('ContestController', ContestController);
+  angular.module('nuCubingApp').controller('ContestController', ['$scope', '$resource', '$q', 'Events', 'Calculator', ContestController]);
 
 })();

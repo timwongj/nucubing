@@ -317,6 +317,6 @@
 
   }
 
-  angular.module('nuCubingApp').factory('Calculator', Calculator);
+  angular.module('nuCubingApp').factory('Calculator', ['Events', Calculator]);
 
 })();

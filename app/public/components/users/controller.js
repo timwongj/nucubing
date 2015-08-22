@@ -12,6 +12,6 @@
 
   }
 
-  angular.module('nuCubingApp').controller('UsersController', UsersController);
+  angular.module('nuCubingApp').controller('UsersController', ['$scope', '$resource', UsersController]);
 
 })();
