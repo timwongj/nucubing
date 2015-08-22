@@ -1,0 +1,151 @@
+.navbar, .navbar-inverse {
+  border-radius:0px;
+  min-height:40px;
+}
+
+.navbar-collapse {
+  padding:0px;
+}
+
+.navbar-collapse ul li a {
+  padding-top:10px;
+  padding-bottom:10px;
+  padding-left:15px;
+  padding-right:15px;
+}
+
+ul.nav.nav-tabs {
+  margin-bottom:10px;
+}
+
+.vertical-middle {
+  vertical-align: middle;
+}
+
+.page-header {
+  margin-top:0px;
+  padding:0px;
+}
+
+.page-title {
+  margin-top:10px;
+}
+
+.jumbotronLogin {
+  padding-top:20px;
+  padding-bottom:40px;
+  padding-left:30px;
+  padding-right:30px;
+}
+
+.panelBodyProfile {
+  padding:0px;
+}
+
+.profilePic {
+  margin-bottom:20px;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+.table-responsive {
+  border:0px;
+}
+
+td.td-profile.ng-binding, td.td-results.ng-binding {
+  font-size:10pt;
+  padding-top:3px;
+  padding-bottom:3px;
+}
+
+.scramble {
+  margin:0px;
+  padding-top:5px;
+  padding-bottom:5px;
+  word-break:keep-all;
+}
+
+.solve-input-addon {
+  height:25px;
+}
+
+.solve-input {
+  -webkit-transition:all linear 0.5s;
+  transition:all linear 0.5s;
+  height:30px;
+}
+
+.solve-input.ng-invalid {
+  background:#FFCCCC;
+}
+
+.solve-input.ng-valid {
+  background:#BFFFBF;
+}
+
+.result-row {
+  margin-top:5px;
+  margin-bottom:5px;
+}
+
+.result {
+  height:30px;
+  margin-bottom:0px;
+  padding-top:5px;
+  padding-bottom:5px;
+}
+
+.timer-scramble {
+  font-size:16pt;
+}
+
+.timer-display {
+  font-size:96pt;
+}
+
+.timer-results-penalties {
+  width:150px;
+}
+
+.mbld-scramble {
+  margin-top:5px;
+  margin-bottom:5px;
+  margin-left:0px;
+  margin-right:0px;
+  padding-top:5px;
+  padding-bottom:5px;
+}
+
+.divider {
+  margin-top:0px;
+  margin-bottom:10px;
+  margin-left:15px;
+  margin-right:15px;
+}
+
+.btn-right {
+  margin-right:15px;
+}
+
+select {
+  margin-left:5px;
+  margin-right:5px;
+}
+
+.my-drop-zone {
+  border:dotted 3px lightgray;
+}
+
+.nv-file-over {
+  border:dotted 3px red;
+}
+
+.user a {
+  text-decoration:none;
+}
+
+.user a img, .user a h4 {
+  display:inline-block;
+  vertical-align:middle;
+  padding:5px;
+}
