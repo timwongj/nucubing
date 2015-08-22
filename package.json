@@ -60,9 +60,6 @@
     "nodemon": "^1.4.1"
   },
   "bundleDependencies": [],
-  "scripts": {
-    "postinstall": "if [ -d \"$OPENSHIFT_REPO_DIR\" ]; then (export HOME=\"$OPENSHIFT_REPO_DIR\"/..; bower install) else (bower install) fi"
-  },
   "private": true,
   "main": "server.js"
 }

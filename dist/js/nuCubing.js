@@ -88,6 +88,7 @@
   angular.module('nuCubingApp').filter('orderObjectBy', OrderObjectByFilter);
 
 })();
+
 (function() {
 
   'use strict';
@@ -1056,7 +1057,6 @@
   angular.module('nuCubingApp').controller('ContestTimerController', ['$scope', '$resource', '$q', '$routeParams', '$interval', 'Events', 'Calculator', ContestTimerController]);
 
 })();
-
 
 (function() {
 

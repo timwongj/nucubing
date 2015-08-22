@@ -120,9 +120,17 @@ module.exports = function(grunt) {
           singleRun: true,
           browsers: ['PhantomJS'],
           files: [
-            'bower_components/angular/angular.js',
+            'bower_components/jquery/dist/jquery.min.js',
+            'bower_components/jquery-ui/jquery-ui.min.js',
+            'bower_components/bootstrap/dist/js/bootstrap.min.js',
+            'bower_components/angular/angular.min.js',
+            'bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js',
+            'bower_components/angular-route/angular-route.min.js',
+            'bower_components/angular-resource/angular-resource.min.js',
+            'bower_components/angular-file-upload/dist/angular-file-upload.min.js',
             'bower_components/angular-mocks/angular-mocks.js',
-            'app/public/**/*.js'
+            'app/public/**/*.js',
+            'test/spec/client/**/*.spec.js'
           ]
         }
       }
@@ -132,17 +140,13 @@ module.exports = function(grunt) {
 
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-karma');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
 
-  grunt.loadNpmTasks('grunt-karma');
-
-  grunt.registerTask('default', ['jshint', 'clean', 'copy', 'concat', 'uglify', 'watch']);
-
-  grunt.registerTask('dev', ['jshint', 'clean', 'copy', 'concat', 'uglify', 'watch']);
+  grunt.registerTask('default', ['jshint', 'karma', 'clean', 'copy', 'concat', 'uglify', 'watch']);
   grunt.registerTask('prod', ['clean', 'copy', 'concat', 'uglify']);
-
 
 };

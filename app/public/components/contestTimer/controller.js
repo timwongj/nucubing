@@ -233,4 +233,3 @@
   angular.module('nuCubingApp').controller('ContestTimerController', ['$scope', '$resource', '$q', '$routeParams', '$interval', 'Events', 'Calculator', ContestTimerController]);
 
 })();
-
