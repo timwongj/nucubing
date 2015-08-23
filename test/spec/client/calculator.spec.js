@@ -13,20 +13,42 @@
 
     describe('convertResults', function() {
 
-      it('should return an empty array given an empty array', function() {
-        var results = [];
+      it('should convert results to displayable format', function() {
+        var results = [
+          {
+            event: '333',
+            facebook_id: '1056354001045640',
+            firstName: 'Tim',
+            lastName: 'Wong',
+            status: 'Completed',
+            week: '082315',
+            data:'{"times":["10.69","11.68","9.48","12.84","6.25"],"penalties":["","","","(DNF)","(+2)"]}'
+          }
+        ];
         var convertedResults = Calculator.convertResults(results);
-        expect(results).toEqual(convertedResults);
+        expect(convertedResults[0].average).toEqual('10.62');
+        expect(convertedResults[0].best).toEqual('8.25');
+        expect(convertedResults[0].details).toEqual('10.69, 11.68, 9.48, DNF, 8.25');
+        expect(convertedResults[0].event).toEqual(results[0].event);
+        expect(convertedResults[0].week).toEqual(results[0].week);
+        expect(convertedResults[0].raw).toEqual(10.62);
+        expect(convertedResults[0].index).toEqual(0);
       });
 
     });
 
     describe('compareResults', function() {
 
-      it ('should return a DNF given two DNFs', function() {
-        var res1 = 'DNF', res2 = 'DNF';
+      it ('should return the faster result', function() {
+        var res1 = '6.25', res2 = '6.44';
         var result = Calculator.compareResults(res1, res2);
-        expect(result).toEqual('DNF');
+        expect(result).toEqual('6.25');
+      });
+
+      it ('should return the faster result', function() {
+        var res1 = '1:09.69', res2 = '4.20';
+        var result = Calculator.compareResults(res1, res2);
+        expect(result).toEqual('4.20');
       });
 
     });

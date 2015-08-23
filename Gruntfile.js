@@ -3,11 +3,11 @@ module.exports = function(grunt) {
   grunt.initConfig({
 
     watch: {
-      files: ['<%= jshint.files %>'],
+      files: ['app/**/*', 'test/**/*', 'config/**/*'],
       tasks: ['jshint', 'copy', 'concat', 'uglify']
     },
     jshint: {
-      files: ['Gruntfile.js', 'server.js', 'app/**/*.js', '!app/public/dist/**/*.js']
+      files: ['Gruntfile.js', 'server.js', 'app/**/*.js', '!app/public/dist/**/*.js', 'test/**/*.js']
     },
     clean: {
       dist: ['dist']
@@ -18,14 +18,8 @@ module.exports = function(grunt) {
           {
             expand: true,
             cwd: 'app/public',
-            src: ['nuCubing.html'],
-            dest: 'dist/'
-          },
-          {
-            expand: true,
-            cwd: 'app/public/components',
             src: ['**/*.html'],
-            dest: 'dist/components/'
+            dest: 'dist/'
           }
         ]
       },

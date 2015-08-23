@@ -119,7 +119,7 @@
             'results':convertedResults,
             'index':($scope.events[event]) ? $scope.events[event].index : 0
           };
-          $scope.displayedResults = [section];
+          $scope.displayedResults = (results[0]) ? [section] : [];
         });
       }
     }
