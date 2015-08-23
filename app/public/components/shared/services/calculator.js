@@ -8,8 +8,8 @@
 
       /**
        * Converts raw results to displayable results
-       * @param results
-       * @returns {Array}
+       * @param {[Object]} results
+       * @returns {[Object]} convertedResults
        */
       convertResults: function(results) {
         var res, formattedTimes, convertedResults = [];
@@ -285,10 +285,10 @@
           return 'DNF';
         }
         if (parseFloat(time) <  60) {
-          return (Math.floor(Number(time) * 100) / 100).toString();
+          return (Math.floor(Number(time) * 100) / 100).toFixed(2).toString();
         } else {
-          var min = Math.floor(parseFloat(time) / 60);
-          var sec = (Math.floor((Number(time) * 100) % 6000) / 100);
+          var min = Math.floor(parseFloat(time) / 60).toString();
+          var sec = (Math.floor((Number(time) * 100) % 6000) / 100).toFixed(2).toString();
           return (sec < 10) ? (min + ':0' + sec) : (min + ':' + sec);
         }
       }
