@@ -210,6 +210,12 @@
         expect(reformattedTime).toEqual('1:09.69');
       });
 
+      it ('should pad the time to 2 decimal places', function() {
+        var time = '6.9';
+        var reformattedTime = Calculator.reformatTime(time);
+        expect(reformattedTime).toEqual('6.90');
+      });
+
       it ('should return a DNF given a non-number', function() {
         var time = 'yuh wuh';
         var reformattedTime = Calculator.reformatTime(time);

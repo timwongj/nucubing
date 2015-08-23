@@ -132,8 +132,8 @@
 
       /**
        * Converts raw results to displayable results
-       * @param results
-       * @returns {Array}
+       * @param {[Object]} results
+       * @returns {[Object]} convertedResults
        */
       convertResults: function(results) {
         var res, formattedTimes, convertedResults = [];
