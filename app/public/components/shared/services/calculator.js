@@ -83,15 +83,15 @@
 
       /**
        * Compares two results
-       * @param res1
-       * @param res2
-       * @returns {*}
+       * @param {String} res1
+       * @param {String} res2
+       * @returns {String} result
        */
       compareResults: function(res1, res2) {
         if (!res1) {
           return res2;
         } else if (res1 == 'DNF') {
-          return (res2 == 'DNF') ? '' : res2;
+          return (res2 == 'DNF') ? 'DNF' : res2;
         } else if (res2 == 'DNF') {
           return res1;
         } else {
@@ -104,22 +104,24 @@
 
       /**
        * Compares two MBLD results
-       * @param res1
-       * @param res2
-       * @returns {*}
+       * @param {Object} res1
+       * @param {Object} res2
+       * @returns {Object} result
        */
       compareMBLDResults: function(res1, res2) {
         if (!res1) {
           return res2;
         }
-        var score1 = res1.solved - (res1.attempted - res1.solved), score2 = res2.solved - (res2.attempted - res2.solved);
+        var score1 = parseInt(res1.solved) - (parseInt(res1.attempted) - parseInt(res1.solved));
+        var score2 = parseInt(res2.solved) - (parseInt(res2.attempted) - parseInt(res2.solved));
+        var times = this.formatTimes([res1.time, res2.time],['','']);
         if (score1 > score2) {
           return res1;
         } else if (score1 < score2) {
           return res2;
-        } else if (res1.time < res2.time) {
+        } else if (times[0] < times[1]) {
           return res1;
-        } else if (res1.time > res2.time) {
+        } else if (times[0] > times[1]) {
           return res2;
         } else if (res1.attempted < res2.attempted) {
           return res1;
@@ -129,66 +131,52 @@
       },
 
       /**
-       * Calculates FMC Single
-       * @param moves
+       * Calculates the best FMC Single
+       * @param {[Number]} moves
        * @returns {string}
        */
       calculateFMCSingle: function(moves) {
-        var i, single = 'DNF';
-        for (i = 0; i < moves.length; i++) {
-          if (moves[i] != 'DNF') {
-            if (single == 'DNF') {
-              single = moves[i];
-            }
-            if (parseFloat(moves[i]) < single) {
-              single = moves[i];
-            }
-          }
-        }
-        return single;
+        var single = 'DNF';
+        angular.forEach(moves, function(move) {
+          single = ((single == 'DNF') && (move != 'DNF')) ? move : single;
+          single = ((parseFloat(move) < single) && (move != 'DNF')) ? move : single;
+        });
+        return single.toString();
       },
 
       /**
        * Calculates the best single time
-       * @param times
-       * @param penalties
-       * @returns {*}
+       * @param {[Number]} times
+       * @param {[String]} penalties
+       * @returns {string} average
        */
       calculateSingle: function(times, penalties) {
-        var i, single = 'DNF', formattedTimes = this.formatTimes(times, penalties);
-        for (i = 0; i < formattedTimes.length; i++) {
-          if (formattedTimes[i] != 'DNF') {
-            if (single == 'DNF') {
-              single = formattedTimes[i];
-            } else if (parseFloat(formattedTimes[i]) < single) {
-              single = formattedTimes[i];
-            }
-          }
-        }
-        if (single == 'DNF') {
-          return single;
-        } else {
-          return this.reformatTime(single);
-        }
+        var single = 'DNF', formattedTimes = this.formatTimes(times, penalties);
+        angular.forEach(formattedTimes, function(formattedTime) {
+          single = ((formattedTime != 'DNF') && (single == 'DNF')) ? formattedTime : single;
+          single = ((formattedTime != 'DNF') && (parseFloat(formattedTime) < single)) ? formattedTime : single;
+        });
+        return (single == 'DNF') ? 'DNF' : this.reformatTime(single);
       },
 
       /**
        * Calculate the trimmed average of 5 given the array of times and penalties
-       * @param times
+       * @param {[]} times
        * @param penalties
        * @returns {*}
        */
       calculateAverage: function(times, penalties) {
-        var formattedTimes = this.formatTimes(times, penalties);
-        var i, DNFCount = 0, minIndex, maxIndex, minValue, maxValue;
-        for (i = 0; i < formattedTimes.length; i++) {
-          if (formattedTimes[i] == 'DNF') {
+        var DNFCount = 0;
+        for (var i = 0; i < penalties.length; i++) {
+          if (penalties[i] == '(DNF)') {
             DNFCount++;
+            if (DNFCount > 1) {
+              return 'DNF';
+            }
           }
         }
-        if (DNFCount > 1) {
-          return 'DNF';
-        }
+        var formattedTimes = this.formatTimes(times, penalties);
+        var minIndex, maxIndex, minValue, maxValue;
         if (formattedTimes[0] != 'DNF') {
           minIndex = 0;
           maxIndex = 0;
@@ -211,105 +199,97 @@
             maxIndex = i;
           }
         }
-        for (i = 0; i < formattedTimes.length; i++) {
-          if ((i != maxIndex) && (parseFloat(formattedTimes[i]) < minValue)) {
-            minValue = parseFloat(formattedTimes[i]);
-            minIndex = i;
+        angular.forEach(formattedTimes, function(formattedTime, index) {
+          if ((index != maxIndex) && (parseFloat(formattedTime) < minValue)) {
+            minValue = parseFloat(formattedTime);
+            minIndex = index;
           }
-        }
+        });
         if ((minIndex === 0) && (maxIndex === 0)) {
           maxIndex = 1;
         }
         var sum = 0;
-        for (i = 0; i < formattedTimes.length; i++) {
-          if ((i != minIndex) && (i != maxIndex)) {
-            sum += parseFloat(formattedTimes[i]);
+        angular.forEach(formattedTimes, function(formattedTime, index) {
+          if ((index != minIndex) && (index != maxIndex)) {
+            sum += parseFloat(formattedTime);
           }
-        }
-        var average = sum / (formattedTimes.length - 2);
+        });
+        var average = (sum / (formattedTimes.length - 2)).toFixed(2);
         return this.reformatTime(average);
       },
 
       /**
        * Calculate FMC mean of 3
-       * @param moves
-       * @returns {string}
+       * @param {[Number|String]} moves
+       * @returns {string} mean
        */
       calculateFMCMean: function(moves) {
-        return ((moves[0] + moves[1] + moves[2]) / 3).toFixed(2);
+        var sum = 0;
+        for (var i = 0; i < moves.length; i++) {
+          if (moves[i] == 'DNF') {
+            return 'DNF';
+          }
+          sum += moves[i];
+        }
+        return (sum / 3).toFixed(2);
       },
 
       /**
-       * Calculate the mean of 3 given the array of times and penalties
-       * @param times
-       * @param penalties
-       * @returns {*}
+       * Calculates the mean given the times and penalties
+       * @param {[Number]} times
+       * @param {[String]} penalties
+       * @returns {String} mean
        */
       calculateMean: function(times, penalties) {
-        var formattedTimes = this.formatTimes(times, penalties);
-        var i, DNFCount = 0;
-        for (i = 0; i < formattedTimes.length; i++) {
-          if (formattedTimes[i] == 'DNF') {
-            DNFCount++;
+        for (var i = 0; i < penalties.length; i++) {
+          if (penalties[i] == '(DNF)') {
+            return 'DNF';
           }
         }
-        if (DNFCount > 0) {
-          return 'DNF';
-        }
+        var formattedTimes = this.formatTimes(times, penalties);
         var sum = 0;
-        for (i = 0; i < formattedTimes.length; i++) {
-          sum += parseFloat(formattedTimes[i]);
-        }
-        var mean = sum / formattedTimes.length;
+        angular.forEach(formattedTimes, function(formattedTime) {
+          sum += formattedTime;
+        });
+        var mean = (sum / formattedTimes.length).toFixed(2);
         return this.reformatTime(mean);
       },
 
       /**
-       * return an array of results in milliseconds taking penalties into account
-       * @param times
-       * @param penalties
-       * @returns {Array}
+       * Returns an array of results in milliseconds taking penalties into account
+       * @param {[Number]} times
+       * @param {[String]} penalties
+       * @returns {[Number|String]} results
        */
       formatTimes: function(times, penalties) {
         var formattedTimes = [];
-        var i, unsplitTimes = [];
-        for (i = 0; i < times.length; i++) {
-          var res = times[i].split(':');
-          if (res.length > 1) {
-            unsplitTimes[i] = (parseFloat(res[0]) * 60) + parseFloat(res[1]);
-          } else {
-            unsplitTimes[i] = parseFloat(res[0]);
+        angular.forEach(times, function(time, index) {
+          var res = time.split(':');
+          formattedTimes[index] = (res.length > 1) ? (parseFloat(res[0]) * 60) + parseFloat(res[1]) : parseFloat(res[0]);
+          if ((penalties[index] == '(DNF)') || (formattedTimes[index] === '')) {
+            formattedTimes[index] = 'DNF';
+          } else if (penalties[index] == '(+2)') {
+            formattedTimes[index] = parseFloat(formattedTimes[index]) + 2;
           }
-          if ((penalties[i] == '(DNF)') || (unsplitTimes[i] === '')) {
-            formattedTimes[i] = 'DNF';
-          } else if (penalties[i] == '(+2)') {
-            formattedTimes[i] = parseFloat(unsplitTimes[i]) + 2;
-          } else {
-            formattedTimes[i] = unsplitTimes[i];
-          }
-        }
+        });
         return formattedTimes;
       },
 
       /**
-       * Converts the time from milliseconds to minutes:seconds.milliseconds
-       * @param time
-       * @returns {*}
+       * Reformats the time from milliseconds to mm:ss.ms
+       * @param {Number|String} time
+       * @returns {String} displayed time
        */
       reformatTime: function(time) {
         if (isNaN(time)) {
           return 'DNF';
         }
         if (parseFloat(time) <  60) {
-          return parseFloat(time).toFixed(2);
+          return (Math.floor(Number(time) * 100) / 100).toString();
         } else {
           var min = Math.floor(parseFloat(time) / 60);
-          var sec = (parseFloat(time) % 60).toFixed(2);
-          if (sec < 10) {
-            return min + ':0' + sec;
-          } else {
-            return min + ':' + sec;
-          }
+          var sec = (Math.floor((Number(time) * 100) % 6000) / 100);
+          return (sec < 10) ? (min + ':0' + sec) : (min + ':' + sec);
         }
       }
 
