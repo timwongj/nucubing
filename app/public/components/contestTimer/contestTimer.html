@@ -2,10 +2,10 @@
   <h2 class="page-title" ng-bind="event"></h2>
 </div>
 <div class="row">
-  <div class="col-md-7 text-center">
-    <p class="timer-scramble" ng-bind="scramble" ng-hide="done"></p>
-    <p class="timer-display" ng-style="timerStyle" ng-bind="timer_display"></p>
-    <h2 ng-bind="result + ' ' + eventFormat" ng-show="done"></h2>
+  <div class="col-md-7">
+      <p class="timer-scramble text-center" ng-bind="scramble" ng-hide="done"></p>
+      <p class="timer-display text-center" ng-style="timerStyle" ng-bind="timer_display"></p>
+      <h2 class="text-center" ng-bind="result + ' ' + eventFormat" ng-show="done"></h2>
   </div>
   <div class="col-md-5 text-center">
     <table class="table">

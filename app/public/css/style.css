@@ -62,17 +62,20 @@ td.td-profile.ng-binding, td.td-results.ng-binding {
   margin:0px;
   padding-top:5px;
   padding-bottom:5px;
-  word-break:keep-all;
+  font-family: monospace;
+  white-space: pre-wrap;
 }
 
-.solve-input-addon {
+.input-group-addon {
   height:25px;
+  border-radius:0px;
 }
 
 .solve-input {
   -webkit-transition:all linear 0.5s;
   transition:all linear 0.5s;
   height:30px;
+  border-radius:0px;
 }
 
 .solve-input.ng-invalid {
@@ -97,6 +100,8 @@ td.td-profile.ng-binding, td.td-results.ng-binding {
 
 .timer-scramble {
   font-size:16pt;
+  font-family: monospace;
+  white-space: pre-wrap;
 }
 
 .timer-display {
@@ -105,15 +110,6 @@ td.td-profile.ng-binding, td.td-results.ng-binding {
 
 .timer-results-penalties {
   width:150px;
-}
-
-.mbld-scramble {
-  margin-top:5px;
-  margin-bottom:5px;
-  margin-left:0px;
-  margin-right:0px;
-  padding-top:5px;
-  padding-bottom:5px;
 }
 
 .divider {
@@ -148,4 +144,31 @@ select {
   display:inline-block;
   vertical-align:middle;
   padding:5px;
+}
+
+.btn, .panel, .label, pre {
+  border-radius:0px;
+}
+
+.container .jumbotron, .container-fluid .jumbotron {
+  border-radius:0px;
+}
+
+.form-group {
+  margin-bottom:0px;
+}
+
+fieldset.scheduler-border {
+  border: 1px groove #ddd !important;
+  padding: 0 5px 5px 5px !important;
+  margin: 0 0 1.5em 0 !important;
+  -webkit-box-shadow:  0px 0px 0px 0px #000;
+  box-shadow:  0px 0px 0px 0px #000;
+}
+
+legend.scheduler-border {
+  width:inherit;
+  padding:0 10px;
+  margin-bottom:0px;
+  border-bottom:none;
 }

@@ -3,18 +3,21 @@
 </div>
 <form name="fmcContestForm" class="form-horizontal" ng-submit="fmcContestForm.$valid && submit()">
   <div class="form-group" ng-repeat="solve in solves">
-    <div class="col-sm-12">
-      <pre class="scramble" ng-bind="solve.scramble"></pre>
-    </div>
-    <div class="col-sm-10 result-row">
-      <div class="input-group">
-        <div class="input-group-addon">Solution</div>
-        <input type="text" class="form-control solve-input" ng-model="solve.solution" ng-change="update(solve)">
+    <fieldset class="scheduler-border">
+      <legend class="scheduler-border" ng-bind="'Solve ' + ($index+1)"></legend>
+      <div class="col-sm-12">
+        <p class="scramble" ng-bind="solve.scramble"></p>
       </div>
-    </div>
-    <div class="col-sm-2 col-xs-12 result-row">
-      <pre class="result"><span ng-bind="solve.moves" ng-show="solve.valid"></span></pre>
-    </div>
+      <div class="col-sm-10 result-row">
+        <div class="input-group">
+          <div class="input-group-addon">Solution</div>
+          <input type="text" class="form-control solve-input" ng-model="solve.solution" ng-change="update(solve)">
+        </div>
+      </div>
+      <div class="col-sm-2 col-xs-12 result-row">
+        <pre class="result"><span ng-bind="solve.moves" ng-show="solve.valid"></span></pre>
+      </div>
+    </fieldset>
   </div>
   <div class="row">
     <hr class="divider"/>
@@ -26,3 +29,4 @@
     </div>
   </div>
 </form>
+<br>
