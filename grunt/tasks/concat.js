@@ -11,6 +11,7 @@
           'app/public/components/shared/filters/orderObjectBy.js',
           'app/public/components/shared/services/events.js',
           'app/public/components/shared/services/calculator.js',
+          'app/public/components/shared/services/cub.js',
           'app/public/controller.js',
           'app/public/components/profile/controller.js',
           'app/public/components/users/controller.js',
