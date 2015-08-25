@@ -4,7 +4,7 @@
 <form name="fmcContestForm" class="form-horizontal" ng-submit="fmcContestForm.$valid && submit()">
   <div class="form-group" ng-repeat="solve in solves">
     <fieldset class="scheduler-border">
-      <legend class="scheduler-border" ng-bind="'Solve ' + ($index+1)"></legend>
+      <legend class="scheduler-border" ng-bind="'Attempt ' + ($index+1)"></legend>
       <div class="col-sm-12">
         <p class="scramble" ng-bind="solve.scramble"></p>
       </div>

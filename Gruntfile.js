@@ -3,7 +3,7 @@ module.exports = function(grunt) {
   grunt.initConfig({
 
     watch: {
-      files: ['app/**/*', 'test/**/*', 'config/**/*'],
+      files: ['app/**/*', 'test/**/*', 'config/**/*', 'Gruntfile.js'],
       tasks: ['jshint', 'copy', 'concat', 'uglify']
     },
     jshint: {

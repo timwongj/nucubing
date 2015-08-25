@@ -1,21 +1,26 @@
 .navbar, .navbar-inverse {
-  border-radius:0px;
-  min-height:40px;
+  border-radius: 0px;
+  min-height: 40px;
 }
 
 .navbar-collapse {
-  padding:0px;
+  padding: 0px;
 }
 
 .navbar-collapse ul li a {
-  padding-top:10px;
-  padding-bottom:10px;
-  padding-left:15px;
-  padding-right:15px;
+  padding: 10px 15px;
 }
 
 ul.nav.nav-tabs {
-  margin-bottom:10px;
+  margin-bottom: 10px;
+}
+
+.panel-heading, .panel-footer {
+  padding: 8px auto;
+}
+
+.panel-body {
+  padding: 12px auto;
 }
 
 .vertical-middle {
@@ -23,139 +28,119 @@ ul.nav.nav-tabs {
 }
 
 .page-header {
-  margin-top:0px;
-  padding:0px;
+  margin-top: 0px;
+  padding: 0px;
 }
 
 .page-title {
-  margin-top:10px;
-}
-
-.jumbotronLogin {
-  padding-top:20px;
-  padding-bottom:40px;
-  padding-left:30px;
-  padding-right:30px;
+  margin-top: 10px;
 }
 
 .panelBodyProfile {
-  padding:0px;
+  padding: 0px;
 }
 
 .profilePic {
-  margin-bottom:20px;
-  margin-left:auto;
-  margin-right:auto;
+  margin: auto auto 20px;
 }
 
 .table-responsive {
-  border:0px;
+  border: 0px;
 }
 
 td.td-profile.ng-binding, td.td-results.ng-binding {
-  font-size:10pt;
-  padding-top:3px;
-  padding-bottom:3px;
+  font-size: 10pt;
+  padding: 3px auto;
 }
 
 .scramble {
-  margin:0px;
-  padding-top:5px;
-  padding-bottom:5px;
+  margin: 0px;
+  padding-top: 5px;
+  padding-bottom: 5px;
   font-family: monospace;
   white-space: pre-wrap;
 }
 
 .input-group-addon {
-  height:25px;
-  border-radius:0px;
+  height: 25px;
+  border-radius: 0px;
 }
 
 .solve-input {
-  -webkit-transition:all linear 0.5s;
-  transition:all linear 0.5s;
-  height:30px;
-  border-radius:0px;
+  -webkit-transition: all linear 0.5s;
+  transition: all linear 0.5s;
+  height: 30px;
+  border-radius: 0px;
 }
 
 .solve-input.ng-invalid {
-  background:#FFCCCC;
+  background: #FFCCCC;
 }
 
 .solve-input.ng-valid {
-  background:#BFFFBF;
+  background: #BFFFBF;
 }
 
 .result-row {
-  margin-top:5px;
-  margin-bottom:5px;
+  margin: 5px auto;
 }
 
 .result {
-  height:30px;
-  margin-bottom:0px;
-  padding-top:5px;
-  padding-bottom:5px;
+  height: 30px;
+  margin-bottom: 0px;
+  padding: 5px auto;
 }
 
 .timer-scramble {
-  font-size:16pt;
+  font-size: 16pt;
   font-family: monospace;
   white-space: pre-wrap;
 }
 
 .timer-display {
-  font-size:96pt;
+  font-size: 96pt;
 }
 
 .timer-results-penalties {
-  width:150px;
+  width: 150px;
 }
 
 .divider {
-  margin-top:0px;
-  margin-bottom:10px;
-  margin-left:15px;
-  margin-right:15px;
+  margin: 0px 15px 10px;
 }
 
 .btn-right {
-  margin-right:15px;
+  margin-right: 15px;
 }
 
 select {
-  margin-left:5px;
-  margin-right:5px;
+  margin: auto 5px;
 }
 
 .my-drop-zone {
-  border:dotted 3px lightgray;
+  border: dotted 3px lightgray;
 }
 
 .nv-file-over {
-  border:dotted 3px red;
+  border: dotted 3px red;
 }
 
 .user a {
-  text-decoration:none;
+  text-decoration: none;
 }
 
 .user a img, .user a h4 {
-  display:inline-block;
-  vertical-align:middle;
-  padding:5px;
+  display: inline-block;
+  vertical-align: middle;
+  padding: 5px;
 }
 
-.btn, .panel, .label, pre {
-  border-radius:0px;
+.btn, .panel, .label, .form-group, pre {
+  border-radius: 0px;
 }
 
 .container .jumbotron, .container-fluid .jumbotron {
-  border-radius:0px;
-}
-
-.form-group {
-  margin-bottom:0px;
+  border-radius: 0px;
 }
 
 fieldset.scheduler-border {
@@ -167,8 +152,8 @@ fieldset.scheduler-border {
 }
 
 legend.scheduler-border {
-  width:inherit;
-  padding:0 10px;
-  margin-bottom:0px;
-  border-bottom:none;
+  width: inherit;
+  padding: 0 10px;
+  margin-bottom: 0px;
+  border-bottom: none;
 }
