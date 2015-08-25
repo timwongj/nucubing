@@ -10,7 +10,7 @@ module.exports = (function() {
   router.route('/')
     .get(function(req, res) {
       // get all users
-      User.find({}, function(err, users) {
+      User.find({}).exec(function(err, users) {
         if (err) {
           res.status(500).json({'message':'cannot get users'});
         } else {
@@ -22,7 +22,7 @@ module.exports = (function() {
   router.route('/:facebook_id')
     .get(function(req, res) {
       // get user given facebook_id
-      User.findOne({facebook_id:req.params.facebook_id}, function(err, user) {
+      User.findOne({facebook_id:req.params.facebook_id}).exec(function(err, user) {
         if (err) {
           res.status(500).json({'message':'cannot get user for facebook_id: ' + req.params.facebook_id});
         } else {

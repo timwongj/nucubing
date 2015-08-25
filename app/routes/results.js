@@ -10,7 +10,7 @@ module.exports = (function() {
   router.route('/')
     .get(function(req, res) {
       // get all results
-      Result.find(req.query, function(err, results) {
+      Result.find(req.query).sort('-week').exec(function(err, results) {
         if (err) {
           res.status(500).json({'message':'cannot get results'});
         } else {

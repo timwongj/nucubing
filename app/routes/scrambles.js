@@ -13,7 +13,7 @@ module.exports = (function() {
   router.route('/')
     .get(function(req, res) {
       // get all scrambles
-      Scramble.find(req.query, function(err, scrambles) {
+      Scramble.find(req.query).exec(function(err, scrambles) {
         if (err) {
           res.status(500).json({'message':'cannot get scrambles'});
         } else {
