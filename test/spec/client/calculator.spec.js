@@ -46,9 +46,9 @@
       });
 
       it ('should return the faster result', function() {
-        var res1 = '1:09.69', res2 = '4.20';
+        var res1 = '1:09.69', res2 = '1:14.18';
         var result = Calculator.compareResults(res1, res2);
-        expect(result).toEqual('4.20');
+        expect(result).toEqual('1:09.69');
       });
 
     });

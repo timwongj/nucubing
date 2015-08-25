@@ -97,7 +97,7 @@
         } else {
           var res1Arr = res1.toString().split(':'), res2Arr = res2.toString().split(':'), res1Formatted, res2Formatted;
           res1Formatted = (res1Arr.length > 1) ? (parseFloat(res1Arr[0]) * 60) + parseFloat(res1Arr[1]) : parseFloat(res1Arr[0]);
-          res2Formatted = (res2Arr.length > 2) ? (parseFloat(res2Arr[0]) * 60) + parseFloat(res2Arr[2]) : parseFloat(res2Arr[0]);
+          res2Formatted = (res2Arr.length > 1) ? (parseFloat(res2Arr[0]) * 60) + parseFloat(res2Arr[1]) : parseFloat(res2Arr[0]);
           return (res1Formatted > res2Formatted) ? res2 : res1;
         }
       },
