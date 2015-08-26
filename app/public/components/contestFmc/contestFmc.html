@@ -1,7 +1,7 @@
 <div class="page-header">
   <h2 class="page-title">3x3 fewest moves</h2>
 </div>
-<form name="fmcContestForm" class="form-horizontal" ng-submit="fmcContestForm.$valid && submit()">
+<form name="fmcContestForm" class="form-horizontal">
   <div class="form-group" ng-repeat="solve in solves">
     <fieldset class="scheduler-border">
       <legend class="scheduler-border" ng-bind="'Attempt ' + ($index+1)"></legend>
@@ -11,11 +11,11 @@
       <div class="col-sm-10 result-row">
         <div class="input-group">
           <div class="input-group-addon">Solution</div>
-          <input type="text" class="form-control solve-input" ng-model="solve.solution" ng-change="update(solve)">
+          <input type="text" class="form-control solve-input" ng-model="solve.solution">
         </div>
       </div>
       <div class="col-sm-2 col-xs-12 result-row">
-        <pre class="result"><span ng-bind="solve.moves" ng-show="solve.valid"></span></pre>
+        <pre class="result" ng-bind="solve.moves"></pre>
       </div>
     </fieldset>
   </div>

@@ -2,7 +2,7 @@
 
   'use strict';
 
-  function ContestFmcController($scope, $resource, $q) {
+  function ContestFmcController($scope, $resource, $q, Cub) {
 
     var User = $resource('/user');
     var Weeks = $resource('/weeks');
@@ -14,7 +14,6 @@
 
     $scope.solves = [];
     $scope.changed = false;
-    $scope.valid = false;
     var dataLoaded = false, savedData = {solutions:['','',''], moves:[]};
 
     var scrambles = weeks.$promise
@@ -25,7 +24,8 @@
         }, function() {
           angular.forEach(scrambles[0].scrambles, function(scramble, index) {
             $scope.solves[index] = {
-              scramble: scramble
+              scramble: scramble,
+              solution: ''
             };
           });
         });
@@ -41,29 +41,29 @@
           if (results[0]) {
             savedData = JSON.parse(results[0].data);
             angular.forEach($scope.solves, function(solve, index) {
-              solve.solution = savedData.solutions[index];
-              solve.moves = savedData.moves[index];
+              solve.solution = savedData.solutions[index] || '';
+              solve.moves = savedData.moves[index] || '';
             });
           }
           dataLoaded = true;
         });
       });
 
-    $scope.update = function(solve) {
-      solve.valid = solve.solution.length !== 0;
-      solve.moves = solve.solution.split(' ').length;
-      $scope.valid = true;
-      angular.forEach($scope.solves, function(solve, index) {
-        $scope.valid = (solve.valid) ? $scope.valid : false;
-      });
-    };
-
     $scope.$watch('solves', function() {
       if (dataLoaded) {
+        $scope.valid = false;
         $scope.changed = false;
-        $scope.valid = true;
+        var cubs = [];
         angular.forEach($scope.solves, function(solve, index) {
-          $scope.valid = (solve.solution === '') ? false : $scope.valid;
+          if (solve.solution.length > 0) {
+            $scope.valid = true;
+            cubs[index] = new Cub();
+            cubs[index].perform(solve.scramble);
+            cubs[index].perform(solve.solution);
+            solve.moves = (cubs[index].isSolved()) ? solve.solution.split(' ').length : 'DNF';
+          } else {
+            solve.moves = '';
+          }
           $scope.changed = (solve.solution != savedData.solutions[index]) ? true : $scope.changed;
         });
       }
@@ -108,7 +108,7 @@
       var data = {solutions:[], moves:[]};
       angular.forEach($scope.solves, function(solve, index) {
         data.solutions[index] = solve.solution;
-        data.moves[index] = solve.moves;
+        data.moves[index] = (solve.moves.length === 0) ? 'DNS' : solve.moves;
       });
       var result = new Results({
         'event':'333fm',
@@ -123,6 +123,6 @@
 
   }
 
-  angular.module('nuCubingApp').controller('ContestFmcController', ['$scope', '$resource', '$q', ContestFmcController]);
+  angular.module('nuCubingApp').controller('ContestFmcController', ['$scope', '$resource', '$q', 'Cub', ContestFmcController]);
 
 })();

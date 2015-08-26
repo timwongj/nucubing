@@ -88,7 +88,7 @@ td.td-profile.ng-binding, td.td-results.ng-binding {
 .result {
   height: 30px;
   margin-bottom: 0px;
-  padding: 5px auto;
+  padding: 5px;
 }
 
 .timer-scramble {

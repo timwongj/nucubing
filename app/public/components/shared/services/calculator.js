@@ -138,8 +138,8 @@
       calculateFMCSingle: function(moves) {
         var single = 'DNF';
         angular.forEach(moves, function(move) {
-          single = ((single == 'DNF') && (move != 'DNF')) ? move : single;
-          single = ((parseFloat(move) < single) && (move != 'DNF')) ? move : single;
+          single = ((single == 'DNF') && (!isNaN(move))) ? move : single;
+          single = ((parseFloat(move) < single) && ((move != 'DNF') && (move != 'DNS'))) ? move : single;
         });
         return single.toString();
       },
@@ -226,7 +226,7 @@
       calculateFMCMean: function(moves) {
         var sum = 0;
         for (var i = 0; i < moves.length; i++) {
-          if (moves[i] == 'DNF') {
+          if (isNaN(moves[i])) {
             return 'DNF';
           }
           sum += moves[i];
