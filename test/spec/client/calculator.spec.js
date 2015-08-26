@@ -39,16 +39,28 @@
 
     describe('compareResults', function() {
 
-      it ('should return the faster result', function() {
+      it ('should return the better result', function() {
         var res1 = '6.25', res2 = '6.44';
         var result = Calculator.compareResults(res1, res2);
         expect(result).toEqual('6.25');
       });
 
-      it ('should return the faster result', function() {
+      it ('should return the better result', function() {
         var res1 = '1:09.69', res2 = '1:14.18';
         var result = Calculator.compareResults(res1, res2);
         expect(result).toEqual('1:09.69');
+      });
+
+      it ('should return the better result', function() {
+        var res1 = 'DNF', res2 = '1:09.69';
+        var result = Calculator.compareResults(res1, res2);
+        expect(result).toEqual('1:09.69');
+      });
+
+      it ('should return the better result', function() {
+        var res1 = 'DNF', res2 = 'DNF';
+        var result = Calculator.compareResults(res1, res2);
+        expect(result).toEqual('DNF');
       });
 
     });
@@ -110,6 +122,13 @@
         expect(single).toEqual('6.44');
       });
 
+      it ('should return the fastest single with penalties taken into account', function() {
+        var times = ['6.25', '6.44', '8.48', '7.08', '6.69'];
+        var penalties = ['(+2)', '(DNF)', '', '', ''];
+        var single = Calculator.calculateSingle(times, penalties);
+        expect(single).toEqual('6.69');
+      });
+
     });
 
     describe('calculateAverage', function() {
@@ -119,6 +138,27 @@
         var penalties = ['', '', '', '', ''];
         var average = Calculator.calculateAverage(times, penalties);
         expect(average).toEqual('8.85');
+      });
+
+      it ('should calculate the average', function() {
+        var times = ['8.09', '8.90', '6.98', '6.36', '6.24'];
+        var penalties = ['', '', '', '', ''];
+        var average = Calculator.calculateAverage(times, penalties);
+        expect(average).toEqual('7.14');
+      });
+
+      it ('should calculate the average', function() {
+        var times = ['1:56.43', '1:39.73', '1:29.25', '1:55.23', '1:28.45'];
+        var penalties = ['', '', '', '', ''];
+        var average = Calculator.calculateAverage(times, penalties);
+        expect(average).toEqual('1:41.40');
+      });
+
+      it ('should calculate the average with counting penalties', function() {
+        var times = ['34.65', '25.58', '38.44', '45.80', '43.34'];
+        var penalties = ['(+2)', '', '(+2)', '', ''];
+        var average = Calculator.calculateAverage(times, penalties);
+        expect(average).toEqual('40.14');
       });
 
       it ('should calculate the average with counting penalties', function() {
@@ -162,6 +202,13 @@
         expect(mean).toEqual('5.63');
       });
 
+      it ('should calculate the mean', function() {
+        var times = ['2:56.41', '2:39.00', '2:18.11'];
+        var penalties = ['', '', ''];
+        var mean = Calculator.calculateMean(times, penalties);
+        expect(mean).toEqual('2:37.84');
+      });
+
       it ('should calculate the mean with penalties', function() {
         var times = ['3:42.01', '3:45.43', '3:49.90'];
         var penalties = ['(+2)', '', ''];
@@ -185,6 +232,13 @@
         var penalties = ['', '', ''];
         var formattedTimes = Calculator.formatTimes(times, penalties);
         expect(formattedTimes).toEqual([6.25, 6.44, 260.69]);
+      });
+
+      it ('should return an array of results in milliseconds', function() {
+        var times = ['2:30.28', '2:32.96', '2:42.06'];
+        var penalties = ['', '', ''];
+        var formattedTimes = Calculator.formatTimes(times, penalties);
+        expect(formattedTimes).toEqual([150.28, 152.96, 162.06]);
       });
 
       it ('should return an array of results in milliseconds with penalties', function() {
