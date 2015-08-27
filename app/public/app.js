@@ -55,15 +55,34 @@
       });
   }
 
-  function Run($rootScope, $resource) {
+  function Run($rootScope, $resource, $location) {
 
     var User = $resource('/user');
     $rootScope.user = User.get();
+
+    $rootScope.$on('$routeChangeStart', function (event, next) {
+      if ((next.$$route.originalPath === '/profile') || (next.$$route.originalPath.substr(0, 8) === '/contest')) {
+        $rootScope.user.$promise
+          .then(function() {
+            if (!$rootScope.user.facebook_id) {
+              $location.path('/');
+            }
+          });
+      }
+      if (next.$$route.originalPath === '/admin') {
+        $rootScope.user.$promise
+          .then(function() {
+            if ($rootScope.user.email != 'timothywong8@gmail.com') {
+              $location.path('/');
+            }
+          });
+      }
+    });
 
   }
 
   angular.module('nuCubingApp', ['ui.bootstrap', 'ngRoute', 'ngResource', 'angularFileUpload']);
 
-  angular.module('nuCubingApp').config(['$routeProvider', Config]).run(['$rootScope','$resource', Run]);
+  angular.module('nuCubingApp').config(['$routeProvider', Config]).run(['$rootScope','$resource', '$location', Run]);
 
 })();
