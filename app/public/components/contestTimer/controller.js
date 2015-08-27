@@ -157,11 +157,18 @@
     $scope.isTiming = 0;
     $scope.isKeydown = 0;
 
+    $scope.touchStart = function() {
+      $scope.$broadcast('keydown', {keyCode: 32});
+    };
+
+    $scope.touchEnd = function() {
+      $scope.$broadcast('keyup', {keyCode: 32});
+    };
 
     $scope.$on('keydown', function(event, args) {
-      if ((args.which === 32) && ($scope.isKeydown === 0) && (!$scope.done)) {
+      if (($scope.isKeydown === 0) && (!$scope.done)) {
         $scope.isKeydown = 1;
-        if ($scope.isTiming === 0) {
+        if ((args.keyCode === 32) && ($scope.isTiming === 0)) {
           $scope.timer_display = '0.00';
           $scope.timerStyle = {'color':'#33CC00'};
         } else if ($scope.isTiming === 1) {
@@ -195,7 +202,7 @@
     });
 
     $scope.$on('keyup', function(event, args) {
-      if ((args.which === 32) && ($scope.isKeydown === 1) && (!$scope.done)) {
+      if ((args.keyCode === 32) && ($scope.isKeydown === 1) && (!$scope.done)) {
         $scope.isKeydown = 0;
         if ($scope.isTiming === 0) {
           $scope.isTiming = 1;

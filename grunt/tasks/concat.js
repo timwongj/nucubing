@@ -8,6 +8,8 @@
       nuCubingJs: {
         src: [
           'app/public/app.js',
+          'app/public/components/shared/directives/touchStart.js',
+          'app/public/components/shared/directives/touchEnd.js',
           'app/public/components/shared/filters/orderObjectBy.js',
           'app/public/components/shared/services/events.js',
           'app/public/components/shared/services/calculator.js',
