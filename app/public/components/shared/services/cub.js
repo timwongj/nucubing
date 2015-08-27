@@ -35,62 +35,74 @@
      * @param {string} moves - The moves to perform.
      */
     Cub.prototype.perform = function(moves) {
-      var stickers, temp, movesArray = moves.split(" "), self = this;
+      var stickers, temp, movesArray = moves.split(" "), moveCount = 0, self = this;
       angular.forEach(movesArray, function(move) {
-        var face = move.substr(0,1), dir = 1;
-        if ((move.length > 1) && (move.substr(1,2) == '\''))
-          dir = -1;
-        else if (move.substr(1,2) == '2')
-          dir = 0;
+        var face = (move.substr(0, 1) === '[') ? face = move.substr(1, move.length - 2) : move.substr(0, 1);
+        var dir = (move.length === 1) ? 1 : ((move.substr(1, 2) === '2') ? 2 : -1);
         switch(face) {
           case 'U': stickers = [['UR', 'UB', 'UL', 'UF'], ['RU', 'BU', 'LU', 'FU'],
-            ['URF', 'UBR', 'ULB', 'UFL'], ['RFU', 'BRU', 'LBU', 'FLU'], ['FUR', 'RUB', 'BUL', 'LUF']]; break;
+            ['URF', 'UBR', 'ULB', 'UFL'], ['RFU', 'BRU', 'LBU', 'FLU'], ['FUR', 'RUB', 'BUL', 'LUF']];
+            moveCount += 1; break;
           case 'D': stickers = [['DR', 'DF', 'DL', 'DB'], ['RD', 'FD', 'LD', 'BD'],
-            ['DFR', 'DLF', 'DBL', 'DRB'], ['RDF', 'FDL', 'LDB', 'BDR'], ['LFD', 'BLD', 'RBD', 'FRD']]; break;
+            ['DFR', 'DLF', 'DBL', 'DRB'], ['RDF', 'FDL', 'LDB', 'BDR'], ['LFD', 'BLD', 'RBD', 'FRD']];
+            moveCount += 1; break;
           case 'L': stickers = [['LU', 'LB', 'LD', 'LF'], ['UL', 'BL', 'DL', 'FL'],
-            ['LUF', 'LBU', 'LDB', 'LFD'], ['UFL', 'BUL', 'DBL', 'FDL'], ['FLU', 'ULB', 'BLD', 'DLF']]; break;
+            ['LUF', 'LBU', 'LDB', 'LFD'], ['UFL', 'BUL', 'DBL', 'FDL'], ['FLU', 'ULB', 'BLD', 'DLF']];
+            moveCount += 1; break;
           case 'R': stickers = [['RU', 'RF', 'RD', 'RB'], ['UR', 'FR', 'DR', 'BR'],
-            ['RFU', 'RDF', 'RBD', 'RUB'], ['URF', 'FRD', 'DRB', 'BRU'], ['FUR', 'DFR', 'BDR', 'UBR']]; break;
+            ['RFU', 'RDF', 'RBD', 'RUB'], ['URF', 'FRD', 'DRB', 'BRU'], ['FUR', 'DFR', 'BDR', 'UBR']];
+            moveCount += 1; break;
           case 'F': stickers = [['FU', 'FL', 'FD', 'FR'], ['UF', 'LF', 'DF', 'RF'],
-            ['FUR', 'FLU', 'FDL', 'FRD'], ['URF', 'LUF', 'DLF', 'RDF'], ['RFU', 'UFL', 'LFD', 'DFR']]; break;
+            ['FUR', 'FLU', 'FDL', 'FRD'], ['URF', 'LUF', 'DLF', 'RDF'], ['RFU', 'UFL', 'LFD', 'DFR']];
+            moveCount += 1; break;
           case 'B': stickers = [['BU', 'BR', 'BD', 'BL'], ['UB', 'RB', 'DB', 'LB'],
-            ['BRU', 'BDR', 'BLD', 'BUL'], ['UBR', 'RBD', 'DBL', 'LBU'], ['RUB', 'DRB', 'LDB', 'ULB']]; break;
-          case 'M': stickers = [['U', 'B', 'D', 'F'], ['UF', 'BU', 'DB', 'FD'], ['FU', 'UB', 'BD', 'DF']]; break;
-          case 'E': stickers = [['F', 'L', 'B', 'R'], ['FR', 'LF', 'BL', 'RB'], ['RF', 'FL', 'LB', 'BR']]; break;
-          case 'S': stickers = [['U', 'L', 'D', 'R'], ['UR', 'LU', 'DL', 'RD'], ['RU', 'UL', 'LD', 'DR']]; break;
-          case 'x': stickers = [['LU', 'LF', 'LD', 'LB'], ['UL', 'FL', 'DL', 'BL'],
+            ['BRU', 'BDR', 'BLD', 'BUL'], ['UBR', 'RBD', 'DBL', 'LBU'], ['RUB', 'DRB', 'LDB', 'ULB']];
+            moveCount += 1; break;
+          case 'x':
+          case 'r': stickers = [['LU', 'LF', 'LD', 'LB'], ['UL', 'FL', 'DL', 'BL'],
             ['LUF', 'LFD', 'LDB', 'LBU'], ['UFL', 'FDL', 'DBL', 'BUL'], ['FLU', 'DLF', 'BLD', 'ULB'],
             ['U', 'F', 'D', 'B'], ['UF', 'FD', 'DB', 'BU'], ['FU', 'DF', 'BD', 'UB'],
             ['RU', 'RF', 'RD', 'RB'], ['UR', 'FR', 'DR', 'BR'],
-            ['RFU', 'RDF', 'RBD', 'RUB'], ['URF', 'FRD', 'DRB', 'BRU'], ['FUR', 'DFR', 'BDR', 'UBR']]; break;
-          case 'y': stickers = [['UR', 'UB', 'UL', 'UF'], ['RU', 'BU', 'LU', 'FU'],
+            ['RFU', 'RDF', 'RBD', 'RUB'], ['URF', 'FRD', 'DRB', 'BRU'], ['FUR', 'DFR', 'BDR', 'UBR']];
+            break;
+          case 'y':
+          case 'u': stickers = [['UR', 'UB', 'UL', 'UF'], ['RU', 'BU', 'LU', 'FU'],
             ['URF', 'UBR', 'ULB', 'UFL'], ['RFU', 'BRU', 'LBU', 'FLU'], ['FUR', 'RUB', 'BUL', 'LUF'],
             ['F', 'R', 'B', 'L'], ['FR', 'RB', 'BL', 'LF'], ['RF', 'BR', 'LB', 'FL'],
             ['DR', 'DB', 'DL', 'DF'], ['RD', 'BD', 'LD', 'FD'],
-            ['DFR', 'DRB', 'DBL', 'DLF'], ['RDF', 'BDR', 'LDB', 'FDL'], ['LFD', 'FRD', 'RBD', 'BLD']]; break;
-          case 'z': stickers = [['FU', 'FL', 'FD', 'FR'], ['UF', 'LF', 'DF', 'RF'],
+            ['DFR', 'DRB', 'DBL', 'DLF'], ['RDF', 'BDR', 'LDB', 'FDL'], ['LFD', 'FRD', 'RBD', 'BLD']];
+            break;
+          case 'z':
+          case 'f': stickers = [['FU', 'FL', 'FD', 'FR'], ['UF', 'LF', 'DF', 'RF'],
             ['FUR', 'FLU', 'FDL', 'FRD'], ['URF', 'LUF', 'DLF', 'RDF'], ['RFU', 'UFL', 'LFD', 'DFR'],
             ['U', 'L', 'D', 'R'], ['UR', 'LU', 'DL', 'RD'], ['RU', 'UL', 'LD', 'DR'],
             ['BU', 'BL', 'BD', 'BR'], ['UB', 'LB', 'DB', 'RB'],
-            ['BRU', 'BUL', 'BLD', 'BDR'], ['UBR', 'LBU', 'DBL', 'RBD'], ['RUB', 'ULB', 'LDB', 'DRB']]; break;
-          case 'u': stickers = [['UR', 'UB', 'UL', 'UF'], ['RU', 'BU', 'LU', 'FU'],
+            ['BRU', 'BUL', 'BLD', 'BDR'], ['UBR', 'LBU', 'DBL', 'RBD'], ['RUB', 'ULB', 'LDB', 'DRB']];
+            break;
+          case 'Uw': stickers = [['UR', 'UB', 'UL', 'UF'], ['RU', 'BU', 'LU', 'FU'],
             ['URF', 'UBR', 'ULB', 'UFL'], ['RFU', 'BRU', 'LBU', 'FLU'], ['FUR', 'RUB', 'BUL', 'LUF'],
-            ['F', 'R', 'B', 'L'], ['FR', 'RB', 'BL', 'LF'], ['RF', 'BR', 'LB', 'FL']]; break;
-          case 'd': stickers = [['DR', 'DF', 'DL', 'DB'], ['RD', 'FD', 'LD', 'BD'],
+            ['F', 'R', 'B', 'L'], ['FR', 'RB', 'BL', 'LF'], ['RF', 'BR', 'LB', 'FL']];
+            moveCount += 1; break;
+          case 'Dw': stickers = [['DR', 'DF', 'DL', 'DB'], ['RD', 'FD', 'LD', 'BD'],
             ['DFR', 'DLF', 'DBL', 'DRB'], ['RDF', 'FDL', 'LDB', 'BDR'], ['LFD', 'BLD', 'RBD', 'FRD'],
-            ['F', 'L', 'B', 'R'], ['FR', 'LF', 'BL', 'RB'], ['RF', 'FL', 'LB', 'BR']]; break;
-          case 'l': stickers = [['LU', 'LB', 'LD', 'LF'], ['UL', 'BL', 'DL', 'FL'],
+            ['F', 'L', 'B', 'R'], ['FR', 'LF', 'BL', 'RB'], ['RF', 'FL', 'LB', 'BR']];
+            moveCount += 1; break;
+          case 'Lw': stickers = [['LU', 'LB', 'LD', 'LF'], ['UL', 'BL', 'DL', 'FL'],
             ['LUF', 'LBU', 'LDB', 'LFD'], ['UFL', 'BUL', 'DBL', 'FDL'], ['FLU', 'ULB', 'BLD', 'DLF'],
-            ['U', 'B', 'D', 'F'], ['UF', 'BU', 'DB', 'FD'], ['FU', 'UB', 'BD', 'DF']]; break;
-          case 'r': stickers = [['RU', 'RF', 'RD', 'RB'], ['UR', 'FR', 'DR', 'BR'],
+            ['U', 'B', 'D', 'F'], ['UF', 'BU', 'DB', 'FD'], ['FU', 'UB', 'BD', 'DF']];
+            moveCount += 1; break;
+          case 'Rw': stickers = [['RU', 'RF', 'RD', 'RB'], ['UR', 'FR', 'DR', 'BR'],
             ['RFU', 'RDF', 'RBD', 'RUB'], ['URF', 'FRD', 'DRB', 'BRU'], ['FUR', 'DFR', 'BDR', 'UBR'],
-            ['U', 'F', 'D', 'B'], ['UF', 'FD', 'DB', 'BU'], ['FU', 'DF', 'BD', 'UB']]; break;
-          case 'f': stickers = [['FU', 'FL', 'FD', 'FR'], ['UF', 'LF', 'DF', 'RF'],
+            ['U', 'F', 'D', 'B'], ['UF', 'FD', 'DB', 'BU'], ['FU', 'DF', 'BD', 'UB']];
+            moveCount += 1; break;
+          case 'Fw': stickers = [['FU', 'FL', 'FD', 'FR'], ['UF', 'LF', 'DF', 'RF'],
             ['FUR', 'FLU', 'FDL', 'FRD'], ['URF', 'LUF', 'DLF', 'RDF'], ['RFU', 'UFL', 'LFD', 'DFR'],
-            ['U', 'L', 'D', 'R'], ['UR', 'LU', 'DL', 'RD'], ['RU', 'UL', 'LD', 'DR']]; break;
-          case 'b': stickers = [['BU', 'BR', 'BD', 'BL'], ['UB', 'RB', 'DB', 'LB'],
+            ['U', 'L', 'D', 'R'], ['UR', 'LU', 'DL', 'RD'], ['RU', 'UL', 'LD', 'DR']];
+            moveCount += 1; break;
+          case 'Bw': stickers = [['BU', 'BR', 'BD', 'BL'], ['UB', 'RB', 'DB', 'LB'],
             ['BRU', 'BDR', 'BLD', 'BUL'], ['UBR', 'RBD', 'DBL', 'LBU'], ['RUB', 'DRB', 'LDB', 'ULB'],
-            ['U', 'R', 'D', 'L'], ['UR', 'RD', 'DL', 'LU'], ['RU', 'DR', 'LD', 'UL']]; break;
+            ['U', 'R', 'D', 'L'], ['UR', 'RD', 'DL', 'LU'], ['RU', 'DR', 'LD', 'UL']];
+            moveCount += 1; break;
         }
         angular.forEach(stickers, function(sticker) {
           switch(dir) {
@@ -101,7 +113,7 @@
               self[sticker[2]] = self[sticker[3]];
               self[sticker[3]] = temp;
               break;
-            case 0:
+            case 2:
               temp = self[sticker[0]];
               self[sticker[0]] = self[sticker[2]];
               self[sticker[2]] = temp;
@@ -119,6 +131,7 @@
           }
         });
       });
+      return moveCount;
     };
 
     /**

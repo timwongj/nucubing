@@ -59,8 +59,8 @@
             $scope.valid = true;
             cubs[index] = new Cub();
             cubs[index].perform(solve.scramble);
-            cubs[index].perform(solve.solution);
-            solve.moves = (cubs[index].isSolved()) ? solve.solution.split(' ').length : 'DNF';
+            var moveCount = cubs[index].perform(solve.solution);
+            solve.moves = (cubs[index].isSolved()) ? moveCount : 'DNF';
           } else {
             solve.moves = '';
           }
