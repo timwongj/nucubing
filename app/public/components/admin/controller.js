@@ -6,9 +6,15 @@
 
     var User = $resource('/user');
     var Scrambles = $resource('/scrambles');
+    var Results = $resource('/results');
+    var Users = $resource('/users');
 
     $scope.user = User.get();
+    $scope.results = Results.query();
+    $scope.users = Users.query();
     $scope.events = Events;
+
+    $scope.display = 'Scrambles';
 
     $scope.scrambles = Scrambles.query(function() {
       angular.forEach($scope.scrambles, function(scramble) {

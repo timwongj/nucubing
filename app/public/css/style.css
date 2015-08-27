@@ -157,3 +157,8 @@ legend.scheduler-border {
   margin-bottom: 0px;
   border-bottom: none;
 }
+
+.table-results-admin tr th, .table-results-admin tr td {
+  font-size: 10pt;
+  white-space: pre-wrap;
+}
