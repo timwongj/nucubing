@@ -19,10 +19,16 @@
     });
 
     $scope.display = 'Results';
-    $scope.order = 'week';
+    $scope.order = ['-week', 'index', 'displayName'];
 
-    $scope.sort = function(order) {
-      $scope.order = (($scope.order === order) && ($scope.order.substr(0, 1) !== '-')) ? ('-' + order) : order;
+    $scope.sort = function(field) {
+      switch(field) {
+        case 'week': $scope.order = ($scope.order[0] === '-week') ? ['week', 'index', 'displayName'] : ['-week', 'index', 'displayName']; break;
+        case 'event': $scope.order = ($scope.order[0] === 'index') ? ['-index', '-week', 'displayName'] : ['index', '-week', 'displayName']; break;
+        case 'name': $scope.order = ($scope.order[0] === 'displayName') ? ['-displayName', '-week', 'index'] : ['displayName', '-week', 'index']; break;
+        case 'date': $scope.order = ($scope.order[0] === '-date') ? ['date', 'index', 'displayName'] : ['-date', 'index', 'displayName']; break;
+        case 'status': $scope.order = ($scope.order[0] === 'status') ? ['-status', '-week', 'index'] : ['status', '-week', 'index']; break;
+      }
     };
 
     $scope.scrambles = Scrambles.query(function() {
