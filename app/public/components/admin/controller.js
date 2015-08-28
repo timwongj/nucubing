@@ -10,11 +10,20 @@
     var Users = $resource('/users');
 
     $scope.user = User.get();
-    $scope.results = Results.query();
     $scope.users = Users.query();
     $scope.events = Events;
+    $scope.results = Results.query(function() {
+      angular.forEach($scope.results, function(result) {
+        result.index = $scope.events[result.event].index;
+      });
+    });
 
-    $scope.display = 'Scrambles';
+    $scope.display = 'Results';
+    $scope.order = 'week';
+
+    $scope.sort = function(order) {
+      $scope.order = (($scope.order === order) && ($scope.order.substr(0, 1) !== '-')) ? ('-' + order) : order;
+    };
 
     $scope.scrambles = Scrambles.query(function() {
       angular.forEach($scope.scrambles, function(scramble) {

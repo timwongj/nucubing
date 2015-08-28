@@ -1,8 +1,32 @@
 <ul class="nav nav-tabs">
-  <li role="presentation" ng-class="{active:(display=='Scrambles')}"><a ng-click="display='Scrambles'">Scrambles</a></li>
   <li role="presentation" ng-class="{active:(display=='Results')}"><a ng-click="display='Results'">Results</a></li>
+  <li role="presentation" ng-class="{active:(display=='Scrambles')}"><a ng-click="display='Scrambles'">Scrambles</a></li>
   <li role="presentation" ng-class="{active:(display=='Users')}"><a ng-click="display='Users'">Users</a></li>
 </ul>
+<div class="row" ng-show="(display=='Results')">
+  <div class="col-xs-12">
+    <table class="table table-condensed table-results-admin">
+      <thead>
+      <tr>
+        <th style="width:10%"><a ng-click="sort('name')">Name</a></th>
+        <th style="width:10%"><a ng-click="sort('week')">Week</a></th>
+        <th style="width:10%"><a ng-click="sort('index')">Event</a></th>
+        <th style="width:60%">Result</th>
+        <th style="width:10%">Status</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="result in results | orderBy:order">
+        <td style="width:10%" ng-bind="result.firstName + ' ' + result.lastName"></td>
+        <td style="width:10%" ng-bind="displayWeek(result.week)"></td>
+        <td style="width:10%" ng-bind="displayEvent(result.event)"></td>
+        <td style="width:60%" ng-bind="result.data"></td>
+        <td style="width:10%" ng-bind="result.status"></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
 <div class="row" ng-show="(display=='Scrambles')">
   <div class="col-md-3">
     <h3>Upload Scrambles</h3>
@@ -87,28 +111,6 @@
         <td ng-bind="displayWeek(scramble.week)"></td>
         <td ng-bind="displayEvent(scramble.event)"></td>
         <td ng-bind="scramble.dateUploaded"></td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-<div class="row" ng-show="(display=='Results')">
-  <div class="col-xs-12">
-    <table class="table table-condensed table-results-admin">
-      <thead>
-      <tr>
-        <th style="width:10%">Name</th>
-        <th style="width:20%">Week/Event</th>
-        <th style="width:60%">Result</th>
-        <th style="width:10%">Status</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr ng-repeat="result in results track by $index | orderBy:'-week'">
-        <td style="width:10%" ng-bind="result.firstName + ' ' + result.lastName"></td>
-        <td style="width:20%" ng-bind="displayWeek(result.week) + ' - ' + displayEvent(result.event)"></td>
-        <td style="width:60%" ng-bind="result.data"></td>
-        <td style="width:10%" ng-bind="result.status"></td>
       </tr>
       </tbody>
     </table>
