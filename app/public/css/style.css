@@ -67,6 +67,7 @@ td.td-profile.ng-binding, td.td-results.ng-binding {
 }
 
 .solve-input {
+  font-family: monospace;
   -webkit-transition: all linear 0.5s;
   transition: all linear 0.5s;
   height: 30px;
@@ -89,6 +90,11 @@ td.td-profile.ng-binding, td.td-results.ng-binding {
   height: 30px;
   margin-bottom: 0px;
   padding: 5px;
+  font-family: monospace;
+}
+
+.text-area {
+  font-family: monospace;
 }
 
 .timer-scramble {
@@ -135,7 +141,7 @@ select {
   padding: 5px;
 }
 
-.btn, .panel, .label, .form-group, pre {
+.btn, .panel, .label, .form-group, .text-area, pre {
   border-radius: 0px;
 }
 

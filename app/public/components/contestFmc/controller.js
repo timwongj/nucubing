@@ -14,7 +14,12 @@
 
     $scope.solves = [];
     $scope.changed = false;
-    var dataLoaded = false, savedData = {solutions:['','',''], moves:[]};
+    var dataLoaded = false;
+    var savedData = {
+      solutions:['','',''],
+      moves:[],
+      comments:['','','']
+    };
 
     var scrambles = weeks.$promise
       .then(function() {
@@ -25,7 +30,8 @@
           angular.forEach(scrambles[0].scrambles, function(scramble, index) {
             $scope.solves[index] = {
               scramble: scramble,
-              solution: ''
+              solution: '',
+              comments: ''
             };
           });
         });
@@ -40,9 +46,11 @@
         }, function() {
           if (results[0]) {
             savedData = JSON.parse(results[0].data);
+            savedData.comments = (savedData.comments) ? savedData.comments : ['','',''];
             angular.forEach($scope.solves, function(solve, index) {
               solve.solution = savedData.solutions[index] || '';
               solve.moves = savedData.moves[index] || '';
+              solve.comments = savedData.comments[index];
             });
           }
           dataLoaded = true;
@@ -65,6 +73,7 @@
             solve.moves = '';
           }
           $scope.changed = (solve.solution != savedData.solutions[index]) ? true : $scope.changed;
+          $scope.changed = (solve.comments != savedData.comments[index]) ? true : $scope.changed;
         });
       }
     }, true);
@@ -84,10 +93,11 @@
     };
 
     $scope.save = function() {
-      var data = {solutions:[], moves:[]};
+      var data = {solutions:[], moves:[], comments:[]};
       angular.forEach($scope.solves, function(solve, index) {
         data.solutions[index] = solve.solution;
         data.moves[index] = solve.moves;
+        data.comments[index] = solve.comments;
       });
       var result = new Results({
         'event':'333fm',
@@ -99,16 +109,18 @@
         angular.forEach($scope.solves, function(solve, index) {
           savedData.solutions[index] = solve.solution;
           savedData.moves[index] = solve.moves;
+          savedData.comments[index] = solve.comments;
         });
         $scope.changed = false;
       });
     };
 
     $scope.submit = function() {
-      var data = {solutions:[], moves:[]};
+      var data = {solutions:[], moves:[], comments:[]};
       angular.forEach($scope.solves, function(solve, index) {
         data.solutions[index] = solve.solution;
         data.moves[index] = (solve.moves.length === 0) ? 'DNS' : solve.moves;
+        data.comments[index] = solve.comments;
       });
       var result = new Results({
         'event':'333fm',
