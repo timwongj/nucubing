@@ -27,10 +27,10 @@
             case 'avg5':
               convertedResult.best = calculator.calculateSingle(data.times, data.penalties);
               convertedResult.average = calculator.calculateAverage(data.times, data.penalties);
-              convertedResult.details = '';
+              convertedResult.details = [];
               formattedTimes = calculator.formatTimes(data.times, data.penalties);
               angular.forEach(formattedTimes, function(formattedTime, index) {
-                convertedResult.details += (index == data.times.length - 1) ? calculator.reformatTime(formattedTime) : calculator.reformatTime(formattedTime) + ', ';
+                convertedResult.details.push(calculator.reformatTime(formattedTime));
               });
               res = convertedResult.average.split(':');
               convertedResult.raw = (convertedResult.average == 'DNF') ? 'DNF' : ((res.length > 1) ? (parseFloat(res[0]) * 60) + parseFloat(res[1]) : parseFloat(res[0]));
@@ -38,10 +38,10 @@
             case 'mo3':
               convertedResult.best = calculator.calculateSingle(data.times, data.penalties);
               convertedResult.average = ((result.event == '555bf') || (result.event == '444bf')) ? '' : calculator.calculateMean(data.times, data.penalties);
-              convertedResult.details = '';
+              convertedResult.details = [];
               formattedTimes = calculator.formatTimes(data.times, data.penalties);
               angular.forEach(formattedTimes, function(formattedTime, index) {
-                convertedResult.details += (index == data.times.length - 1) ? calculator.reformatTime(formattedTime) : calculator.reformatTime(formattedTime) + ', ';
+                convertedResult.details.push(calculator.reformatTime(formattedTime));
               });
               res = convertedResult.average.split(':');
               convertedResult.raw = (convertedResult.average == 'DNF') ? 'DNF' : ((res.length > 1) ? (parseFloat(res[0]) * 60) + parseFloat(res[1]) : parseFloat(res[0]));
@@ -49,10 +49,10 @@
             case 'bo3':
               convertedResult.best = calculator.calculateSingle(data.times, data.penalties);
               convertedResult.average = ((result.event == '555bf') || (result.event == '444bf')) ? '' : calculator.calculateMean(data.times, data.penalties);
-              convertedResult.details = '';
+              convertedResult.details = [];
               formattedTimes = calculator.formatTimes(data.times, data.penalties);
               angular.forEach(formattedTimes, function(formattedTime, index) {
-                convertedResult.details += (index == data.times.length - 1) ? calculator.reformatTime(formattedTime) : calculator.reformatTime(formattedTime) + ', ';
+                convertedResult.details.push(calculator.reformatTime(formattedTime));
               });
               res = convertedResult.best.split(':');
               convertedResult.raw = (convertedResult.best == 'DNF') ? 'DNF' : ((res.length > 1) ? (parseFloat(res[0]) * 60) + parseFloat(res[1]) : parseFloat(res[0]));
@@ -60,16 +60,16 @@
             case 'fmc':
               convertedResult.best = calculator.calculateFMCSingle(data.moves);
               convertedResult.average = calculator.calculateFMCMean(data.moves);
-              convertedResult.details = data.moves[0] + ', ' + data.moves[1] + ', ' + data.moves[2];
+              convertedResult.details = data.moves;
               convertedResult.raw = convertedResult.average;
               break;
             case 'mbld':
               if (data.dnf == '(DNF)') {
                 convertedResult.best = 'DNF';
-                convertedResult.details = 'DNF';
+                convertedResult.details = ['DNF'];
               } else {
                 convertedResult.best = data.solved + '/' + data.attempted + ' in ' + data.time;
-                convertedResult.details = convertedResult.best;
+                convertedResult.details = [convertedResult.best];
               }
               var rawScore = parseFloat(data.solved) - (parseFloat(data.attempted) - parseFloat(data.solved));
               var rawTime = (parseFloat(data.time.split(':')[0]) * 60) + parseFloat(data.time.split(':')[1]);

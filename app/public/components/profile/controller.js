@@ -78,34 +78,34 @@
               case 'avg5':
                 res.best = Calculator.calculateSingle(data.times, data.penalties);
                 res.average = Calculator.calculateAverage(data.times, data.penalties);
-                res.details = '';
+                res.details = [];
                 formattedTimes = Calculator.formatTimes(data.times, data.penalties);
                 angular.forEach(data.times, function(time, index) {
-                  res.details += (index == data.times.length - 1) ? Calculator.reformatTime(formattedTimes[index]) : Calculator.reformatTime(formattedTimes[index]) + ', ';
+                  res.details.push(Calculator.reformatTime(formattedTimes[index]));
                 });
                 break;
               case 'mo3':
               case 'bo3':
                 res.best = Calculator.calculateSingle(data.times, data.penalties);
                 res.average = ((result.event == '555bf') || (result.event == '444bf')) ? '' : Calculator.calculateMean(data.times, data.penalties);
-                res.details = '';
+                res.details = [];
                 formattedTimes = Calculator.formatTimes(data.times, data.penalties);
                 angular.forEach(data.times, function(time, index) {
-                  res.details += (index == data.times.length - 1) ? Calculator.reformatTime(formattedTimes[index]) : Calculator.reformatTime(formattedTimes[index]) + ', ';
+                  res.details.push(Calculator.reformatTime(formattedTimes[index]));
                 });
                 break;
               case 'fmc':
                 res.best = Calculator.calculateFMCSingle(data.moves);
                 res.average = Calculator.calculateFMCMean(data.moves);
-                res.details = data.moves[0] + ', ' + data.moves[1] + ', ' + data.moves[2];
+                res.details = data.moves;
                 break;
               case 'mbld':
                 if (data.dnf == '(DNF)') {
                   res.best = 'DNF';
-                  res.details = 'DNF';
+                  res.details = ['DNF'];
                 } else {
                   res.best = data.solved + '/' + data.attempted + ' in ' + data.time;
-                  res.details = res.best;
+                  res.details = [res.best];
                 }
                 break;
             }

@@ -48,9 +48,9 @@ ul.nav.nav-tabs {
   border: 0px;
 }
 
-td.td-profile.ng-binding, td.td-results.ng-binding {
+table.table-results tbody tr td {
   font-size: 10pt;
-  padding: 3px auto;
+  padding: 3px;
 }
 
 .scramble {

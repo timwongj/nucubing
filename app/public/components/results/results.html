@@ -19,7 +19,7 @@
       <span class="label label-warning" ng-bind="displayEvent(section.event)" ng-show="selectedEvent == 'All Events'"></span>
     </h4>
     <div class="table table-responsive table-results">
-      <table class="table table-condensed table-striped">
+      <table class="table table-condensed table-striped table-results">
         <thead>
         <tr>
           <th style="width:5%;padding-bottom:1px;">Rank</th>
@@ -35,7 +35,7 @@
           <td style="width:25%;padding-top:3px;padding-bottom:3px;"><a href="#/users/{{result.facebook_id}}" ng-bind="result.name"></a></td>
           <td style="width:15%;" class="td-results" ng-bind="result.best"></td>
           <td style="width:15%;" class="td-results" ng-bind="result.average"></td>
-          <td style="width:40%;" class="td-results" ng-bind="result.details"></td>
+          <td style="width:40%;" class="td-results"><span ng-repeat="detail in result.details track by $index" ng-bind="detail + '&emsp;'"></span></td>
         </tr>
         </tbody>
       </table>
