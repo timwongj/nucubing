@@ -14,8 +14,11 @@
   var mongoose = require('mongoose');
   var passport = require('passport');
   var config = require('config');
+  var ua = require('universal-analytics');
 
   var fbAuth = require('./app/middleware/authentication');
+  var visitor = ua('UA-66895178-1');
+  visitor.pageview("/", "Home", "http://nucubing.com").send();
 
   var authRouter = require('./app/routes/auth');
   var resultsRouter = require('./app/routes/results');

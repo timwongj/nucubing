@@ -5,7 +5,7 @@
   module.exports = function(grunt) {
 
     grunt.config('watch', {
-      files: ['app/**/*', 'test/**/*', 'config/**/*', 'grunt/**/*', 'Gruntfile.js'],
+      files: ['server.js', 'app/**/*', 'test/**/*', 'config/**/*', 'grunt/**/*', 'Gruntfile.js'],
       tasks: ['jshint', 'copy', 'concat', 'uglify']
     });
 
