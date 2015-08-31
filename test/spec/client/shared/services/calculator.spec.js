@@ -28,7 +28,7 @@
         var convertedResults = Calculator.convertResults(results);
         expect(convertedResults[0].average).toEqual('10.62');
         expect(convertedResults[0].best).toEqual('8.25');
-        expect(convertedResults[0].details).toEqual('10.69, 11.68, 9.48, DNF, 8.25');
+        expect(convertedResults[0].details).toEqual(['10.69', '11.68', '9.48', 'DNF', '8.25']);
         expect(convertedResults[0].event).toEqual(results[0].event);
         expect(convertedResults[0].week).toEqual(results[0].week);
         expect(convertedResults[0].raw).toEqual(10.62);
