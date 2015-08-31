@@ -21,5 +21,10 @@
       "clientID":"uh oh riley time",
       "clientSecret":"don't try to be too clever!"
     }
+  },
+  "universal-analytics": {
+    "account-ID":"UA-66895178-1",
+    "url":"http://nucubing.com",
+    "name":"Home"
   }
 }

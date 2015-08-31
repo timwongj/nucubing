@@ -17,8 +17,8 @@
   var ua = require('universal-analytics');
 
   var fbAuth = require('./app/middleware/authentication');
-  var visitor = ua('UA-66895178-1');
-  visitor.pageview("/", "Home", "http://nucubing.com").send();
+  var visitor = ua(config.get('universal-analytics.account-ID'));
+  visitor.pageview("/", config.get('universal-analytics.name'), config.get('universal-analytics.url')).send();
 
   var authRouter = require('./app/routes/auth');
   var resultsRouter = require('./app/routes/results');
