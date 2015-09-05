@@ -87,7 +87,7 @@
         $scope.changed = false;
         $scope.valid = true;
         angular.forEach($scope.solves, function(solve, index) {
-          $scope.valid = (solve.time === '') ? false : $scope.valid;
+          $scope.valid = (solve.time === undefined) ? false : $scope.valid;
           $scope.changed = ((solve.time != savedData.times[index]) || (solve.penalty != savedData.penalties[index])) ? true : $scope.changed;
         });
       }

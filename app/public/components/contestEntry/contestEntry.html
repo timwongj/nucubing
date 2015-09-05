@@ -34,7 +34,7 @@
       <button class="btn btn-warning" tabindex="-1" type="button" ng-click="back()"><i class="fa fa-backward"> Back</i></button>
       <button class="btn btn-info" tabindex="-1" type="button" ng-click="info()"><i class="fa fa-info-circle"> Info</i></button>
       <button class="btn btn-primary" tabindex="-1" type="button" ng-click="save()" ng-disabled="!changed"><i class="fa fa-save"> Save</i></button>
-      <button class="btn btn-success" tabindex="-1" type="submit" ng-click="submit()" ng-disabled="!contestForm.$valid"><i class="fa fa-upload"></i> Submit</button>
+      <button class="btn btn-success" tabindex="-1" type="submit" ng-click="submit()" ng-disabled="!(contestForm.$valid && valid)"><i class="fa fa-upload"></i> Submit</button>
     </div>
   </div>
 </form>
