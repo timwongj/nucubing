@@ -46,9 +46,6 @@
     "multer": "^0.1.8",
     "passport": "^0.2.1",
     "passport-facebook": "^2.0.0",
-    "passport-google": "^0.3.0",
-    "passport-local": "^1.0.0",
-    "passport-twitter": "^1.0.3",
     "path": "^0.11.14",
     "universal-analytics": "^0.3.9"
   },
@@ -56,7 +53,8 @@
     "grunt-contrib-jshint": "^0.11.2",
     "grunt-contrib-nodeunit": "^0.4.1",
     "grunt-contrib-watch": "^0.6.1",
-    "karma": "^0.13.9",
+    "grunt-karma": "^0.12.1",
+    "karma": "https://registry.npmjs.org/karma/-/karma-0.13.9.tgz",
     "karma-jasmine": "^0.3.6",
     "karma-phantomjs-launcher": "^0.2.1",
     "nodemon": "^1.4.1"
