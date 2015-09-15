@@ -1,10 +1,10 @@
 .navbar, .navbar-inverse {
-  border-radius: 0px;
+  border-radius: 0;
   min-height: 40px;
 }
 
 .navbar-collapse {
-  padding: 0px;
+  padding: 0;
 }
 
 .navbar-collapse ul li a {
@@ -16,11 +16,11 @@ ul.nav.nav-tabs {
 }
 
 .panel-heading, .panel-footer {
-  padding: 8px auto;
+  padding: 8px 0;
 }
 
 .panel-body {
-  padding: 12px auto;
+  padding: 12px 0;
 }
 
 .vertical-middle {
@@ -28,8 +28,8 @@ ul.nav.nav-tabs {
 }
 
 .page-header {
-  margin-top: 0px;
-  padding: 0px;
+  margin-top: 0;
+  padding: 0;
 }
 
 .page-title {
@@ -37,7 +37,7 @@ ul.nav.nav-tabs {
 }
 
 .panelBodyProfile {
-  padding: 0px;
+  padding: 0;
 }
 
 .profilePic {
@@ -45,7 +45,7 @@ ul.nav.nav-tabs {
 }
 
 .table-responsive {
-  border: 0px;
+  border: 0;
 }
 
 table.table-results tbody tr td {
@@ -54,7 +54,7 @@ table.table-results tbody tr td {
 }
 
 .scramble {
-  margin: 0px;
+  margin: 0;
   padding-top: 5px;
   padding-bottom: 5px;
   font-family: monospace;
@@ -63,7 +63,7 @@ table.table-results tbody tr td {
 
 .input-group-addon {
   height: 25px;
-  border-radius: 0px;
+  border-radius: 2px;
 }
 
 .solve-input {
@@ -71,7 +71,7 @@ table.table-results tbody tr td {
   -webkit-transition: all linear 0.5s;
   transition: all linear 0.5s;
   height: 30px;
-  border-radius: 0px;
+  border-radius: 2px;
 }
 
 .solve-input.ng-invalid {
@@ -88,7 +88,7 @@ table.table-results tbody tr td {
 
 .result {
   height: 30px;
-  margin-bottom: 0px;
+  margin-bottom: 0;
   padding: 5px;
   font-family: monospace;
 }
@@ -112,7 +112,7 @@ table.table-results tbody tr td {
 }
 
 .divider {
-  margin: 0px 15px 10px;
+  margin: 0 15px 10px;
 }
 
 .btn-right {
@@ -142,26 +142,28 @@ select {
 }
 
 .btn, .panel, .label, .form-group, .text-area, pre {
-  border-radius: 0px;
+  border-radius: 2px;
 }
 
 .container .jumbotron, .container-fluid .jumbotron {
-  border-radius: 0px;
+  border-radius: 2px;
 }
 
 fieldset.scheduler-border {
-  border: 1px groove #ddd !important;
+  border: 2px groove #ddd !important;
   padding: 0 5px 5px 5px !important;
   margin: 0 0 1.5em 0 !important;
-  -webkit-box-shadow:  0px 0px 0px 0px #000;
-  box-shadow:  0px 0px 0px 0px #000;
+  -webkit-box-shadow: 0 0 0 0 rgba(0,0,0,0.75);
+  -moz-box-shadow: 0 0 0 0 rgba(0,0,0,0.75);
+  box-shadow: 0 0 0 0 rgba(0,0,0,0.75);
 }
 
 legend.scheduler-border {
   width: inherit;
   padding: 0 10px;
-  margin-bottom: 0px;
+  margin-bottom: 0;
   border-bottom: none;
+  font-size: 18px;
 }
 
 .table-results-admin tr th, .table-results-admin tr td {
