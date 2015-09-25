@@ -43,7 +43,33 @@ module.exports = (function() {
       } else {
         res.status(500).json({'message':'login is required to submit a result'});
       }
-
+    })
+    .put(function(req, res) {
+      if (req.user.email === 'timothywong8@gmail.com') {
+        Result.update(req.query, req.body, function(err, result) {
+          if (err) {
+            res.status(500).json({'message':'cannot update result'});
+          } else {
+            res.status(200).json({'message':'result was successfully updated'});
+          }
+        });
+      } else {
+        res.status(401).json({'message':'Unauthorized'});
+      }
+    })
+    .delete(function(req, res) {
+      if (req.user.email === 'timothywong8@gmail.com') {
+        Result.remove(req.query, function(err, removed) {
+          if (err) {
+            res.status(500).json({'message':'cannot remove result'});
+          } else {
+            console.log(removed);
+            res.status(200).json({'message':'result was sucessfully removed'});
+          }
+        });
+      } else {
+        res.status(401).json({'message':'Unauthorized'});
+      }
     });
 
   return router;

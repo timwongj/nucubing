@@ -6,15 +6,29 @@
 
     var User = $resource('/user');
     var Scrambles = $resource('/scrambles');
-    var Results = $resource('/results');
+    var Results = $resource('/results', null, {
+      'update': {
+        method: 'PUT',
+        params: {
+          week: '@week',
+          event: '@event',
+          facebook_id: '@facebook_id'
+        }
+      }
+    });
     var Users = $resource('/users');
 
     $scope.user = User.get();
-    $scope.users = Users.query();
+    $scope.users = Users.query(function(users) {
+      angular.forEach(users, function(user) {
+        user.updated_time = new Date(user.updated_time);
+      });
+    });
     $scope.events = Events;
     $scope.results = Results.query(function() {
       angular.forEach($scope.results, function(result) {
         result.index = $scope.events[result.event].index;
+        result.data = JSON.parse(result.data);
       });
     });
 
@@ -31,11 +45,35 @@
       }
     };
 
+    $scope.weeks = {};
+
     $scope.scrambles = Scrambles.query(function() {
       angular.forEach($scope.scrambles, function(scramble) {
         scramble.index = $scope.events[scramble.event].index;
+        scramble.dateUploaded = new Date(scramble.dateUploaded);
+        if (!$scope.weeks[scramble.week]) {
+          $scope.weeks[scramble.week] = [];
+        }
+        $scope.weeks[scramble.week].push(scramble);
       });
     });
+
+    $scope.editResult = function(result) {
+      var changedStatus = (result.status == 'Completed') ? 'In Progress' : 'Completed';
+      if (confirm('Are you sure you would like to change the status of this result to ' + changedStatus)) {
+        Results.update({week:result.week, event:result.event, facebook_id:result.facebook_id}, {$set: {status: changedStatus}}, function() {
+          result.status = changedStatus;
+        });
+      }
+    };
+
+    $scope.removeResult = function(result) {
+      if (confirm('Are you sure you would like to remove this result')) {
+        Results.delete({week:result.week, event:result.event, facebook_id:result.facebook_id}, function() {
+          $scope.results.splice($scope.results.indexOf(result), 1);
+        });
+      }
+    };
 
     $scope.uploader = new FileUploader({
       url:'/scrambles'

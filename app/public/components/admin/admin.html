@@ -11,8 +11,9 @@
         <th style="width:10%"><a ng-click="sort('name')">Name</a></th>
         <th style="width:10%"><a ng-click="sort('week')">Week</a></th>
         <th style="width:10%"><a ng-click="sort('event')">Event</a></th>
-        <th style="width:60%"><a ng-click="sort('date')">Result</a></th>
+        <th style="width:55%"><a ng-click="sort('date')">Result</a></th>
         <th style="width:10%"><a ng-click="sort('status')">Status</a></th>
+        <th style="width:5%;">Actions</th>
       </tr>
       </thead>
       <tbody>
@@ -20,8 +21,20 @@
         <td style="width:10%" ng-bind="result.firstName + ' ' + result.lastName"></td>
         <td style="width:10%" ng-bind="displayWeek(result.week)"></td>
         <td style="width:10%" ng-bind="displayEvent(result.event)"></td>
-        <td style="width:60%" ng-bind="result.data"></td>
-        <td style="width:10%" ng-bind="result.status"></td>
+        <td style="width:55%;white-space:normal;">
+          <ul style="list-style-type:none;padding:0;margin:0;">
+            <li ng-repeat="(key, value) in result.data" ng-bind="key + ' - ' + value"></li>
+          </ul>
+        </td>
+        <td style="width:10%;white-space:normal;vertical-align:top">
+          <h5 style="margin:0;"><span class="label label-success" ng-if="result.status=='Completed'" ng-bind="result.status"></span></h5>
+          <h5 style="margin:0;"><span class="label label-warning" ng-if="result.status=='In Progress'" ng-bind="result.status"></span></h5>
+        </td>
+        <td style="width:5%;white-space:nowrap;">
+          <button class="btn btn-warning btn-xs" ng-if="result.status=='Completed'" ng-click="editResult(result)"><i class="fa fa-pencil"></i></button>
+          <button class="btn btn-success btn-xs" ng-if="result.status=='In Progress'" ng-click="editResult(result)"><i class="fa fa-check"></i></button>
+          <button class="btn btn-danger btn-xs" ng-click="removeResult(result)"><i class="fa fa-remove"></i></button>
+        </td>
       </tr>
       </tbody>
     </table>
@@ -101,16 +114,16 @@
     <table class="table table-condensed">
       <thead>
       <tr>
-        <th>Week</th>
-        <th>Event</th>
-        <th>Date Uploaded</th>
+        <th style="width:10%;">Week</th>
+        <th style="width:70%;">Events</th>
+        <th style="width:20%;">Date Uploaded</th>
       </tr>
       </thead>
       <tbody>
-      <tr ng-repeat="scramble in scrambles | orderBy:['-week', 'index']">
-        <td ng-bind="displayWeek(scramble.week)"></td>
-        <td ng-bind="displayEvent(scramble.event)"></td>
-        <td ng-bind="scramble.dateUploaded"></td>
+      <tr ng-repeat="(week, scrambles) in weeks | orderObjectBy:['-week', 'index']">
+        <td style="width:10%;" ng-bind="displayWeek(scrambles[0].week)"></td>
+        <td style="width:70%;"><span ng-repeat="scramble in scrambles" ng-bind="displayEvent(scramble.event) + '&emsp;'"></span></td>
+        <td style="width:20%;" ng-bind="scrambles[0].dateUploaded"></td>
       </tr>
       </tbody>
     </table>
@@ -130,7 +143,10 @@
       </thead>
       <tbody>
       <tr ng-repeat="user in users track by $index">
-        <td><a ng-href="#/users/{{user.facebook_id}}" ng-bind="user.firstName + ' ' + user.lastName"></a></td>
+        <td style="white-space:normal">
+          <img ng-src="http://graph.facebook.com/{{user.facebook_id}}/picture?width=20&height=20" class="img-responsive" style="display:inline;margin-right:5px;">
+          <a ng-href="#/users/{{user.facebook_id}}" ng-bind="user.firstName + ' ' + user.lastName"></a>
+        </td>
         <td ng-bind="user.gender"></td>
         <td ng-bind="user.email"></td>
         <td><a ng-href="{{user.profileUrl}}" ng-bind="user.facebook_id" ></a></td>
