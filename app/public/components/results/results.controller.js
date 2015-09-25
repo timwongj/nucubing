@@ -2,7 +2,7 @@
 
   'use strict';
 
-  function ResultsController($scope, $resource, Calculator, Events) {
+  function ResultsController($scope, $resource, $modal, Calculator, Events) {
 
     $scope.eventsList = ['All Events', '333', '444', '555', '222', '333bf', '333oh', '333fm', '333ft', 'minx', 'pyram', 'sq1', 'clock', 'skewb', '666', '777', '444bf', '555bf', '333mbf'];
     $scope.selectedEvent = $scope.eventsList[0];
@@ -124,6 +124,22 @@
       }
     }
 
+    $scope.displayComments = function(result, index) {
+      var modalInstance = $modal.open({
+        animation: true,
+        templateUrl: '/dist/components/results/resultsModal.html',
+        controller: 'ResultsModalController',
+        resolve: {
+          result: function () {
+            return result;
+          },
+          index: function () {
+            return index;
+          }
+        }
+      });
+    };
+
     $scope.displayEvent = function(event) {
       return ((event === 'All Events') || (event === undefined)) ? event : $scope.events[event].name;
     };
@@ -134,6 +150,6 @@
 
   }
 
-  angular.module('nuCubingApp').controller('ResultsController', ['$scope', '$resource', 'Calculator', 'Events', ResultsController]);
+  angular.module('nuCubingApp').controller('ResultsController', ['$scope', '$resource', '$modal', 'Calculator', 'Events', ResultsController]);
 
 })();

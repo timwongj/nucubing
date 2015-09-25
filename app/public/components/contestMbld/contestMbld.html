@@ -7,8 +7,8 @@
       <legend class="scheduler-border">Attempt 1</legend>
       <div class="col-sm-12 result-row">
         <p class="scramble" ng-repeat="scramble in scrambles" ng-bind="$index + 1 + '. ' + scramble" ng-show="$index < displayed"></p>
-        <button class="btn btn-default btn-sm" ng-click="display('less')" ng-disabled="displayed==7">Less Scrambles</button>
-        <button class="btn btn-default btn-sm" ng-click="display('more')" ng-disabled="displayed==scrambles.length">More Scrambles</button>
+        <button type="button" class="btn btn-default btn-sm" ng-click="display('less')" ng-disabled="displayed==7">Less Scrambles</button>
+        <button type="button" class="btn btn-default btn-sm" ng-click="display('more')" ng-disabled="displayed==scrambles.length">More Scrambles</button>
       </div>
       <div class="col-sm-5 result-row">
         <div class="input-group">

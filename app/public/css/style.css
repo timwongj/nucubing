@@ -51,6 +51,7 @@ ul.nav.nav-tabs {
 table.table-results tbody tr td {
   font-size: 10pt;
   padding: 3px;
+  vertical-align: middle;
 }
 
 .scramble {
@@ -169,4 +170,16 @@ legend.scheduler-border {
 .table-results-admin tr th, .table-results-admin tr td {
   font-size: 10pt;
   white-space: pre-wrap;
+}
+
+.modal {
+  top: 20%;
+}
+
+.modal-header {
+  padding: 8px 10px;
+}
+
+.modal-body {
+  padding: 0 10px;
 }

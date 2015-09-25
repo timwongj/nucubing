@@ -1,0 +1,12 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="close()"><span aria-hidden="true">&times;</span></button>
+  <img ng-src="http://graph.facebook.com/{{facebook_id}}/picture?width=10&height=10" style="display:inline;padding-right:2px;">
+  <h4 class="modal-title" ng-bind="name + ' - ' + event" style="display:inline;vertical-align:middle;"></h4>
+</div>
+<div class="modal-body">
+  <h5 ng-bind="'Week: ' + week + ' - Attempt ' + (index+1)"></h5>
+  <h5 ng-bind="'Scramble: ' + scramble"></h5>
+  <h5 ng-bind="'Solution: ' + solution"></h5>
+  <h5 ng-bind="'Result: ' + result"></h5>
+  <p style="white-space:pre-wrap;" ng-bind="comments"></p>
+</div>

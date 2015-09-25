@@ -31,11 +31,24 @@
         </thead>
         <tbody>
         <tr ng-repeat="result in section.results | orderBy:'raw'">
-          <td style="width:5%;" class="td-results" ng-bind="$index + 1"></td>
-          <td style="width:25%;padding-top:3px;padding-bottom:3px;"><a href="#/users/{{result.facebook_id}}" ng-bind="result.name"></a></td>
-          <td style="width:15%;" class="td-results" ng-bind="result.best"></td>
-          <td style="width:15%;" class="td-results" ng-bind="result.average"></td>
-          <td style="width:40%;" class="td-results"><span ng-repeat="detail in result.details track by $index" ng-bind="detail + '&emsp;'"></span></td>
+          <td style="width:5%;">
+            <span style="padding:0 3px 0 10px;" ng-bind="$index + 1"></span>
+            <span ng-if="$index==0" style="color:#FFD700"><i class="fa fa-trophy"></i></span>
+            <span ng-if="$index==1" style="color:#C0C0C0"><i class="fa fa-trophy"></i></span>
+            <span ng-if="$index==2" style="color:#CD7F32"><i class="fa fa-trophy"></i></span>
+          </td>
+          <td style="width:25%;padding-top:3px;padding-bottom:3px;">
+            <img ng-src="http://graph.facebook.com/{{result.facebook_id}}/picture?width=10&height=10" style="display:inline;padding-right:2px;">
+            <a href="#/users/{{result.facebook_id}}" ng-bind="result.name"></a>
+          </td>
+          <td style="width:15%;" ng-bind="result.best"></td>
+          <td style="width:15%;" ng-bind="result.average"></td>
+          <td style="width:40%;">
+            <span ng-if="!result.comments" ng-repeat="detail in result.details track by $index" ng-bind="detail + '&emsp;'"></span>
+            <span ng-if="result.comments" ng-repeat="detail in result.details track by $index">
+              <a ng-click="displayComments(result, $index);" ng-bind="detail"></a><span>&emsp;</span>
+            </span>
+          </td>
         </tr>
         </tbody>
       </table>

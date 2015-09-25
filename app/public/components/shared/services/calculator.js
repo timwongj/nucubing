@@ -62,6 +62,8 @@
               convertedResult.average = calculator.calculateFMCMean(data.moves);
               convertedResult.details = data.moves;
               convertedResult.raw = convertedResult.average;
+              convertedResult.solutions = data.solutions;
+              convertedResult.comments = data.comments;
               break;
             case 'mbld':
               if (data.dnf == '(DNF)') {
