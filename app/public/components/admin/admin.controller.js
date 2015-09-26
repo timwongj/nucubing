@@ -21,7 +21,8 @@
     $scope.user = User.get();
     $scope.users = Users.query(function(users) {
       angular.forEach(users, function(user) {
-        user.updated_time = new Date(user.updated_time);
+        user.updated_time = moment(new Date(user.updated_time)).format('MM/DD/YYYY h:mm:ss A');
+        user.created_time = moment(new Date(user.created_time)).format('MM/DD/YYYY h:mm:ss A');
       });
     });
     $scope.events = Events;
@@ -50,11 +51,11 @@
     $scope.scrambles = Scrambles.query(function() {
       angular.forEach($scope.scrambles, function(scramble) {
         scramble.index = $scope.events[scramble.event].index;
-        scramble.dateUploaded = new Date(scramble.dateUploaded);
+        scramble.dateUploaded = moment(new Date(scramble.dateUploaded)).format('MM/DD/YYYY h:mm:ss A');
         if (!$scope.weeks[scramble.week]) {
-          $scope.weeks[scramble.week] = [];
+          $scope.weeks[scramble.week] = {scrambles: [], expand: false};
         }
-        $scope.weeks[scramble.week].push(scramble);
+        $scope.weeks[scramble.week].scrambles.push(scramble);
       });
     });
 

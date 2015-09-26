@@ -115,15 +115,29 @@
       <thead>
       <tr>
         <th style="width:10%;">Week</th>
-        <th style="width:70%;">Events</th>
-        <th style="width:20%;">Date Uploaded</th>
+        <th style="width:75%;">Events</th>
+        <th style="width:15%;">Uploaded</th>
       </tr>
       </thead>
       <tbody>
-      <tr ng-repeat="(week, scrambles) in weeks | orderObjectBy:['-week', 'index']">
-        <td style="width:10%;" ng-bind="displayWeek(scrambles[0].week)"></td>
-        <td style="width:70%;"><span ng-repeat="scramble in scrambles" ng-bind="displayEvent(scramble.event) + '&emsp;'"></span></td>
-        <td style="width:20%;" ng-bind="scrambles[0].dateUploaded"></td>
+      <tr ng-repeat="(week, events) in weeks | orderObjectBy:['-week', 'index']">
+        <td style="width:10%;">
+          <span ng-bind="displayWeek(events.scrambles[0].week)"></span>
+          <button class="btn btn-info btn-xs" style="margin-left:2px;" ng-if="!events.expand" ng-click="events.expand=true;"><i class="fa fa-plus"></i></button>
+          <button class="btn btn-info btn-xs" style="margin-left:2px;" ng-if="events.expand" ng-click="events.expand=false"><i class="fa fa-minus"></i></button>
+        </td>
+        <td style="width:75%;">
+          <span ng-if="!events.expand" ng-repeat="event in events.scrambles" ng-bind="displayEvent(event.event) + '&emsp;'"></span>
+          <ul ng-if="events.expand" style="list-style-type:none;padding:0;margin:0;">
+            <li ng-repeat="event in events.scrambles">
+              <span ng-bind="displayEvent(event.event)"></span>
+              <ul style="list-style-type:none;padding-left:10px;">
+                <li ng-repeat="scramble in event.scrambles" ng-bind="($index+1) + '.&emsp;' + scramble"></li>
+              </ul>
+            </li>
+          </ul>
+        </td>
+        <td style="width:15%;" ng-bind="events.scrambles[0].dateUploaded"></td>
       </tr>
       </tbody>
     </table>
@@ -139,6 +153,7 @@
         <th>Email</th>
         <th>Facebook ID</th>
         <th>Updated</th>
+        <th>Created</th>
       </tr>
       </thead>
       <tbody>
@@ -151,6 +166,7 @@
         <td ng-bind="user.email"></td>
         <td><a ng-href="{{user.profileUrl}}" ng-bind="user.facebook_id" ></a></td>
         <td ng-bind="user.updated_time"></td>
+        <td ng-bind="user.created_time"></td>
       </tr>
       </tbody>
     </table>

@@ -1,0 +1,10 @@
+{
+  "restartable": "rs",
+  "verbose": true,
+  "watch": [
+    "server.js",
+    "app/middleware",
+    "app/models",
+    "app/routes"
+  ]
+}

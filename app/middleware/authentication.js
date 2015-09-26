@@ -11,7 +11,7 @@ module.exports = (function() {
       callbackURL: '/auth/facebook/callback'
     }, function(accessToken, refreshToken, profile, done) {
       process.nextTick(function() {
-        User.findOne({'email':profile.emails[0].value}, function(err, user) {
+        User.findOne({'facebook_id': profile.id}, function(err, user) {
           if (err) {
             return done(err);
           } else if (user) {
@@ -38,21 +38,22 @@ module.exports = (function() {
             }
             return done(null, user);
           } else {
-            var newUser = new User();
-            newUser.facebook_id = profile.id;
-            newUser.username = profile.username;
-            newUser.displayName = profile.displayName;
-            newUser.name = profile.name;
-            newUser.firstName = profile.name.givenName;
-            newUser.lastName = profile.name.familyName;
-            newUser.email = profile.emails[0].value;
-            newUser.emails = profile.emails;
-            newUser.gender = profile.gender;
-            newUser.profileUrl = profile.profileUrl;
-            newUser.provider = profile.provider;
-            newUser.locale = profile._json.locale;
-            newUser.timezone = profile._json.timezone;
-            newUser.updated_time = profile._json.updated_time;
+            var newUser = new User({
+              facebook_id: profile.id,
+              username: profile.username,
+              displayName: profile.displayName,
+              name: profile.name,
+              firstName: profile.name.givenName,
+              lastName: profile.name.familyName,
+              email: profile.emails[0].value,
+              emails: profile.emails,
+              gender: profile.gender,
+              profileUrl: profile.profileUrl,
+              provider: profile.provider,
+              locale: profile._json.locale,
+              timezone: profile._json.timezone,
+              updated_time: profile._json.updated_time
+            });
             newUser.save(function(err) {
               if (err) {
                 throw err;
