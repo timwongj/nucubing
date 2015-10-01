@@ -44,9 +44,11 @@
           <td style="width:15%;" ng-bind="result.best"></td>
           <td style="width:15%;" ng-bind="result.average"></td>
           <td style="width:40%;">
-            <span ng-if="!result.comments" ng-repeat="detail in result.details track by $index" ng-bind="detail + '&emsp;'"></span>
-            <span ng-if="result.comments" ng-repeat="detail in result.details track by $index">
-              <a ng-click="displayComments(result, $index);" ng-bind="detail"></a><span>&emsp;</span>
+            <span ng-repeat="detail in result.details track by $index">
+              <a ng-if="((result.comments) && (detail !== 'DNS') && (detail !== 'DNF'))"
+                 ng-bind="detail" ng-click="displayComments(result, $index);" style="margin-right:1em;"></a>
+              <span ng-if="!((result.comments) && (detail !== 'DNS') && (detail !== 'DNF'))"
+                    ng-bind="detail" style="margin-right:1em;"></span>
             </span>
           </td>
         </tr>
