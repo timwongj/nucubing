@@ -25,7 +25,7 @@ module.exports = (function() {
     var sunday = new Date();
     sunday.setDate(today.getDate() - today.getDay());
     var date = (sunday.getDate() < 10) ? '0' + sunday.getDate().toString() : sunday.getDate().toString();
-    var month = (sunday.getMonth() < 10) ? '0' + (sunday.getMonth() + 1).toString() : (sunday.getMonth() + 1).toString();
+    var month = (sunday.getMonth() < 9) ? '0' + (sunday.getMonth() + 1).toString() : (sunday.getMonth() + 1).toString();
     var year = sunday.getFullYear().toString().substr(2, 2);
     return month + date + year;
   }
