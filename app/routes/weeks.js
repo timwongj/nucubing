@@ -1,5 +1,5 @@
 var express = require('express');
-var Scramble = require('../models/scramble');
+var Scramble = require('../schemas/scramble');
 
 module.exports = (function() {
 

@@ -1,5 +1,5 @@
 var express = require('express');
-var Result = require('../models/result');
+var Result = require('../schemas/result');
 
 module.exports = (function() {
 

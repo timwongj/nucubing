@@ -1,5 +1,5 @@
 var express = require('express');
-var User = require('../models/user');
+var User = require('../schemas/user');
 
 module.exports = (function() {
 
