@@ -119,6 +119,12 @@
         'status':'In Progress',
         'data':JSON.stringify(data)
       });
+      localStorage.setItem((new Date()).toString(), JSON.stringify({
+        event: $scope.eventId,
+        week: weeks[0],
+        status: 'In Progress',
+        data: data
+      }));
       result.$save(function() {
         angular.forEach($scope.solves, function(solve, index) {
           savedData.times[index] = solve.time || '';
@@ -141,6 +147,12 @@
           'status':'Completed',
           'data':JSON.stringify(data)
         });
+        localStorage.setItem((new Date()).toString(), JSON.stringify({
+          event: $scope.eventId,
+          week: weeks[0],
+          status: 'Completed',
+          data: data
+        }));
         result.$save(function() {
           window.location = '#/contest';
         });

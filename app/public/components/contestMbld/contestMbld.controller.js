@@ -121,6 +121,12 @@
       result.data.time = $scope.mbldResult.time;
       result.data.dnf = $scope.mbldResult.dnf;
       result.data = JSON.stringify(result.data);
+      localStorage.setItem((new Date()).toString(), JSON.stringify({
+        event: '333mbf',
+        week: weeks[0],
+        status: 'In Progress',
+        data: result.data
+      }));
       result.$save(function() {
         savedData = {
           'solved':$scope.mbldResult.solved,
@@ -143,6 +149,12 @@
       result.data.time = $scope.mbldResult.time;
       result.data.dnf = $scope.mbldResult.dnf;
       result.data = JSON.stringify(result.data);
+      localStorage.setItem((new Date()).toString(), JSON.stringify({
+        event: '333mbf',
+        week: weeks[0],
+        status: 'Completed',
+        data: result.data
+      }));
       result.$save(function() {
         window.location = '#/contest';
       });
