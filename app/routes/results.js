@@ -32,13 +32,13 @@ module.exports = (function() {
           if (err) {
             res.status(500).json({'message':'cannot save result'});
           }
-        });
-        result.save(function(err) {
-          if (err) {
-            res.status(500).json({'message':'cannot save result'});
-          } else {
-            res.status(200).json({'message':'result was successfully saved'});
-          }
+          result.save(function(err) {
+            if (err) {
+              res.status(500).json({'message':'cannot save result'});
+            } else {
+              res.status(200).json({'message':'result was successfully saved'});
+            }
+          });
         });
       } else {
         res.status(500).json({'message':'login is required to submit a result'});
