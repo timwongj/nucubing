@@ -22,19 +22,19 @@ module.exports = (function() {
       console.log(req.user ? ('name: ' + req.user.displayName + ', facebook_id: ' + req.user.facebook_id) : 'no User');
       console.log(req.body ? ('week: ' + req.body.week + ', event: ' + req.body.event + ', status: ' + req.body.status + ', data: ' + req.body.data) : 'no body');
       if (req.user) {
-        var result = new Result();
-        result.event = req.body.event;
-        result.week = req.body.week;
-        result.email = req.user.email;
-        result.firstName = req.user.firstName;
-        result.lastName = req.user.lastName;
-        result.facebook_id = req.user.facebook_id;
-        result.status = req.body.status;
-        result.data = req.body.data;
         Result.remove({'week':result.week, 'event':result.event, 'email':result.email}).exec(function(err) {
           if (err) {
             res.status(500).json({'message':'cannot save result'});
           }
+          var result = new Result();
+          result.event = req.body.event;
+          result.week = req.body.week;
+          result.email = req.user.email;
+          result.firstName = req.user.firstName;
+          result.lastName = req.user.lastName;
+          result.facebook_id = req.user.facebook_id;
+          result.status = req.body.status;
+          result.data = req.body.data;
           result.save(function(err) {
             if (err) {
               res.status(500).json({'message':'cannot save result'});

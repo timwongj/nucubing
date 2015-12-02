@@ -31,20 +31,20 @@ module.exports = (function() {
           var date = scrambles.competitionName.substr(scrambles.competitionName.length - 10, scrambles.competitionName.length);
           var week = date.substr(0, 2) + date.substr(3, 2) + date.substr(8, 2);
           for (var i = 0; i < scrambles.sheets.length; i++) {
-            var scramble = new Scramble();
-            scramble.event = scrambles.sheets[i].event;
-            scramble.week = week;
-            scramble.scrambles = scrambles.sheets[i].scrambles;
-            scramble.extraScrambles = scrambles.sheets[i].extraScrambles;
             Scramble.remove({'week':week}, function(err) {
               if (err) {
                 throw err;
               }
-            });
-            scramble.save(function(err) {
-              if (err) {
-                throw err;
-              }
+              var scramble = new Scramble();
+              scramble.event = scrambles.sheets[i].event;
+              scramble.week = week;
+              scramble.scrambles = scrambles.sheets[i].scrambles;
+              scramble.extraScrambles = scrambles.sheets[i].extraScrambles;
+              scramble.save(function(err) {
+                if (err) {
+                  throw err;
+                }
+              });
             });
           }
           res.send({status:'success'});
