@@ -33,7 +33,7 @@ module.exports = (function() {
           for (var i = 0; i < scrambles.sheets.length; i++) {
             Scramble.remove({'week':week}, function(err) {
               if (err) {
-                throw err;
+                res.status(500).send({status:'cannot save', error: err});
               }
               var scramble = new Scramble();
               scramble.event = scrambles.sheets[i].event;
@@ -41,15 +41,13 @@ module.exports = (function() {
               scramble.scrambles = scrambles.sheets[i].scrambles;
               scramble.extraScrambles = scrambles.sheets[i].extraScrambles;
               scramble.save(function(err) {
-                if (err) {
-                  throw err;
-                }
+                res.status(500).send({status:'cannot save', error: err});
               });
             });
           }
           res.send({status:'success'});
         } catch(e) {
-          res.status(500).send({status:'failure', error:e});
+          res.status(500).send({status: 'failure', error: e});
         }
       }
     });
