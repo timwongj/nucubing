@@ -69,8 +69,9 @@
     };
 
     $scope.removeResult = function(result) {
+      console.log(result);
       if (confirm('Are you sure you would like to remove this result')) {
-        Results.delete({week:result.week, event:result.event, facebook_id:result.facebook_id}, function() {
+        Results.delete({_id: result._id}, function() {
           $scope.results.splice($scope.results.indexOf(result), 1);
         });
       }

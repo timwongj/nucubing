@@ -15,7 +15,7 @@ module.exports = (function() {
       // get all scrambles
       Scramble.find(req.query).exec(function(err, scrambles) {
         if (err) {
-          res.status(500).json({'message':'cannot get scrambles'});
+          res.status(500).json({'message': 'cannot get scrambles'});
         } else {
           res.json(scrambles);
         }
@@ -30,20 +30,15 @@ module.exports = (function() {
           var scrambles = JSON.parse(fs.readFileSync(req.files.file.path));
           var date = scrambles.competitionName.substr(scrambles.competitionName.length - 10, scrambles.competitionName.length);
           var week = date.substr(0, 2) + date.substr(3, 2) + date.substr(8, 2);
+          Scramble.remove({'week':week});
           for (var i = 0; i < scrambles.sheets.length; i++) {
-            Scramble.remove({'week':week}, function(err) {
-              if (err) {
-                res.status(500).send({status:'cannot save', error: err});
-              }
-              var scramble = new Scramble();
-              scramble.event = scrambles.sheets[i].event;
-              scramble.week = week;
-              scramble.scrambles = scrambles.sheets[i].scrambles;
-              scramble.extraScrambles = scrambles.sheets[i].extraScrambles;
-              scramble.save(function(err) {
-                res.status(500).send({status:'cannot save', error: err});
-              });
+            var scramble = new Scramble({
+              event: scrambles.sheets[i].event,
+              week: week,
+              scrambles: scrambles.sheets[i].scrambles,
+              extraScrambles: scrambles.sheets[i].extraScrambles
             });
+            scramble.save();
           }
           res.send({status:'success'});
         } catch(e) {
