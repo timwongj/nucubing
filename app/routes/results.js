@@ -22,7 +22,7 @@ module.exports = (function() {
       console.log(req.user ? ('name: ' + req.user.displayName + ', facebook_id: ' + req.user.facebook_id) : 'no User');
       console.log(req.body ? ('week: ' + req.body.week + ', event: ' + req.body.event + ', status: ' + req.body.status + ', data: ' + req.body.data) : 'no body');
       if (req.user) {
-        Result.remove({'week':req.body.week, 'event':req.body.event, 'email':req.body.email}).exec(function(err) {
+        Result.remove({'week':req.body.week, 'event':req.body.event, 'email':req.user.email}).exec(function(err) {
           if (err) {
             res.status(500).json({'message':'cannot save result'});
           }

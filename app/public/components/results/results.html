@@ -15,8 +15,8 @@
 <div class="row">
   <div class="col-xs-12" ng-repeat="section in displayedResults | orderBy:['-week', 'index']">
     <h4>
-      <span class="label label-primary" ng-bind="displayWeek(section.week)" ng-show="selectedWeek == 'All Weeks'"></span>
-      <span class="label label-warning" ng-bind="displayEvent(section.event)" ng-show="selectedEvent == 'All Events'"></span>
+      <span class="label label-primary" ng-bind="displayWeek(section.week)" ng-if="selectedWeek == 'All Weeks'"></span>
+      <span class="label label-warning" ng-bind="displayEvent(section.event)" ng-if="selectedEvent == 'All Events'"></span>
     </h4>
     <div class="table table-responsive table-results">
       <table class="table table-condensed table-striped table-results">
@@ -56,5 +56,5 @@
       </table>
     </div>
   </div>
-  <h3 class="text-center" ng-show="(displayedResults.length == 0)">No Results to Display</h3>
+  <h3 class="text-center" ng-if="(displayedResults.length == 0)">No Results to Display</h3>
 </div>

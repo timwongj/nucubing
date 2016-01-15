@@ -6,7 +6,7 @@
     <fieldset class="scheduler-border">
       <legend class="scheduler-border">Attempt 1</legend>
       <div class="col-sm-12 result-row">
-        <p class="scramble" ng-repeat="scramble in scrambles" ng-bind="$index + 1 + '. ' + scramble" ng-show="$index < displayed"></p>
+        <p class="scramble" ng-repeat="scramble in scrambles" ng-bind="$index + 1 + '. ' + scramble" ng-if="$index < displayed"></p>
         <button type="button" class="btn btn-default btn-sm" ng-click="display('less')" ng-disabled="displayed==7">Less Scrambles</button>
         <button type="button" class="btn btn-default btn-sm" ng-click="display('more')" ng-disabled="displayed==scrambles.length">More Scrambles</button>
       </div>
@@ -25,7 +25,7 @@
         </div>
       </div>
       <div class="col-sm-4 result-row">
-        <pre class="result"><span ng-bind="mbldResult.solved + '/' + mbldResult.attempted + ' ' + mbldResult.time + ' ' + mbldResult.dnf" ng-show="valid"></span></pre>
+        <pre class="result"><span ng-bind="mbldResult.solved + '/' + mbldResult.attempted + ' ' + mbldResult.time + ' ' + mbldResult.dnf" ng-if="valid"></span></pre>
       </div>
     </fieldset>
   </div>

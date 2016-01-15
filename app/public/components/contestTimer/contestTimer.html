@@ -5,7 +5,7 @@
   <div class="col-md-7" touch-start="touchStart()" touch-end="touchEnd()">
       <p class="timer-scramble text-center" ng-bind="scramble" ng-hide="done"></p>
       <p class="timer-display text-center" ng-style="timerStyle" ng-bind="timer_display"></p>
-      <h2 class="text-center" ng-bind="result + ' ' + eventFormat" ng-show="done"></h2>
+      <h2 class="text-center" ng-bind="result + ' ' + eventFormat" ng-if="done"></h2>
   </div>
   <div class="col-md-5 text-center">
     <table class="table">
@@ -22,7 +22,7 @@
         <td ng-bind="solve.displayedResult"></td>
         <td class="timer-results-penalties">
           <div class="input-group">
-            <div class="btn-group" role="group" ng-show="solve.completed">
+            <div class="btn-group" role="group" ng-if="solve.completed">
               <button type="button" class="btn btn-success btn-xs" tabindex="-1" ng-click="updateResultWithPenalty(solve, '')"><i class="fa fa-check-circle"></i> OK</button>
               <button type="button" class="btn btn-warning btn-xs" tabindex="-1" ng-click="updateResultWithPenalty(solve, '(+2)')"><i class="fa fa-plus-circle"></i> +2</button>
               <button type="button" class="btn btn-danger btn-xs" tabindex="-1" ng-click="updateResultWithPenalty(solve, '(DNF)')"><i class="fa fa-times-circle"></i> DNF</button>
